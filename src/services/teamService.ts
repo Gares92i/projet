@@ -1,5 +1,21 @@
-import { TeamMember, normalizeTeamMember } from "@/types/team";
+import { TeamMember } from "@/types/team";
 import { createApiClient } from "./apiClient";
+
+// Fonction utilitaire pour normaliser les données de membre d'équipe
+export function normalizeTeamMember(member: any): TeamMember {
+  return {
+    id: member.id || `temp-${Date.now()}`,
+    name: member.name || '',
+    role: member.role || 'autre',
+    email: member.email || '',
+    phone: member.phone || '',
+    avatar: member.avatar || '',
+    status: member.status || 'active',
+    team_id: member.team_id || null,
+    user_id: member.user_id || null,
+    created_at: member.created_at || new Date().toISOString()
+  };
+}
 
 // Service pour gérer les membres d'équipe avec l'API Railway
 export const teamService = {
