@@ -1,6 +1,4 @@
 import { 
-    SignInButton, 
-    SignUpButton, 
     useUser, 
     useAuth as useClerkAuth
   } from "@clerk/clerk-react";
@@ -9,7 +7,7 @@ import {
   // Adapter les fonctions d'authentification de Clerk pour notre application
   export const useAuth = () => {
     const { isSignedIn, user, isLoaded } = useUser();
-    const { signOut } = useClerkAuth();
+    const { signOut, getToken } = useClerkAuth();
     
     // Convertir les données utilisateur de Clerk en UserProfile
     const mapToUserProfile = (): UserProfile | null => {
@@ -58,6 +56,7 @@ import {
       isLoading: !isLoaded,
       isAuthenticated: isSignedIn,
       signOut,
-      updateProfile
+      updateProfile,
+      getToken
     };
   };
