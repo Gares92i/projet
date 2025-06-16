@@ -1,0 +1,68 @@
+/* SOLUTION NUCLÉAIRE - Forcer l'affichage des barres de progression */
+
+/* Réinitialiser tous les styles qui pourraient cacher nos barres */
+.rct-item * {
+  display: initial !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Style amélioré pour la barre de progression qui s'étend horizontalement */
+.super-visible-progress {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  height: 100% !important; /* Couvre toute la hauteur de l'élément */
+  background: rgba(255, 255, 255, 0.25) !important; /* Fond semi-transparent */
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.1) 10px,
+    rgba(255, 255, 255, 0.3) 10px,
+    rgba(255, 255, 255, 0.3) 20px
+  ) !important; /* Motif strié pour meilleure visibilité */
+  z-index: 5 !important;
+  pointer-events: none !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transition: width 0.3s ease !important;
+  border-right: none !important; /* Supprimer la bordure droite existante */
+}
+
+/* Créer l'indicateur vertical rouge qui dépasse */
+.super-visible-progress::after {
+  content: "" !important;
+  position: absolute !important;
+  right: 0 !important;
+  top: -10px !important; /* Dépasse de 10px en haut */
+  height: calc(100% + 20px) !important; /* Dépasse de 10px en haut et en bas */
+  width: 3px !important; /* Épaisseur de la ligne */
+  background-color: #ff4040 !important; /* ROUGE comme dans votre exemple */
+  z-index: 50 !important; /* Au-dessus de tout */
+  box-shadow: 0 0 4px rgba(255, 0, 0, 0.5) !important; /* Effet de halo */
+}
+
+/* S'assurer que le contenu reste visible par-dessus la barre */
+.task-content-container {
+  position: relative !important;
+  z-index: 10 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  padding: 0 8px !important;
+  pointer-events: none !important;
+}
+
+/* Forcer l'affichage de la barre de progression */
+.rct-item > .super-visible-progress {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.task-title-text, .task-progress-indicator {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+

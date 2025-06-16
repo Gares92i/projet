@@ -1,0 +1,321 @@
+$item-color: rgb(214, 71, 71) !default;
+$item-background: #2196f3 !default;
+$item-border: none !default;
+$item-selected-color: white !default;
+$item-selected-background: #ffc107 !default;
+$item-selected-border: none !default;
+
+$row-background-even: white !default;
+$row-background-odd: white !default;
+
+$border-color: #e5e7eb;
+$border-width: 1px;
+$sidebar-color: #333333 !default;
+$sidebar-background-color: white !default;
+$sidebar-width: 250px;
+$list-item-padding: 0px;
+$weekend: rgba(255, 248, 225, 0.5) !default;
+$weekend-color: rgba(255, 248, 225, 0.5);
+
+$date-header-background: #f9fafb !default;
+$date-header-color: #374151 !default;
+
+// Style spécifique pour la timeline
+.react-calendar-timeline {
+  * {
+    box-sizing: border-box;
+  }
+
+  .rct-outer {
+    display: block;
+    overflow: hidden;
+  }
+
+  .rct-scroll {
+    display: inline-block;
+    white-space: normal;
+    vertical-align: top;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -ms-touch-action: none;
+    touch-action: none;
+  }
+
+  // Styles pour la sidebar
+  .rct-sidebar {
+    overflow: hidden;
+    white-space: normal;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    box-sizing: border-box;
+    border-right: 1px solid $border-color;
+    width: $sidebar-width;
+
+    .rct-sidebar-row {
+      padding: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      box-sizing: border-box;
+      margin: 0;
+      border-bottom: 1px solid #ddd;
+
+      &.rct-sidebar-row-odd {
+        background-color: $row-background-odd;
+      }
+      
+      &.rct-sidebar-row-even {
+        background-color: $row-background-even;
+      }
+    }
+  }
+
+  // Style pour les entêtes de lot
+  .group-lot {
+    display: flex;
+    align-items: center;
+    background-color: #f8d7da;
+    padding: 6px 8px;
+    font-weight: 500;
+
+    .lot-icon {
+      margin-right: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 2px;
+
+      svg {
+        width: 14px;
+        height: 14px;
+        color: white;
+      }
+    }
+
+    .lot-title {
+      font-weight: 500;
+      font-size: 13px;
+    }
+  }
+
+  // Style pour les tâches dans la sidebar
+  .group-task {
+    padding: 6px 8px 6px 28px;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+
+    .task-indicator {
+      width: 12px;
+      height: 12px;
+      margin-right: 8px;
+      border-radius: 2px;
+    }
+  }
+
+  // Styles pour les barres de tâches
+  .rct-item {
+    position: absolute;
+    box-sizing: border-box;
+    font-size: 12px;
+    color: white !important; 
+    cursor: pointer;
+    border-radius: 4px;
+    z-index: 80;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    padding: 0;
+    min-height: 24px !important;
+    max-height: 22px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
+    position: absolute !important;
+    z-index: 80 !important;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+    
+    &:hover {
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+      z-index: 90;
+    }
+    
+    .rct-item-overflow {
+      position: absolute;
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      padding: 2px 6px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    
+    .rct-item-content {
+      position: relative;
+      height: 100%;
+      padding: 0 6px;
+      display: flex;
+      align-items: center;
+    }
+
+    &.lot-0 { background-color: #4CAF50 !important; }
+    &.lot-1 { background-color: #2196F3 !important; }
+    &.lot-2 { background-color: #8D6E63 !important; }
+    &.lot-3 { background-color: #FF9800 !important; }
+    &.lot-4 { background-color: #9C27B0 !important; }
+    &.lot-5 { background-color: #607D8B !important; }
+    
+    // Assurer que le texte est visible
+    * {
+      color: white !important;
+      font-weight: bold !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+  }
+
+  // Style pour les en-têtes
+  .rct-header-container {
+    z-index: 40;
+    background: white;
+    border-bottom: 1px solid $border-color;
+  }
+
+  .rct-header {
+    margin: 0;
+    overflow-x: hidden;
+    z-index: 40;
+    
+    .rct-label-group {
+      position: absolute;
+      top: 0;
+      font-size: 12px;
+      text-align: center;
+      cursor: pointer;
+      border-bottom: 1px solid $border-color;
+      background: $date-header-background;
+      color: $date-header-color;
+      border-left: 2px solid white;
+      box-sizing: border-box;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    
+    .rct-label {
+      position: absolute;
+      text-align: center;
+      cursor: pointer;
+      border-left: 1px solid $border-color;
+      border-bottom: 1px solid $border-color;
+      background: white;
+      color: $date-header-color;
+      box-sizing: content-box;
+      font-size: 12px;
+      padding: 4px;
+
+      &:hover {
+        background: #f7f7f7;
+      }
+    }
+
+    .lot-header-line {
+      position: absolute;
+      height: 1px;
+      top: 50%;
+      width: 100%;
+      background-color: #dee2e6;
+      z-index: 1;
+    }
+
+    .lot-header-text {
+      position: relative;
+      z-index: 2;
+      background-color: white;
+      padding: 0 8px;
+    }
+  }
+
+  // Style pour la ligne du jour
+  .rct-today {
+    position: absolute;
+    width: 2px;
+    background: red;
+    z-index: 85;
+  }
+
+  .rct-vertical-lines .rct-vl {
+    border-left: 1px solid #f0f0f0 !important;
+    
+    &.weekend-highlight {
+      background-color: $weekend-color;
+    }
+  }
+
+  .rct-horizontal-lines .rct-hl-even,
+  .rct-horizontal-lines .rct-hl-odd {
+    border-bottom: 1px solid #f0f0f0 !important;
+    height: 32px;
+  }
+
+  .rct-dateHeader {
+    background-color: #f9fafb !important;
+    border-left: 1px solid #e5e7eb !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    font-weight: 500 !important;
+  }
+}
+
+// Couleurs pour les barres de tâches par lot
+.lot-0 {
+  background-color: #4CAF50 !important;
+}
+
+.lot-1 {
+  background-color: #2196F3 !important;
+}
+
+.lot-2 {
+  background-color: #8D6E63 !important;
+}
+
+.lot-3 {
+  background-color: #FF9800 !important;
+}
+
+.lot-4 {
+  background-color: #9C27B0 !important;
+}
+
+.lot-5 {
+  background-color: #607D8B !important;
+}
+
+// Style pour les titres de lot dans la timeline
+.rct-dateHeader {
+  background-color: #f9fafb !important;
+  border-left: 1px solid #e5e7eb !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+// Style pour marquer les weekends
+.weekend-highlight {
+  background-color: rgba(255, 248, 225, 0.5) !important;
+  border-left: 1px solid #f0f0f0 !important;
+}
+
+// Meilleur style pour les lignes de la timeline
+.rct-horizontal-lines .rct-hl-even,
+.rct-horizontal-lines .rct-hl-odd {
+  border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.rct-vertical-lines .rct-vl {
+  border-left: 1px solid #f0f0f0 !important;
+}
