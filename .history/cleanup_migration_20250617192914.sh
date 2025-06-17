@@ -45,7 +45,7 @@ find src/components -type f \( -name "*.tsx" -o -name "*.ts" \) | while read -r 
   # Extraire le nom de base du fichier sans extension
   base_name=$(basename "$file" .tsx)
   base_name=${base_name%.ts}
-
+  
   # Vérifier si un composant correspondant existe dans features
   if find src/features -path "*/components/$base_name.tsx" -o -path "*/components/$base_name.ts" -o -path "*/components/${base_name,,}.tsx" -o -path "*/components/${base_name,,}.ts" | grep -q .; then
     echo "  ✅ Suppression de $file (migré vers features)"
@@ -76,7 +76,7 @@ echo "🗑️ Suppression des anciens services..."
 find src/services -type f -name "*.ts" | while read -r file; do
   # Extraire le nom de base du fichier sans extension
   base_name=$(basename "$file" .ts)
-
+  
   # Vérifier si un service correspondant existe dans features
   if find src/features -path "*/services/$base_name.ts" -o -path "*/services/${base_name,,}.ts" | grep -q .; then
     echo "  ✅ Suppression de $file (migré vers features)"
