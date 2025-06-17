@@ -1,5 +1,5 @@
 // Types pour les rapports de visite
-import { LotTravaux } from '@/features/descriptif/types/descriptif';
+import { LotTravaux } from '@/';
 
 export interface Observation {
   id: string;
