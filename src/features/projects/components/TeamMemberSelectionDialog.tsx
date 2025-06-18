@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Participant } from "@/types";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/ui/dialog";
+import { Button } from "@/ui/button";
+import { Checkbox } from "@/ui/checkbox";
+import { ScrollArea } from "@/ui/scroll-area";
+import { Participant } from "@/app/styles";
 import { TeamMember } from "@/types/team";
 // Importer directement depuis le service existant
-import { getProjectMembers } from "@/services/team/teamProjectRelationService";
-import { syncLocalMembersWithReports } from "@/services/teamService";
+import { getProjectMembers } from "@/features/team/teamProjectRelationService";
+import { syncLocalMembersWithReports } from "@/features/team/services/teamService";
 interface TeamMemberSelectionDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;

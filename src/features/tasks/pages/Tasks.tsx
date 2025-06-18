@@ -1,17 +1,17 @@
 
 import { useState, useEffect } from "react";
 import MainLayout from "@/components/layout/MainLayout";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import TaskList from "@/components/TaskList";
+import { Button } from "@/ui/button";
+import { Card, CardContent } from "@/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs";
+import TaskList from "@/features/tasks/components/TaskList";
 import { Plus } from "lucide-react";
 import { Task } from "@/components/gantt/types";
-import { getAllTasks, toggleTaskCompletion } from "@/components/services/taskService";
-import TaskFilters from "@/components/tasks/TaskFilters";
-import TaskStats from "@/components/tasks/TaskStats";
-import NewTaskSheet from "@/components/tasks/NewTaskSheet";
-import EditTaskSheet from "@/components/tasks/EditTaskSheet";
+import { getAllTasks, toggleTaskCompletion } from "@/features/tasks/services/taskService";
+import TaskFilters from "@/features/tasks/components/TaskFilters";
+import TaskStats from "@/features/tasks/components/TaskStats";
+import NewTaskSheet from "@/features/tasks/components/NewTaskSheet";
+import EditTaskSheet from "@/features/tasks/components/EditTaskSheet";
 import { toast } from "sonner";
 
 const Tasks = () => {

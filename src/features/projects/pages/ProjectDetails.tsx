@@ -1,29 +1,29 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import MainLayout from "@/components/layout/MainLayout";
-import { getTasksByProjectId } from "@/components/services/taskService";
-import { getProjectById, getProjectMilestones, updateProjectMilestones } from "@/services/projectService";
-import { getProjectMembers } from "@/services/team/teamProjectRelationService"; // Ajout de l'import manquant
+import { getTasksByProjectId } from "@/features/tasks/services/taskService";
+import { getProjectById, getProjectMilestones, updateProjectMilestones } from "@/features/projects/services/projectService";
+import { getProjectMembers } from "@/features/team/teamProjectRelationService"; // Ajout de l'import manquant
 import { Task } from "@/components/gantt/types";
 import { toast } from "sonner";
-import { ProjectHeader } from "@/components/project/ProjectHeader";
-import { ProjectDetailsCard } from "@/components/project/ProjectDetailsCard";
-import { ProjectBudgetCard } from "@/components/project/ProjectBudgetCard";
-import { ProjectProgressCard } from "@/components/project/ProjectProgressCard";
-import { ProjectTabs } from "@/components/project/ProjectTabs";
+import { ProjectHeader } from "@/features/projects/components/ProjectHeader";
+import { ProjectDetailsCard } from "@/features/projects/components/ProjectDetailsCard";
+import { ProjectBudgetCard } from "@/features/projects/components/ProjectBudgetCard";
+import { ProjectProgressCard } from "@/features/projects/components/ProjectProgressCard";
+import { ProjectTabs } from "@/features/projects/components/ProjectTabs";
 import {
   projectDocuments,
 
 
-} from "@/components/project/ProjectData";
+} from "@/features/projects/components/ProjectData";
 // En haut du fichier ProjectDetails.tsx
-import { getProjectAnnotations } from "@/services/annotationService";
+import { getProjectAnnotations } from "@/features/annotations/services/annotationService";
 // Suppression de l'import statique de teamMembers qui sera remplacé par un état
-import { ProjectCardProps as UIProjectCardProps } from "@/components/ProjectCard";
-import { Annotation } from "@/types";
-import { Skeleton } from "@/components/ui/skeleton";
+import { ProjectCardProps as UIProjectCardProps } from "@/features/projects/components/ProjectCard";
+import { Annotation } from "@/app/styles";
+import { Skeleton } from "@/ui/skeleton";
 import { TeamMember } from "@/types/team";
-import { ProjectMilestone } from "@/services/projectService"; // Ajouter cet import pour résoudre l'erreur de ProjectMilestone
+import { ProjectMilestone } from "@/features/projects/services/projectService"; // Ajouter cet import pour résoudre l'erreur de ProjectMilestone
 
 // Ajouter cette interface après les imports
 interface LotTravaux {
@@ -443,7 +443,7 @@ const ProjectDetails = () => {
   );
 
   // Remplacer l'import statique
-  // import { projectStats } from "@/components/project/ProjectData";
+  // import { projectStats } from "@/features/projects/components/ProjectData";
 
   // Par un état local
   useEffect(() => {

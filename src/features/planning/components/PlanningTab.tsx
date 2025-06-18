@@ -28,9 +28,9 @@ import "react-calendar-timeline/dist/style.css";
 import "./timeline-custom.css";
 import "./timeline-progress-fix.css";
 import "./force-progress.css";
-import { Slider } from "@/components/ui/slider";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Slider } from "@/ui/slider";
+import { Card } from "@/ui/card";
+import { Button } from "@/ui/button";
 import {
   ZoomIn,
   ZoomOut,
@@ -58,14 +58,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogOverlay,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/ui/dialog";
+import { Input } from "@/ui/input";
+import { Label } from "@/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/ui/popover";
 
 import { LotTravaux } from "@/types/projectTypes";
 import { Tooltip } from "react-tooltip";
@@ -81,8 +81,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/ui/select";
+import { Checkbox } from "@/ui/checkbox";
 import { PDFViewer } from "@react-pdf/renderer";
 dayjs.locale("fr");
 

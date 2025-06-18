@@ -6,8 +6,8 @@ import {
   RotateCcw,
   AlertCircle,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/ui/button";
+import { Skeleton } from "@/ui/skeleton";
 import { toast } from "sonner";
 
 interface ImageViewerProps {

@@ -1,32 +1,32 @@
 import { useNavigate, useParams } from "react-router-dom";
 import MainLayout from "@/components/layout/MainLayout";
-import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Form } from "@/ui/form";
+import { Button } from "@/ui/button";
+import { Card } from "@/ui/card";
 import { ChevronLeft } from "lucide-react";
 import { useReportForm, AnnotationReserve } from "@/hooks/use-report-form";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { ReportTemplateSelector } from "@/components/project/ReportTemplateSelector";
-import ReportHeader from "@/components/project/ReportHeader";
-import { GeneralInfoSection } from "@/components/project/GeneralInfoSection";
-import { PhotosSection } from "@/components/project/PhotosSection";
-import { ObservationsSection } from "@/components/project/ObservationsSection";
-import { RecommendationsSection } from "@/components/project/RecommendationsSection";
+import { ReportTemplateSelector } from "@/features/projects/components/ReportTemplateSelector";
+import ReportHeader from "@/features/projects/components/ReportHeader";
+import { GeneralInfoSection } from "@/features/projects/components/GeneralInfoSection";
+import { PhotosSection } from "@/features/projects/components/PhotosSection";
+import { ObservationsSection } from "@/features/projects/components/ObservationsSection";
+import { RecommendationsSection } from "@/features/projects/components/RecommendationsSection";
 import { useStorageUpload } from "@/hooks/use-storage-upload";
-import { AdditionalDetailsSection } from "@/components/project/AdditionalDetailsSection";
-import { ParticipantsSection } from "@/components/project/ParticipantsSection";
-import { ReportAnnotationsSection } from "@/components/project/ReportAnnotationsSection";
-import { TaskProgressSelector } from "@/components/project/TaskProgressSelector";
-import { TaskProgressDisplay } from "@/components/project/TaskProgressDisplay";
-import { syncReportParticipantsWithTeamMembers } from "@/services/team/teamMembersService";
+import { AdditionalDetailsSection } from "@/features/projects/components/AdditionalDetailsSection";
+import { ParticipantsSection } from "@/features/projects/components/ParticipantsSection";
+import { ReportAnnotationsSection } from "@/features/projects/components/ReportAnnotationsSection";
+import { TaskProgressSelector } from "@/features/projects/components/TaskProgressSelector";
+import { TaskProgressDisplay } from "@/features/projects/components/TaskProgressDisplay";
+import { syncReportParticipantsWithTeamMembers } from "@/features/team/teamMembersService";
 import { calculateAverageProgress } from "@/utils/progressUtils";
 
-import { getOrCreateDefaultTeam } from "@/services/teamService"; // Ajustez le chemin si nécessaire
+import { getOrCreateDefaultTeam } from "@/features/team/services/teamService"; // Ajustez le chemin si nécessaire
 
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
-import { SiteVisitReport, TaskProgress } from "@/types";
-import { addReport, updateReport } from "@/components/services/reportService";
+import { SiteVisitReport, TaskProgress } from "@/app/styles";
+import { addReport, updateReport } from "@/features/reports/services/reportService";
 
 // Fonction pour récupérer les données d'une table spécifique
 const getTableData = (projectId: string, tableName: string) => {

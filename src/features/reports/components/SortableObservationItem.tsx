@@ -1,10 +1,10 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { TableRow, TableCell } from "@/components/ui/table";
+import { Button } from "@/ui/button";
+import { Input } from "@/ui/input";
+import { TableRow, TableCell } from "@/ui/table";
 import { Trash2, GripVertical, Image, Upload } from "lucide-react";
-import { Observation } from "@/types";
+import { Observation } from "@/app/styles";
 import { cn } from "@/lib/utils";
 import { useRef, useState } from "react";
 import { toast } from "sonner";

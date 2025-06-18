@@ -7,9 +7,9 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+} from "@/ui/table";
+import { Button } from "@/ui/button";
+import { Badge } from "@/ui/badge";
 import { FileText, Calendar, User, MoreHorizontal, Hash } from "lucide-react";
 import {
   DropdownMenu,
@@ -17,12 +17,12 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/ui/dropdown-menu";
 import {
   getAllReportsByProjectId,
   deleteReport,
-} from "@/components/services/reportService";
-import { SiteVisitReport } from "@/types";
+} from "@/features/reports/services/reportService";
+import { SiteVisitReport } from "@/app/styles";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -33,7 +33,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/ui/alert-dialog";
 
 interface SiteVisitReportsListProps {
   formatDate: (dateString: string) => string;

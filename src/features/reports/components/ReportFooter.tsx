@@ -1,7 +1,7 @@
 
-import { getArchitectInfo } from "@/components/services/reportService";
+import { getArchitectInfo } from "@/features/reports/services/reportService";
 import { useEffect, useState } from "react";
-import { ArchitectInfo } from "@/types";
+import { ArchitectInfo } from "@/app/styles";
 
 const ReportFooter = () => {
   const [architectInfo, setArchitectInfo] = useState<ArchitectInfo | null>(null);

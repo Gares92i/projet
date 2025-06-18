@@ -1,13 +1,13 @@
 import { useState } from "react";
 import MainLayout from "@/components/layout/MainLayout";
-import { TeamMemberDisplay } from "@/components/team/TeamMemberDisplay";
-import { Button } from "@/components/ui/button";
+import { TeamMemberDisplay } from "@/features/team/components/TeamMemberDisplay";
+import { Button } from "@/ui/button";
 import { PlusCircle, Search, Grid, List, Filter } from "lucide-react"; // Ajout des icônes Grid et List
 import { useTeamMemberManager } from "@/hooks/useTeamMemberManager";
-import { TeamMemberDialogs } from "@/components/team/TeamMemberDialogs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"; // Ajout de ToggleGroup
+import { TeamMemberDialogs } from "@/features/team/components/TeamMemberDialogs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/ui/select";
+import { Input } from "@/ui/input";
+import { ToggleGroup, ToggleGroupItem } from "@/ui/toggle-group"; // Ajout de ToggleGroup
 
 const TeamPage = () => {
   // Utiliser useTeamMemberManager pour gérer l'état

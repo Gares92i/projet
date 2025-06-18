@@ -1,22 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import MainLayout from "@/components/layout/MainLayout";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/ui/card";
+import { Badge } from "@/ui/badge";
+import { Input } from "@/ui/input";
+import { Label } from "@/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs";
+import { Switch } from "@/ui/switch";
+import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
+import { Separator } from "@/ui/separator";
 import { Upload, Building, Bell, Lock, UserCog, Globe, Palette, Database, FilePenLine, Trash2 } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
-import { Progress } from "@/components/ui/progress";
-import { HeaderFooterEditor } from "@/components/settings/HeaderFooterEditor";
-import { ColorPicker } from "@/components/settings/ColorPicker";
-import { ThemeSelector } from "@/components/team/ThemeSelector";
+import { Textarea } from "@/ui/textarea";
+import { Progress } from "@/ui/progress";
+import { HeaderFooterEditor } from "@/features/settings/components/HeaderFooterEditor";
+import { ColorPicker } from "@/features/settings/components/ColorPicker";
+import { ThemeSelector } from "@/features/team/components/ThemeSelector";
 import { toast } from "sonner";
-import { saveArchitectInfo, getArchitectInfo } from "@/components/services/reportService";
+import { saveArchitectInfo, getArchitectInfo } from "@/features/reports/services/reportService";
 
 const Settings = () => {
   const [selectedTab, setSelectedTab] = useState("account");

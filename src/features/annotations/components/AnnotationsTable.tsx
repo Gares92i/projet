@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Annotation, Document } from '@/types';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/ui/table";
+import { Badge } from "@/ui/badge";
+import { Button } from "@/ui/button";
+import { Checkbox } from "@/ui/checkbox";
+import { Annotation, Document } from '@/app/styles';
 import { MessageSquare, ExternalLink, Check } from 'lucide-react';
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";

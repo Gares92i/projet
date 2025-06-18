@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs";
 import { ProjectOverviewTab } from "./ProjectOverviewTab";
 import {
   Table,
@@ -8,8 +8,8 @@ import {
   TableHead,
   TableRow,
   TableCell,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+} from "@/ui/table";
+import { Badge } from "@/ui/badge";
 import { TasksTab } from "./tabs/TasksTab";
 import { TeamTab } from "./tabs/TeamTab";
 import { DocumentsTab } from "./tabs/DocumentsTab";
@@ -18,13 +18,13 @@ import { ReportsTab } from "./tabs/ReportsTab";
 import { AnnotationsTab } from "./tabs/AnnotationsTab";
 import { PlanningTab } from "./tabs/PlanningTab"; // Ajouter l'import du nouveau composant
 import { Task } from "@/components/gantt/types";
-import { Document } from "@/components/DocumentsList";
-import { Annotation } from "@/types";
+import { Document } from "@/features/documents/components/DocumentsList";
+import { Annotation } from "@/app/styles";
 import { ProjectMilestone, ProjectStats } from "./tabs/types";
 import { TeamMember } from "@/types/team";
 import { ClipboardPen } from "lucide-react"; // Importer l'icône
 import { DescriptifDetailTab } from "./tabs/DescriptifDetailTab"; // Importer le nouveau composant
-import { Button } from "@/components/ui/button"; // Importer le composant Button
+import { Button } from "@/ui/button"; // Importer le composant Button
 import { useNavigate } from "react-router-dom"; // Importer le hook useNavigate
 import { LotTravaux, DescriptifData } from "@/types/projectTypes";
 import { useLocalStorage } from '@/hooks/useLocalStorage'; // Importer le hook useLocalStorage

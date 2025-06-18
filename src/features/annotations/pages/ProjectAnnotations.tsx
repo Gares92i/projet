@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import MainLayout from "@/components/layout/MainLayout";
-import { getProjectById } from "@/services/projectService";
+import { getProjectById } from "@/features/projects/services/projectService";
 import { toast } from "sonner";
-import { ProjectHeader } from "@/components/project/ProjectHeader";
-import { PlanViewerPage } from "@/components/annotations/PlanViewerPage";
-import { ProjectCardProps } from "@/components/ProjectCard";
+import { ProjectHeader } from "@/features/projects/components/ProjectHeader";
+import { PlanViewerPage } from "@/features/annotations/components/PlanViewerPage";
+import { ProjectCardProps } from "@/features/projects/components/ProjectCard";
 import { migrateProjectImages } from "@/scripts/migrateImages";
 const ProjectAnnotations = () => {
   const { id } = useParams<{ id: string }>();

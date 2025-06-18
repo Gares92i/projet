@@ -4,12 +4,12 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
+} from "@/ui/card";
+import { Progress } from "@/ui/progress";
+import { Badge } from "@/ui/badge";
 import { Loader2 } from "lucide-react";
-import { TaskProgress } from "@/types";
-import { fetchTaskProgressFromPlanning } from "@/components/services/planningService";
+import { TaskProgress } from "@/app/styles";
+import { fetchTaskProgressFromPlanning } from "@/features/planning/services/planningService";
 
 interface TaskProgressSelectorProps {
   projectId?: string;

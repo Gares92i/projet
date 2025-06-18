@@ -1,18 +1,18 @@
 
 import { Check, Clock, MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/ui/button";
+import { Checkbox } from "@/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from "@/ui/dropdown-menu";
+import { Badge } from "@/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { Task } from "@/components/gantt/types";
-import { toggleTaskCompletion, deleteTask } from "@/components/services/taskService";
+import { toggleTaskCompletion, deleteTask } from "@/features/tasks/services/taskService";
 import { toast } from "sonner";
 import { useState } from "react";
 

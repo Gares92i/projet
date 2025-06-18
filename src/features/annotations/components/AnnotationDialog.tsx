@@ -7,10 +7,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
-import { Annotation } from "@/types";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+} from "@/ui/dialog";
+import { Annotation } from "@/app/styles";
+import { Textarea } from "@/ui/textarea";
+import { Button } from "@/ui/button";
 import {
   PlusCircle,
   X,
@@ -21,24 +21,24 @@ import {
   ArrowRight,
   Edit,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/ui/input";
+import { Label } from "@/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/ui/select";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/ui/popover";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Calendar as CalendarComponent } from "@/ui/calendar";
 import { uploadAnnotation } from "@/services/storageService";
 import { DialogImageEditor, DrawingElement } from "./DialogImageEditor";
 

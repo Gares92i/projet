@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/ui/card";
+import { Button } from "@/ui/button";
 import { Plus } from "lucide-react";
-import { AnnotationsTable } from "@/components/project/AnnotationsTable";
-import { Annotation } from "@/types";
+import { AnnotationsTable } from "@/features/projects/components/AnnotationsTable";
+import { Annotation } from "@/app/styles";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 interface AnnotationsTabProps {

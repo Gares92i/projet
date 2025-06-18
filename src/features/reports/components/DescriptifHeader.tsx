@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { getArchitectInfo } from "@/components/services/reportService";
-import { getProjectById } from "@/services/projectService";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { getArchitectInfo } from "@/features/reports/services/reportService";
+import { getProjectById } from "@/features/projects/services/projectService";
+import { Card, CardContent } from "@/ui/card";
+import { Separator } from "@/ui/separator";
 import { Building, MapPin, User, Calendar, FileText } from "lucide-react";
 import { Project } from "@/types/project";
-import { ArchitectInfo } from "@/types";
+import { ArchitectInfo } from "@/app/styles";
 
 interface DescriptifHeaderProps {
   projectId: string;

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/ui/card";
+import { Button } from "@/ui/button";
+import { Input } from "@/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/ui/select";
 import { Trash2, Plus, GripVertical, RefreshCw } from "lucide-react";
 import {
   DndContext,
@@ -25,11 +25,11 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { getProjectMembers } from "@/services/team/teamProjectRelationService";
+import { getProjectMembers } from "@/features/team/teamProjectRelationService";
 import { TeamMember } from "@/types/team";
 import { TeamMemberSelectionDialog } from "./TeamMemberSelectionDialog";
 import { useParams } from "react-router-dom";
-import { syncLocalMembersWithReports } from "@/services/teamService";
+import { syncLocalMembersWithReports } from "@/features/team/services/teamService";
 
 interface StorageProject {
   id: string;

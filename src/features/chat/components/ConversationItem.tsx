@@ -1,5 +1,5 @@
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
 import { ChatConversation } from "@/types/chat";
 import { PrivateIndicator } from "./PrivateIndicator";
 

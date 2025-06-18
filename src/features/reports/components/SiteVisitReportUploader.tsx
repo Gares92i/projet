@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/ui/button";
 import { cn } from "@/lib/utils";
 import { FileUp, Loader2, Image as ImageIcon, Camera } from "lucide-react";
 import { toast } from "sonner";

@@ -1,9 +1,9 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
+import { Progress } from "@/ui/progress";
 import { useEffect, useState } from "react";
-import { getAllReportsByProjectId } from "@/components/services/reportService";
-import { SiteVisitReport } from "@/types";
+import { getAllReportsByProjectId } from "@/features/reports/services/reportService";
+import { SiteVisitReport } from "@/app/styles";
 
 interface ProjectStats {
   budgetTotal: number;

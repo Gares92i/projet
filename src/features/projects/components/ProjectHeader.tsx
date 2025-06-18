@@ -1,6 +1,6 @@
 import React from "react";
-import { ProjectCardProps } from "@/components/ProjectCard";
-import { Button } from "@/components/ui/button";
+import { ProjectCardProps } from "@/features/projects/components/ProjectCard";
+import { Button } from "@/ui/button";
 import {
   ArrowLeft,
   MoreHorizontal,
@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+} from "@/ui/dropdown-menu";
 
 interface ProjectHeaderProps {
   project: ProjectCardProps | null;

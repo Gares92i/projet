@@ -1,8 +1,8 @@
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
 import { ChatMessage } from "@/types/chat";
 import { format } from "date-fns";
-import { ChatBubble, ChatBubbleFooter } from "@/components/ui/chat-bubble";
+import { ChatBubble, ChatBubbleFooter } from "@/ui/chat-bubble";
 import { cn } from "@/lib/utils";
 
 export interface MessageBubbleProps {

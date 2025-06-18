@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/ui/dialog";
+import { Button } from "@/ui/button";
+import { Checkbox } from "@/ui/checkbox";
+import { ScrollArea } from "@/ui/scroll-area";
+import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
+import { Badge } from "@/ui/badge";
 import { TeamMember } from "@/types/team";
 import { toast } from "sonner";
-import { assignMemberToProject, removeMemberFromProject, getProjectMembers } from "@/services/team/teamProjectRelationService";
+import { assignMemberToProject, removeMemberFromProject, getProjectMembers } from "@/features/team/teamProjectRelationService";
 
 interface AssignMembersDialogProps {
   projectId: string;

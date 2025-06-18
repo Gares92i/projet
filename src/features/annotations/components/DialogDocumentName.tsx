@@ -6,9 +6,9 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from "@/ui/dialog";
+import { Input } from "@/ui/input";
+import { Button } from "@/ui/button";
 
 interface DialogDocumentNameProps {
   isOpen: boolean;

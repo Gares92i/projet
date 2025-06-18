@@ -1,16 +1,16 @@
-import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/ui/card";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/ui/form";
+import { Input } from "@/ui/input";
+import { Button } from "@/ui/button";
+import { Calendar } from "@/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { calculateAverageProgress } from "@/utils/progressUtils";
-import { Slider } from "@/components/ui/slider";
+import { Slider } from "@/ui/slider";
 
 // Créer un type dédié pour le formulaire
 interface SiteVisitFormValues {

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/ui/button";
+import { Card, CardContent } from "@/ui/card";
+import { Input } from "@/ui/input";
+import { Label } from "@/ui/label";
+import { Separator } from "@/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs";
 import { Upload, Trash2, RotateCcw, X } from "lucide-react";
 import { toast } from "sonner";
-import { getArchitectInfo } from "@/components/services/reportService";
-import { ArchitectInfo } from "@/types";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { getArchitectInfo } from "@/features/reports/services/reportService";
+import { ArchitectInfo } from "@/app/styles";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/ui/select";
 
 export function HeaderFooterEditor() {
   const [activeTab, setActiveTab] = useState("header");

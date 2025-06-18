@@ -2,10 +2,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { ProjectCardProps } from "@/components/ProjectCard";
-import { getProjectById, updateProject } from "@/services/projectService";
-import { getAllTeamMembers, TeamMember as LegacyTeamMember } from "@/services/team";
-import { getAllClients, ClientData } from "@/components/services/clientService";
+import { ProjectCardProps } from "@/features/projects/components/ProjectCard";
+import { getProjectById, updateProject } from "@/features/projects/services/projectService";
+import { getAllTeamMembers, TeamMember as LegacyTeamMember } from "@/features/team";
+import { getAllClients, ClientData } from "@/features/clients/services/clientService";
 
 export const useEditProject = (projectId: string | undefined) => {
   const navigate = useNavigate();

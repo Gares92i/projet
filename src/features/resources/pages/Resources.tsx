@@ -1,18 +1,18 @@
 import { useState } from "react";
 import MainLayout from "@/components/layout/MainLayout";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/ui/button";
 import { Plus, Search } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { ResourceForm } from "@/components/resources/ResourceForm";
-import { ResourceSearchBar } from "@/components/resources/ResourceSearchBar";
-import { ResourceCategories } from "@/components/resources/ResourceCategories";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { resources } from "@/components/resources/data";
-import { Input } from "@/components/ui/input";
+import { ResourceForm } from "@/features/resources/components/ResourceForm";
+import { ResourceSearchBar } from "@/features/resources/components/ResourceSearchBar";
+import { ResourceCategories } from "@/features/resources/components/ResourceCategories";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs";
+import { resources } from "@/features/resources/components/data";
+import { Input } from "@/ui/input";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { MoreHorizontal } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import LotManager from "@/components/resources/LotManager";
+import { Popover, PopoverContent, PopoverTrigger } from "@/ui/popover";
+import LotManager from "@/features/resources/components/LotManager";
 
 const Resources = () => {
   const [isResourceSheetOpen, setIsResourceSheetOpen] = useState(false);

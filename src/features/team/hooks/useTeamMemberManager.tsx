@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
-import { TeamMember } from '@/types'; // Importer depuis le point central
+import { TeamMember } from '@/app/styles'; // Importer depuis le point central
 import {
   getAllTeamMembers,
   addTeamMember,
   updateTeamMember,
   deleteTeamMember,
   syncLocalMembersWithReports
-} from "@/services/teamService"; // Utiliser les fonctions Supabase
+} from "@/features/team/services/teamService"; // Utiliser les fonctions Supabase
 import { toast } from 'sonner';
 import { useProfile } from '@/hooks/useProfile';
 

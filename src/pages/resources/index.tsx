@@ -1,2 +1,2 @@
-import { Resources } from "@features/resources/pages/Resources";
+import { Resources } from "@/features/resources/pages/Resources";
 export default Resources;

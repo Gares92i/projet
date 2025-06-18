@@ -1,6 +1,6 @@
 
 import MainLayout from "@/components/layout/MainLayout";
-import { ChatContainer } from "@/components/chat/ChatContainer";
+import { ChatContainer } from "@/features/chat/components/ChatContainer";
 
 const Chat = () => {
   return (

@@ -1,10 +1,10 @@
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/ui/button";
+import { Input } from "@/ui/input";
+import { Label } from "@/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/ui/select";
 import {
   Sheet,
   SheetContent,
@@ -12,11 +12,11 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import { updateTask } from "@/components/services/taskService";
+} from "@/ui/sheet";
+import { updateTask } from "@/features/tasks/services/taskService";
 import { Task } from "@/components/gantt/types";
 import { toast } from "sonner";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/ui/textarea";
 
 interface EditTaskSheetProps {
   isOpen: boolean;

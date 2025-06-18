@@ -12,9 +12,13 @@ import {
   DoorOpen
 } from "lucide-react";
 import MainLayout from "@/components/layout/MainLayout";
-import ProjectCard, { ProjectCardProps, normalizeTeamMembers, TeamMemberInfo } from "@/components/ProjectCard";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import ProjectCard, {
+  ProjectCardProps,
+  normalizeTeamMembers,
+  TeamMemberInfo,
+} from "@/features/projects/components/ProjectCard";
+import { Button } from "@/ui/button";
+import { Input } from "@/ui/input";
 import {
   Select,
   SelectContent,
@@ -22,20 +26,20 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/ui/select";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+} from "@/ui/popover";
+import { Checkbox } from "@/ui/checkbox";
+import { Label } from "@/ui/label";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/tabs";
+} from "@/ui/tabs";
 import {
   Sheet,
   SheetContent,
@@ -43,19 +47,19 @@ import {
   SheetHeader,
   SheetTitle,
   SheetFooter,
-} from "@/components/ui/sheet";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+} from "@/ui/sheet";
+import { Avatar, AvatarImage, AvatarFallback } from "@/ui/avatar";
 import { toast } from "sonner";
 import {
   getAllProjects,
   addProject,
   addProjectToMember,
-} from "@/services/projectService";
-import { TeamMember } from "@/types/team";
-import { getAllTeamMembers } from "@/services/team/legacyTeamService";
-import { getAllClients, ClientData } from "@/components/services/clientService";
-import { SiteVisitReportUploader } from "@/components/project/SiteVisitReportUploader";
-import { safeSetItem } from "@/services/storage/localStorageService";
+} from "@/features/projects/services/projectService";
+import { TeamMember } from "@/features/team/types/team";
+import { getAllTeamMembers } from "@/features/team/services/legacyTeamService";
+import { getAllClients, ClientData } from "@/features/clients/services/clientService";
+import { SiteVisitReportUploader } from "@/features/projects/components/SiteVisitReportUploader";
+import { safeSetItem } from "@/features/storage/localStorageService";
 import { getMilestonesByProjectId } from "@/components/services/milestonesService";
 
 const Projects = () => {

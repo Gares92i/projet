@@ -10,9 +10,9 @@ import {
   FilePenLine,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Document } from "@/types";
-import { Button } from "@/components/ui/button";
-import { DialogDocumentName } from "@/components/annotations/DialogDocumentName";
+import { Document } from "@/app/styles";
+import { Button } from "@/ui/button";
+import { DialogDocumentName } from "@/features/annotations/components/DialogDocumentName";
 // Ajoutez en haut du fichier, avec les autres imports
 import { toast } from "sonner";
 

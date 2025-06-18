@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Annotation } from "@/types";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/ui/dialog";
+import { Annotation } from "@/app/styles";
+import { Input } from "@/ui/input";
+import { Textarea } from "@/ui/textarea";
+import { Button } from "@/ui/button";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/ui/select";
+import { Label } from "@/ui/label";
 import { toast } from "sonner";
-import { addTask } from "@/components/services/taskService"; // Assurez-vous d'importer correctement
+import { addTask } from "@/features/tasks/services/taskService"; // Assurez-vous d'importer correctement
 
 interface ConvertToTaskDialogProps {
   isOpen: boolean;

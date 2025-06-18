@@ -3,11 +3,11 @@ import { useState } from "react";
 import { DndContext, closestCenter, useSensor, useSensors, DragEndEvent, PointerSensor, TouchSensor, KeyboardSensor } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Table, TableHeader, TableRow, TableHead, TableBody } from "@/components/ui/table";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/ui/card";
+import { Button } from "@/ui/button";
+import { Table, TableHeader, TableRow, TableHead, TableBody } from "@/ui/table";
 import { Plus } from "lucide-react";
-import { Recommendation } from "@/types";
+import { Recommendation } from "@/app/styles";
 import { SortableRecommendationItem } from "./SortableRecommendationItem";
 import { cn } from "@/lib/utils";
 

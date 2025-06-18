@@ -1,20 +1,20 @@
 import { Building, Calendar, Clock, MapPin, MoreHorizontal, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from "@/components/ui/card";
+} from "@/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+} from "@/ui/dropdown-menu";
+import { Badge } from "@/ui/badge";
+import { Progress } from "@/ui/progress";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -26,8 +26,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { deleteProject } from "@services/projectService";
+} from "@/ui/alert-dialog";
+import { deleteProject } from "@/services/projectService";
 import { toast } from "sonner";
 
 // Ajout des propriétés manquantes dans l'interface ProjectCardProps

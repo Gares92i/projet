@@ -7,9 +7,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Resource } from "@/components/resources/types";
+} from "@/ui/dropdown-menu";
+import { Button } from "@/ui/button";
+import { Resource } from "@/features/resources/components/types";
 
 const iconByType = {
   document: <FileText className="h-6 w-6" />,

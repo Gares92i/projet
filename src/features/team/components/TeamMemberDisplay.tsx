@@ -1,15 +1,15 @@
 import React from 'react';
 import { TeamMember } from "@/types/team";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
+import { Button } from "@/ui/button";
+import { Badge } from "@/ui/badge";
 import { Edit, Trash2, MoreHorizontal } from "lucide-react"; // Ajout d'icônes
 import {
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu"; // Ajout de DropdownMenu
+} from "@/ui/dropdown-menu"; // Ajout de DropdownMenu
 
 // Fonction pour obtenir les initiales
 const getInitials = (name: string | undefined): string => {

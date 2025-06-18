@@ -1,8 +1,8 @@
 
 import MainLayout from "@/components/layout/MainLayout";
-import DocumentsList, { Document } from "@/components/DocumentsList";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import DocumentsList, { Document } from "@/features/documents/components/DocumentsList";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
+import { Input } from "@/ui/input";
 import { Search } from "lucide-react";
 
 const Documents = () => {

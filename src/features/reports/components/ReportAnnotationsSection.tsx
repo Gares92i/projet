@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Table, TableHeader, TableRow, TableHead, TableBody } from "@/components/ui/table";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/ui/card";
+import { Button } from "@/ui/button";
+import { Table, TableHeader, TableRow, TableHead, TableBody } from "@/ui/table";
 import { Plus, Filter } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Annotation } from "@/types";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/ui/dialog";
+import { Badge } from "@/ui/badge";
+import { Annotation } from "@/app/styles";
 import { AnnotationReserve } from "@/hooks/use-report-form";
 import { AnnotationReserveItem } from "./AnnotationReserveItem";
 import { AnnotationsTable } from "./AnnotationsTable";

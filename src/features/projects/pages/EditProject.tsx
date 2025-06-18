@@ -1,12 +1,12 @@
 
 import { useParams } from "react-router-dom";
 import MainLayout from "@/components/layout/MainLayout";
-import { ProjectHeader } from "@/components/project/edit/ProjectHeader";
-import { GeneralInfoCard } from "@/components/project/edit/GeneralInfoCard";
-import { TeamMembersCard } from "@/components/project/edit/TeamMembersCard";
-import { ProjectImageCard } from "@/components/project/edit/ProjectImageCard";
-import { LoadingState } from "@/components/project/edit/LoadingState";
-import { NotFoundState } from "@/components/project/edit/NotFoundState";
+import { ProjectHeader } from "@/features/projects/components/edit/ProjectHeader";
+import { GeneralInfoCard } from "@/features/projects/components/edit/GeneralInfoCard";
+import { TeamMembersCard } from "@/features/projects/components/edit/TeamMembersCard";
+import { ProjectImageCard } from "@/features/projects/components/edit/ProjectImageCard";
+import { LoadingState } from "@/features/projects/components/edit/LoadingState";
+import { NotFoundState } from "@/features/projects/components/edit/NotFoundState";
 import { useEditProject } from "@/hooks/useEditProject";
 
 const EditProject = () => {

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { Document, Annotation } from "@/types";
+import { Document, Annotation } from "@/app/styles";
 import { updateDocument } from '../../services/annotationService';
 import html2canvas from 'html2canvas';
 
@@ -7,7 +7,7 @@ import { ImageViewer } from "./ImageViewer";
 import { AnnotationMarker } from "./AnnotationMarker";
 import { AddFileButton } from "./AddFileButton";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/ui/button";
 import { toast } from "sonner";
 import {
   Edit,

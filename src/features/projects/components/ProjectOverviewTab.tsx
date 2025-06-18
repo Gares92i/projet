@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/ui/card";
+import { Badge } from "@/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
 import { Calendar, FileText, MessageCircle, ListChecks } from "lucide-react";
-import TaskList from "@/components/TaskList";
+import TaskList from "@/features/tasks/components/TaskList";
 import { Task } from "@/components/gantt/types";
-import { Document } from "@/components/DocumentsList";
+import { Document } from "@/features/documents/components/DocumentsList";
 import { TeamMember } from "@/types/team";
 import { MilestonesSection } from "./overview/MilestonesSection";
 // Nous supprimons l'import qui n'existe pas
