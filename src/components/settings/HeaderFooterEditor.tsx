@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, Trash2, RotateCcw, X } from "lucide-react";
 import { toast } from "sonner";
-import { getArchitectInfo } from "@/components/services/reportService";
+import { getArchitectInfo } from "@/services/reportService";
 import { ArchitectInfo } from "@/types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 

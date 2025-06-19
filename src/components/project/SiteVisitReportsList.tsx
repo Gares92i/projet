@@ -21,7 +21,7 @@ import {
 import {
   getAllReportsByProjectId,
   deleteReport,
-} from "@/components/services/reportService";
+} from "@/services/reportService";
 import { SiteVisitReport } from "@/types";
 import { toast } from "sonner";
 import {

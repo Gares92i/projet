@@ -1,5 +1,4 @@
-
-import { getArchitectInfo } from "@/components/services/reportService";
+import { getArchitectInfo } from "@/services/reportService";
 import { useEffect, useState } from "react";
 import { ArchitectInfo } from "@/types";
 

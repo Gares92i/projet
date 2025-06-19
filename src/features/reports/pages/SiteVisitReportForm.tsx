@@ -21,12 +21,11 @@ import { TaskProgressDisplay } from "@/components/project/TaskProgressDisplay";
 import { syncReportParticipantsWithTeamMembers } from "@/services/team/teamMembersService";
 import { calculateAverageProgress } from "@/utils/progressUtils";
 
-import { getOrCreateDefaultTeam } from "@/services/teamService"; // Ajustez le chemin si nécessaire
-
+// import { getOrCreateDefaultTeam } from "@/services/teamService"; // Removed import
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { SiteVisitReport, TaskProgress } from "@/types";
-import { addReport, updateReport } from "@/components/services/reportService";
+import { addReport, updateReport } from "@/services/reportService";
 
 // Fonction pour récupérer les données d'une table spécifique
 const getTableData = (projectId: string, tableName: string) => {
@@ -100,19 +99,15 @@ const SiteVisitReportForm = ({
 
   useEffect(() => {
     const fetchDefaultTeamId = async () => {
-      try {
-        const teamId = await getOrCreateDefaultTeam();
-        setDefaultTeamId(teamId);
-        console.log("ID d'équipe par défaut récupéré:", teamId);
-      } catch (error) {
-        console.error("Erreur lors de la récupération de l'ID d'équipe:", error);
-        // Fallback: utiliser une valeur depuis localStorage si disponible
-        const storedId = localStorage.getItem('defaultTeamId');
-        if (storedId) {
-          console.log("Utilisation de l'ID d'équipe depuis localStorage:", storedId);
-          setDefaultTeamId(storedId);
-        }
+      let teamId = localStorage.getItem('defaultTeamId');
+      if (!teamId) {
+        console.warn("No defaultTeamId in localStorage for features/reports/pages/SiteVisitReportForm. Generating a fallback.");
+        teamId = `generated-default-${Date.now()}`; // Ensure unique fallback if multiple forms load simultaneously
+        localStorage.setItem('defaultTeamId', teamId);
+        toast.info("ID d'équipe par défaut généré (features).", { description: "Aucun ID existant trouvé." });
       }
+      setDefaultTeamId(teamId);
+      console.log("ID d'équipe par défaut utilisé (features):", teamId);
     };
     
     fetchDefaultTeamId();

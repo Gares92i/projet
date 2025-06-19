@@ -1,7 +1,7 @@
 import { ProjectMilestone } from '@/types/project';
 
 // Base de données simulée pour les jalons
-let milestonesDB: Record<string, ProjectMilestone[]> = {};
+const milestonesDB: Record<string, ProjectMilestone[]> = {};
 
 // Obtenir tous les jalons d'un projet
 export const getMilestonesByProjectId = async (projectId: string): Promise<ProjectMilestone[]> => {

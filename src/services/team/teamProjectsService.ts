@@ -36,7 +36,7 @@ const getProjectById = async (id: string) => {
 };
 
 // Initialize team members data
-let teamMembersData: LegacyTeamMember[] = loadTeamMembersFromStorage();
+const teamMembersData: LegacyTeamMember[] = loadTeamMembersFromStorage();
 
 // Get project names from IDs
 export const getProjectNamesFromIds = async (projectIds: string[]): Promise<string[]> => {

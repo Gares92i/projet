@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getArchitectInfo } from "@/components/services/reportService";
+import { getArchitectInfo } from "@/services/reportService";
 import { getProjectById } from "@/services/projectService";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";

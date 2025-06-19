@@ -24,9 +24,9 @@ import AuthGuard from "@/components/guards/AuthGuard";
 import GuestGuard from "@/components/guards/GuestGuard";
 import Chat from "@/pages/Chat";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import ProjectDescriptif from "./pages/ProjectDescriptif";
+import ProjectDescriptif from "../pages/ProjectDescriptif";
 import { useEffect } from 'react';
-import { getOrCreateDefaultTeam, initializeDataSync, setUseLocalMode } from './services/teamService';
+// import { getOrCreateDefaultTeam, initializeDataSync, setUseLocalMode } from '../services/teamService'; // Removed unused imports
 
 function App() {
   

@@ -15,7 +15,7 @@ import { useParams } from "react-router-dom";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { uploadAnnotation, } from '@/services/storageService';
 // Ajoutez cet import
-import { deleteDocument, deleteAnnotation, updateDocument } from '../../services/annotationService';
+import { deleteAnnotation } from '../../services/annotationService'; // Removed deleteDocument, updateDocument
 
 import html2canvas from 'html2canvas';
 
@@ -297,38 +297,38 @@ export const PlanViewerPage = () => {
   );
 
   // Ajoutez cette fonction avant le return
-const handleDeleteDocument = async (documentId: string) => {
-  try {
-    if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce document ?")) {
-      return;
-    }
+// const handleDeleteDocument = async (documentId: string) => {
+//   try {
+//     if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce document ?")) {
+//       return;
+//     }
 
-    // Supprimer le document dans le service
-    const success = await deleteDocument(projectId, documentId);
+//     // Supprimer le document dans le service
+//     // const success = await deleteDocument(projectId, documentId); // Commented out
 
-    if (success) {
-      // Mettre à jour l'état local
-      const updatedDocs = documents.filter((doc) => doc.id !== documentId);
-      setDocuments(updatedDocs);
+//     // if (success) {
+//     //   // Mettre à jour l'état local
+//     //   const updatedDocs = documents.filter((doc) => doc.id !== documentId);
+//     //   setDocuments(updatedDocs);
 
-      // Si le document actif a été supprimé, sélectionner un autre ou null
-      if (activeDocument?.id === documentId) {
-        if (updatedDocs.length > 0) {
-          handleSelectDocument(updatedDocs[0]);
-        } else {
-          handleSelectDocument(null); // Assurez-vous que cette fonction gère le cas null
-        }
-      }
+//     //   // Si le document actif a été supprimé, sélectionner un autre ou null
+//     //   if (activeDocument?.id === documentId) {
+//     //     if (updatedDocs.length > 0) {
+//     //       handleSelectDocument(updatedDocs[0]);
+//     //     } else {
+//     //       handleSelectDocument(null); // Assurez-vous que cette fonction gère le cas null
+//     //     }
+//     //   }
 
-      toast.success("Document supprimé avec succès");
-    } else {
-      toast.error("Erreur lors de la suppression du document");
-    }
-  } catch (error) {
-    console.error("Erreur lors de la suppression du document:", error);
-    toast.error("Erreur lors de la suppression du document");
-  }
-};
+//     //   toast.success("Document supprimé avec succès");
+//     // } else {
+//     //   toast.error("Erreur lors de la suppression du document");
+//     // }
+//   } catch (error) {
+//     console.error("Erreur lors de la suppression du document:", error);
+//     toast.error("Erreur lors de la suppression du document");
+//   }
+// };
 
   // Ajouter cette fonction adaptateur après la déclaration des autres fonctions
 
@@ -449,7 +449,7 @@ const captureViewer = async (viewerRef, annotations, documentId) => {
                 activeDocument={activeDocument}
                 onSelectDocument={handleSelectDocument}
                 onAddDocument={handleOpenFileSelector}
-                onDeleteDocument={handleDeleteDocument} // Ajoutez cette ligne ici aussi
+                // onDeleteDocument={handleDeleteDocument} // Commented out
               />
               <div className="p-2 border-t">
                 <Button
@@ -517,7 +517,7 @@ const captureViewer = async (viewerRef, annotations, documentId) => {
                     <DocumentsSidebar
                       documents={documents}
                       activeDocument={activeDocument}
-                      onDeleteDocument={handleDeleteDocument}
+                      // onDeleteDocument={handleDeleteDocument} // Commented out
                       onSelectDocument={(doc) => {
                         handleSelectDocument(doc);
                         setDocumentsOpen(false);
@@ -562,7 +562,7 @@ const captureViewer = async (viewerRef, annotations, documentId) => {
               onRepositionAnnotation={handleRepositionAnnotation}
               // Ajoutez ces nouvelles props
               captureViewerFn={captureViewer}
-              updateDocumentFn={updateDocument}
+              // updateDocumentFn={updateDocument} // Commented out
             />
           </div>
 

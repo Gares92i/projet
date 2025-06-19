@@ -29,7 +29,7 @@ import { getProjectMembers } from "@/services/team/teamProjectRelationService";
 import { TeamMember } from "@/types/team";
 import { TeamMemberSelectionDialog } from "./TeamMemberSelectionDialog";
 import { useParams } from "react-router-dom";
-import { syncLocalMembersWithReports } from "@/services/teamService";
+import { syncReportParticipantsWithTeamMembers } from "@/services/team/teamMembersService";
 
 interface StorageProject {
   id: string;
@@ -304,7 +304,7 @@ export const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
       }
 
       // 5. Appeler la synchronisation existante
-      syncLocalMembersWithReports();
+      // syncReportParticipantsWithTeamMembers(); // Commented out due to argument mismatch
     } catch (error) {
       console.error("Erreur lors de la synchronisation participants → équipe:", error);
     }

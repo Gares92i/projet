@@ -111,7 +111,7 @@ const Clients = () => {
   // Trier les clients
   const handleSort = (option: string) => {
     setSortOption(option);
-    let sorted = [...filteredClients];
+    const sorted = [...filteredClients];
     
     switch (option) {
       case "name-asc":

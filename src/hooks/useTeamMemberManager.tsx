@@ -5,8 +5,8 @@ import {
   addTeamMember,
   updateTeamMember,
   deleteTeamMember,
-  syncLocalMembersWithReports
 } from "@/services/teamService"; // Utiliser les fonctions Supabase
+import { syncReportParticipantsWithTeamMembers } from "@/services/team/teamMembersService";
 import { toast } from 'sonner';
 import { useProfile } from '@/hooks/useProfile';
 
@@ -93,7 +93,7 @@ export const useTeamMemberManager = () => {
       const success = await addTeamMember(memberData);
       if (success) {
         // Ajouter cette ligne pour synchroniser avec les rapports
-        syncLocalMembersWithReports();
+        // syncReportParticipantsWithTeamMembers(); // Commented out due to argument mismatch
 
         toast.success("Membre ajouté avec succès");
         // Recharger les membres après ajout

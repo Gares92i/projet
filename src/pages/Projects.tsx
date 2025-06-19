@@ -49,8 +49,8 @@ import { toast } from "sonner";
 import {
   getAllProjects,
   addProject,
-  addProjectToMember,
 } from "@/services/projectService";
+import { assignMemberToProject } from "@/services/team/teamProjectRelationService";
 import { TeamMember } from "@/types/team";
 import { getAllTeamMembers } from "@/services/team/legacyTeamService";
 import { getAllClients, ClientData } from "@/components/services/clientService";
@@ -237,7 +237,7 @@ const Projects = () => {
         // Ajouter le projet à chaque membre
         await Promise.allSettled(
           selectedTeamMembers.map(memberId => 
-            addProjectToMember(memberId, newProjectId.id)
+            assignMemberToProject(memberId, newProjectId.id)
           )
         );
       }

@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addReport, getReportById, updateReport } from "@/components/services/reportService";
+import { addReport, getReportById, updateReport } from "@/services/reportService";
 import { getProjectById } from "@/services/projectService";
 import { Observation, Recommendation, Participant, SiteVisitReport,Annotation } from "@/types";
 import { ProjectCardProps } from "@/components/ProjectCard";

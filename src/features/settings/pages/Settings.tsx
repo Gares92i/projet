@@ -16,7 +16,7 @@ import { HeaderFooterEditor } from "@/components/settings/HeaderFooterEditor";
 import { ColorPicker } from "@/components/settings/ColorPicker";
 import { ThemeSelector } from "@/components/team/ThemeSelector";
 import { toast } from "sonner";
-import { saveArchitectInfo, getArchitectInfo } from "@/components/services/reportService";
+import { saveArchitectInfo, getArchitectInfo } from "@/services/reportService";
 
 const Settings = () => {
   const [selectedTab, setSelectedTab] = useState("account");

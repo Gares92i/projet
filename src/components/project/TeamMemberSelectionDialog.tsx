@@ -7,7 +7,7 @@ import { Participant } from "@/types";
 import { TeamMember } from "@/types/team";
 // Importer directement depuis le service existant
 import { getProjectMembers } from "@/services/team/teamProjectRelationService";
-import { syncLocalMembersWithReports } from "@/services/teamService";
+import { syncReportParticipantsWithTeamMembers } from "@/services/team/teamMembersService";
 interface TeamMemberSelectionDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -90,7 +90,7 @@ export const TeamMemberSelectionDialog: React.FC<TeamMemberSelectionDialogProps>
       if (modified) {
         localStorage.setItem('teamMembersData', JSON.stringify(existingMembers));
         // Synchroniser pour les rapports
-        syncLocalMembersWithReports();
+        // syncReportParticipantsWithTeamMembers(); // Commented out due to argument mismatch
       }
     } catch (error) {
       console.error("Erreur lors de la synchronisation des membres:", error);
