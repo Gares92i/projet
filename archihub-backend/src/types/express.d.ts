@@ -1,12 +1,10 @@
-import 'express';
+import { Request } from 'express';
 
-declare global {
-  namespace Express {
-    interface Request {
-      auth?: {
-        userId: string;
-        isAuthenticated: boolean;
-      };
-    }
-  }
+export interface RequestWithAuth extends Request {
+  auth?: {
+    userId: string;
+    isAuthenticated: boolean;
+  };
+  userId?: string; // Ajouté par Clerk
+  session?: any; // Ajouté par Clerk
 }

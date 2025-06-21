@@ -11,21 +11,27 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'clerk_user_id' })
-  clerkUserId: string;
+  @Column({ unique: true })
+  clerkId: string;
+
+  @Column({ nullable: true })
+  firstName: string;
+
+  @Column({ nullable: true })
+  lastName: string;
 
   @Column({ nullable: true })
   email: string;
 
   @Column({ nullable: true })
-  name: string;
+  profileImageUrl: string;
 
-  @Column({ type: 'jsonb', nullable: true, default: '[]' })
+  @Column('simple-array', { default: '[]' })
   roles: string[];
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn()
   updatedAt: Date;
 }
