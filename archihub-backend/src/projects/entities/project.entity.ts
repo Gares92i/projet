@@ -18,56 +18,49 @@ export class Project {
   @Column()
   name: string;
 
-  @Column({ nullable: true, name: 'client_id' })
-  clientId: string;
+  @Column({ nullable: true })
+  description: string;
 
-  @ManyToOne(() => Client, (client) => client.projects, { nullable: true })
-  @JoinColumn({ name: 'client_id' })
-  client: Client;
+  @Column({ nullable: true })
+  address: string;
 
-  @Column({ nullable: true, type: 'text' })
-  location: string;
+  @Column({ nullable: true })
+  city: string;
 
-  @Column({ nullable: true, name: 'start_date' })
-  startDate: Date;
+  @Column({ nullable: true })
+  postalCode: string;
 
-  @Column({ nullable: true, name: 'end_date' })
-  endDate: Date;
-
-  @Column({ nullable: true, length: 50 })
+  @Column({ nullable: true })
   status: string;
 
-  @Column({ nullable: true, default: 0 })
-  progress: number;
+  @Column({ nullable: true })
+  budget: number;
 
-  @Column({ nullable: true, name: 'project_type', length: 100 })
-  projectType: string;
+  @Column({ nullable: true })
+  startDate: Date;
 
-  @Column({
-    nullable: true,
-    name: 'project_area',
-    type: 'numeric',
-    precision: 10,
-    scale: 2,
-  })
-  projectArea: number;
+  @Column({ nullable: true })
+  endDate: Date;
 
-  @Column({ nullable: true, name: 'room_count' })
-  roomCount: number;
+  @Column({ nullable: true })
+  thumbnail: string;
 
-  @Column({ nullable: true, name: 'image_url', type: 'text' })
-  imageUrl: string;
+  @Column({ nullable: true })
+  ownerId: string; // ID de l'utilisateur Clerk propriétaire
 
-  @Column({ nullable: true, name: 'created_by_user_id' })
-  createdByUserId: string;
+  @Column('simple-array', { nullable: true })
+  tags: string[];
 
-  @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'created_by_user_id' })
-  createdByUser: User;
+  @ManyToOne(() => Client, { nullable: true })
+  @JoinColumn({ name: 'clientId' })
+  client: Client;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @Column({ nullable: true })
+  clientId: string;
+
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn()
   updatedAt: Date;
 }

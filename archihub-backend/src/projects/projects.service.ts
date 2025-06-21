@@ -17,83 +17,74 @@ export class ProjectsService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  // Créer un nouveau projet
-  async create(createProjectDto: CreateProjectDto, userId?: string): Promise<Project> {
-    try {
-      const project = this.projectsRepository.create({
-        ...createProjectDto,
-        createdByUserId: userId,
-      });
+  async create(createProjectDto: CreateProjectDto, userId: string): Promise<Project> {
+    const project = this.projectsRepository.create({
+      ...createProjectDto,
+      ownerId: userId,
+    });
 
-      const savedProject = await this.projectsRepository.save(project);
+    const savedProject = await this.projectsRepository.save(project);
 
-      // Invalider le cache lorsqu'un projet est créé
-      await this.cacheManager.del('all_projects');
-      if (createProjectDto.clientId) {
-        await this.cacheManager.del(`client_projects_${createProjectDto.clientId}`);
-      }
-
-      return savedProject;
-    } catch (error) {
-      this.logger.error(`Erreur lors de la création du projet: ${error.message}`, error.stack);
-      throw error;
+    // Invalidate cache when creating new project
+    await this.cacheManager.del(`projects_all_${userId}`);
+    if (createProjectDto.clientId) {
+      await this.cacheManager.del(`projects_client_${createProjectDto.clientId}`);
     }
+
+    return savedProject;
   }
 
-  // Récupérer tous les projets
   async findAll(clientId?: string, userId?: string): Promise<Project[]> {
     try {
-      // Clé de cache différente selon les paramètres
-      const cacheKey = clientId
-        ? `client_projects_${clientId}`
-        : userId
-          ? `user_projects_${userId}`
-          : 'all_projects';
+      // Cache key based on parameters
+      const cacheKey = clientId ? `projects_client_${clientId}` : `projects_all_${userId}`;
 
-      // Essayer d'abord de récupérer du cache
+      // Try to get from cache first
       const cachedProjects = await this.cacheManager.get<Project[]>(cacheKey);
       if (cachedProjects) {
+        this.logger.log(`Retrieved projects from cache (${cacheKey})`);
         return cachedProjects;
       }
 
-      // Si pas dans le cache, requêter la base de données
-      const query = this.projectsRepository
-        .createQueryBuilder('project')
-        .leftJoinAndSelect('project.client', 'client')
-        .orderBy('project.createdAt', 'DESC');
+      // Query construction
+      const queryBuilder = this.projectsRepository.createQueryBuilder('project');
 
+      // Filter by client if provided
       if (clientId) {
-        query.where('project.clientId = :clientId', { clientId });
+        queryBuilder.where('project.clientId = :clientId', { clientId });
       }
 
+      // Filter by owner if provided
       if (userId) {
-        query.andWhere('project.createdByUserId = :userId', { userId });
+        if (clientId) {
+          queryBuilder.andWhere('project.ownerId = :userId', { userId });
+        } else {
+          queryBuilder.where('project.ownerId = :userId', { userId });
+        }
       }
 
-      const projects = await query.getMany();
+      queryBuilder.orderBy('project.updatedAt', 'DESC');
 
-      // Mettre en cache pour les futures requêtes
-      await this.cacheManager.set(cacheKey, projects);
+      const projects = await queryBuilder.getMany();
+
+      // Store in cache for 5 minutes
+      await this.cacheManager.set(cacheKey, projects, 300000);
 
       return projects;
     } catch (error) {
-      this.logger.error(
-        `Erreur lors de la récupération des projets: ${error.message}`,
-        error.stack,
-      );
+      this.logger.error(`Error fetching projects: ${error.message}`, error.stack);
       throw error;
     }
   }
 
-  // Récupérer un projet spécifique par ID
   async findOne(id: string): Promise<Project> {
     try {
-      // Clé de cache pour un projet spécifique
       const cacheKey = `project_${id}`;
 
-      // Essayer d'abord de récupérer du cache
+      // Try to get from cache first
       const cachedProject = await this.cacheManager.get<Project>(cacheKey);
       if (cachedProject) {
+        this.logger.log(`Retrieved project from cache (${cacheKey})`);
         return cachedProject;
       }
 
@@ -103,78 +94,64 @@ export class ProjectsService {
       });
 
       if (!project) {
-        throw new NotFoundException(`Projet avec ID ${id} non trouvé`);
+        throw new NotFoundException(`Project with ID ${id} not found`);
       }
 
-      // Mettre en cache pour les futures requêtes
-      await this.cacheManager.set(cacheKey, project);
+      // Store in cache for 5 minutes
+      await this.cacheManager.set(cacheKey, project, 300000);
 
       return project;
     } catch (error) {
-      this.logger.error(`Erreur lors de la récupération du projet: ${error.message}`, error.stack);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      this.logger.error(`Error fetching project ${id}: ${error.message}`, error.stack);
       throw error;
     }
   }
 
-  // Mettre à jour un projet existant
   async update(id: string, updateProjectDto: UpdateProjectDto): Promise<Project> {
     try {
       const project = await this.findOne(id);
-      Object.assign(project, updateProjectDto);
 
-      const updatedProject = await this.projectsRepository.save(project);
+      // Update the project
+      await this.projectsRepository.update(id, updateProjectDto);
 
-      // Invalider les caches
+      // Invalidate caches
       await this.cacheManager.del(`project_${id}`);
-      await this.cacheManager.del('all_projects');
+      await this.cacheManager.del(`projects_all_${project.ownerId}`);
       if (project.clientId) {
-        await this.cacheManager.del(`client_projects_${project.clientId}`);
-      }
-      if (updateProjectDto.clientId && updateProjectDto.clientId !== project.clientId) {
-        await this.cacheManager.del(`client_projects_${updateProjectDto.clientId}`);
+        await this.cacheManager.del(`projects_client_${project.clientId}`);
       }
 
-      return updatedProject;
+      // Get updated project
+      return this.findOne(id);
     } catch (error) {
-      this.logger.error(`Erreur lors de la mise à jour du projet: ${error.message}`, error.stack);
+      this.logger.error(`Error updating project ${id}: ${error.message}`, error.stack);
       throw error;
     }
   }
 
-  // Supprimer un projet
   async remove(id: string): Promise<void> {
     try {
+      // Get project before deletion to invalidate caches
       const project = await this.findOne(id);
 
-      await this.projectsRepository.remove(project);
+      const result = await this.projectsRepository.delete(id);
 
-      // Invalider les caches
+      if (result.affected === 0) {
+        throw new NotFoundException(`Project with ID ${id} not found`);
+      }
+
+      // Invalidate caches
       await this.cacheManager.del(`project_${id}`);
-      await this.cacheManager.del('all_projects');
+      await this.cacheManager.del(`projects_all_${project.ownerId}`);
       if (project.clientId) {
-        await this.cacheManager.del(`client_projects_${project.clientId}`);
+        await this.cacheManager.del(`projects_client_${project.clientId}`);
       }
     } catch (error) {
-      this.logger.error(`Erreur lors de la suppression du projet: ${error.message}`, error.stack);
+      this.logger.error(`Error removing project ${id}: ${error.message}`, error.stack);
       throw error;
-    }
-  }
-
-  // Méthode de test de connexion
-  async testConnection(): Promise<{ success: boolean; message: string }> {
-    try {
-      const count = await this.projectsRepository.count();
-      return {
-        success: true,
-        message: `Connexion réussie! Nombre de projets: ${count}`,
-      };
-    } catch (error: unknown) {
-      console.error('Erreur de connexion:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
-      return {
-        success: false,
-        message: `Erreur de connexion: ${errorMessage}`,
-      };
     }
   }
 }

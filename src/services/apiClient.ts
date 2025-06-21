@@ -1,81 +1,88 @@
-import { useAuth } from "@clerk/clerk-react";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+// Configuration de base pour les requêtes API
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
-interface ApiClientOptions {
-  baseUrl?: string;
-  headers?: Record<string, string>;
+export interface ApiResponse<T> {
+  data: T;
+  message?: string;
+  status: number;
 }
 
-class ApiClient {
-  private baseUrl: string;
-  private headers: Record<string, string>;
-
-  constructor(options: ApiClientOptions = {}) {
-    this.baseUrl = options.baseUrl || '/api';
-    this.headers = {
+export const createApiClient = (): {
+  get: <T>(url: string, config?: AxiosRequestConfig) => Promise<T>;
+  post: <T>(url: string, data?: any, config?: AxiosRequestConfig) => Promise<T>;
+  put: <T>(url: string, data?: any, config?: AxiosRequestConfig) => Promise<T>;
+  delete: <T>(url: string, config?: AxiosRequestConfig) => Promise<T>;
+  patch: <T>(url: string, data?: any, config?: AxiosRequestConfig) => Promise<T>;
+} => {
+  const instance: AxiosInstance = axios.create({
+    baseURL: API_BASE_URL,
+    headers: {
       'Content-Type': 'application/json',
-      ...options.headers,
-    };
-  }
+    },
+    timeout: 15000, // 15 secondes
+  });
 
-  async get<T>(endpoint: string): Promise<T> {
-    // Pour le développement, simuler des délais de réseau
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    // Vérifier si les données sont dans localStorage
-    const storageKey = this.getStorageKey(endpoint);
-    const stored = localStorage.getItem(storageKey);
-    
-    if (stored) {
-      return JSON.parse(stored) as T;
+  // Intercepteur pour ajouter le token d'authentification
+  instance.interceptors.request.use(async (config) => {
+    try {
+      // Récupérer le token depuis le localStorage ou autre mécanisme d'authentification
+      const token = localStorage.getItem('auth_token');
+      
+      if (token && config.headers) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'ajout du token d'authentification:", error);
     }
     
-    throw new Error(`Données non trouvées pour ${endpoint}`);
-  }
+    return config;
+  });
 
-  async post<T>(endpoint: string, data: any): Promise<T> {
-    // Simuler un délai de réseau
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Stocker les données pour les récupérer plus tard
-    const storageKey = this.getStorageKey(endpoint);
-    const result = { ...data, id: `${Date.now()}` };
-    localStorage.setItem(storageKey, JSON.stringify(result));
-    
-    return result as T;
-  }
+  // Intercepteur de réponse pour standardiser le traitement des erreurs
+  instance.interceptors.response.use(
+    (response: AxiosResponse) => {
+      return response.data;
+    },
+    (error) => {
+      // Gérer les différents types d'erreurs
+      if (error.response) {
+        // La requête a été faite et le serveur a répondu avec un code d'erreur
+        console.error('Erreur de réponse:', error.response.status, error.response.data);
+        
+        // Gérer les erreurs d'authentification
+        if (error.response.status === 401) {
+          // Rediriger vers la page de connexion ou rafraîchir le token
+          console.log('Session expirée, redirection vers la page de connexion');
+          localStorage.removeItem('auth_token');
+          window.location.href = '/login';
+        }
+      } else if (error.request) {
+        // La requête a été faite mais aucune réponse n'a été reçue
+        console.error('Erreur de requête:', error.request);
+      } else {
+        // Une erreur s'est produite lors de la configuration de la requête
+        console.error('Erreur:', error.message);
+      }
+      
+      return Promise.reject(error);
+    }
+  );
 
-  async put<T>(endpoint: string, data: any): Promise<T> {
-    // Simuler un délai de réseau
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Mettre à jour les données existantes
-    const storageKey = this.getStorageKey(endpoint);
-    localStorage.setItem(storageKey, JSON.stringify(data));
-    
-    return data as T;
-  }
+  return {
+    get: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => 
+      instance.get(url, config),
+    post: <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => 
+      instance.post(url, data, config),
+    put: <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => 
+      instance.put(url, data, config),
+    delete: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => 
+      instance.delete(url, config),
+    patch: <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => 
+      instance.patch(url, data, config)
+  };
+};
 
-  async delete(endpoint: string): Promise<boolean> {
-    // Simuler un délai de réseau
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Supprimer les données
-    const storageKey = this.getStorageKey(endpoint);
-    localStorage.removeItem(storageKey);
-    
-    return true;
-  }
-
-  private getStorageKey(endpoint: string): string {
-    return `api-${endpoint.replace(/\//g, '-')}`;
-  }
-}
-
-export function createApiClient(options?: ApiClientOptions): ApiClient {
-  return new ApiClient(options);
-}
-
-// Exporter une instance par défaut pour faciliter l'utilisation
-export const apiClient = new ApiClient();
+// Créer une instance par défaut pour une utilisation directe
+export const apiClient = createApiClient();

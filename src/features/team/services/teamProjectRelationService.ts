@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
-import type { ProjectCardProps } from '@/components/ProjectCard';
-import { TeamMember, TeamMemberRole, TeamMemberStatus } from '@/types/team';
+import type { ProjectCardProps } from '@/features/projects/components/ProjectCard';
+import { TeamMember, TeamMemberRole, TeamMemberStatus } from '@/features/team/types/team';
 
 // Fonction utilitaire pour normaliser les ID de membres
 function normalizeTeamMemberIds(members: any[] | string[] | undefined): string[] {

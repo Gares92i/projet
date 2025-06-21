@@ -5,6 +5,7 @@ export interface RequestWithAuth extends Request {
     userId: string;
     isAuthenticated: boolean;
   };
-  userId?: string; // Ajouté par Clerk
-  session?: any; // Ajouté par Clerk
+  // Propriétés ajoutées par Clerk
+  userId?: string;
+  session?: any;
 }

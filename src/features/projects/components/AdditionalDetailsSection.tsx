@@ -6,7 +6,7 @@ import { Button } from "@/ui/button";
 import { Pencil } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import * as z from "zod";
-import { SiteVisitReportUploader } from "@/features/projects/components/SiteVisitReportUploader";
+import { SiteVisitReportUploader } from "@/features/reports/components/SiteVisitReportUploader";
 import { toast } from "sonner";
 
 interface AdditionalDetailsSectionProps {

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
+import axios from 'axios';
 
 @Injectable()
 export class AuthService {
@@ -16,10 +17,30 @@ export class AuthService {
         throw new Error('CLERK_SECRET_KEY non trouvée');
       }
 
+      // Vérification simple du token JWT
       const decoded = jwt.verify(token, secretKey);
       return decoded;
     } catch (error) {
       throw new Error(`Erreur de vérification du token: ${error.message}`);
+    }
+  }
+
+  /**
+   * Obtenir les informations utilisateur de Clerk
+   */
+  async getUserInfo(userId: string) {
+    const secretKey = this.configService.get<string>('CLERK_SECRET_KEY');
+    try {
+      const response = await axios.get(`https://api.clerk.com/v1/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${secretKey}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        `Erreur lors de la récupération des informations utilisateur: ${error.message}`,
+      );
     }
   }
 

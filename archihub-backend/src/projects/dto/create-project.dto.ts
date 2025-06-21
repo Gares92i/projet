@@ -1,49 +1,68 @@
-import { IsString, IsOptional, IsNumber, IsUUID, IsDate } from 'class-validator';
-import { Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsUUID,
+  IsNumber,
+  IsDateString,
+  IsArray,
+} from 'class-validator';
 
 export class CreateProjectDto {
+  @ApiProperty({ description: 'Nom du projet' })
+  @IsNotEmpty()
   @IsString()
   name: string;
 
+  @ApiPropertyOptional({ description: 'Description du projet' })
   @IsOptional()
   @IsString()
-  location?: string;
+  description?: string;
 
+  @ApiPropertyOptional({ description: 'Adresse du projet' })
   @IsOptional()
-  @IsUUID()
-  clientId?: string;
+  @IsString()
+  address?: string;
 
+  @ApiPropertyOptional({ description: 'Ville du projet' })
   @IsOptional()
-  @Type(() => Date)
-  @IsDate()
-  startDate?: Date;
+  @IsString()
+  city?: string;
 
+  @ApiPropertyOptional({ description: 'Code postal du projet' })
   @IsOptional()
-  @Type(() => Date)
-  @IsDate()
-  endDate?: Date;
+  @IsString()
+  postalCode?: string;
 
+  @ApiPropertyOptional({ description: 'Statut du projet' })
   @IsOptional()
   @IsString()
   status?: string;
 
+  @ApiPropertyOptional({ description: 'Budget du projet' })
   @IsOptional()
   @IsNumber()
-  progress?: number;
+  budget?: number;
 
+  @ApiPropertyOptional({ description: 'Date de début du projet' })
   @IsOptional()
-  @IsString()
-  projectType?: string;
+  @IsDateString()
+  startDate?: Date;
 
+  @ApiPropertyOptional({ description: 'Date de fin du projet' })
   @IsOptional()
-  @IsNumber()
-  projectArea?: number;
+  @IsDateString()
+  endDate?: Date;
 
+  @ApiPropertyOptional({ description: 'ID du client associé au projet' })
   @IsOptional()
-  @IsNumber()
-  roomCount?: number;
+  @IsUUID()
+  clientId?: string;
 
+  @ApiPropertyOptional({ description: 'Tags du projet' })
   @IsOptional()
-  @IsString()
-  imageUrl?: string;
+  @IsArray()
+  @IsString({ each: true })
+  tags?: string[];
 }

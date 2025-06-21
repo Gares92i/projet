@@ -7,33 +7,25 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
+  Req,
   Logger,
   HttpException,
   HttpStatus,
-  Req,
-  Query,
-  NotFoundException,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
   ApiParam,
+  ApiBearerAuth,
   ApiQuery,
 } from '@nestjs/swagger';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
-import { Request } from 'express';
-
-interface RequestWithAuth extends Request {
-  auth?: {
-    userId: string;
-    isAuthenticated: boolean;
-  };
-}
+import { RequestWithAuth } from '../types/express';
 
 @ApiTags('projects')
 @ApiBearerAuth()
@@ -53,6 +45,9 @@ export class ProjectsController {
   async create(@Body() createProjectDto: CreateProjectDto, @Req() req: RequestWithAuth) {
     try {
       const userId = req.auth?.userId;
+      if (!userId) {
+        throw new HttpException('Utilisateur non authentifié', HttpStatus.UNAUTHORIZED);
+      }
       return await this.projectsService.create(createProjectDto, userId);
     } catch (error) {
       this.logger.error(`Erreur lors de la création du projet: ${error.message}`, error.stack);
@@ -100,8 +95,8 @@ export class ProjectsController {
     try {
       return await this.projectsService.findOne(id);
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      if (error instanceof HttpException) {
+        throw error;
       }
       this.logger.error(`Erreur lors de la récupération du projet: ${error.message}`, error.stack);
       throw new HttpException(
@@ -122,8 +117,8 @@ export class ProjectsController {
     try {
       return await this.projectsService.update(id, updateProjectDto);
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      if (error instanceof HttpException) {
+        throw error;
       }
       this.logger.error(`Erreur lors de la mise à jour du projet: ${error.message}`, error.stack);
       throw new HttpException(
@@ -143,10 +138,10 @@ export class ProjectsController {
   async remove(@Param('id') id: string) {
     try {
       await this.projectsService.remove(id);
-      return { success: true, message: 'Projet supprimé avec succès' };
+      return { message: `Projet avec ID ${id} supprimé avec succès` };
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      if (error instanceof HttpException) {
+        throw error;
       }
       this.logger.error(`Erreur lors de la suppression du projet: ${error.message}`, error.stack);
       throw new HttpException(
