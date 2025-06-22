@@ -34,7 +34,9 @@ import { ClerkAuthMiddleware } from './auth/middleware/clerk-auth.middleware';
         ssl: {
           rejectUnauthorized: false,
         },
-        synchronize: false, // Important: Gardez à false car les tables existent déjà
+        synchronize: false, // Toujours false en production
+        migrationsRun: true,
+        migrations: [__dirname + '/../migrations/**/*.ts'],
         logging: ['query', 'error'],
       }),
       inject: [ConfigService],

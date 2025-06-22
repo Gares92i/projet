@@ -1,14 +1,40 @@
-const jwt = require('jsonwebtoken');
+const axios = require('axios');
+require('dotenv').config();
 
-// Utilisation de votre clé secrète Clerk
-const CLERK_SECRET_KEY = 'sk_test_zpXRshmm4SSnqaZ70RHkg5s0aImEWf5s8EDXECrBXE';
+const CLERK_API_KEY = process.env.CLERK_SECRET_KEY;
+const TEST_USER_ID = 'user_2ypZXnHwTR3NdG5oM3FmQbKW9eM';
 
-const payload = {
-  sub: 'user_test123', // ID utilisateur fictif pour les tests
-  iat: Math.floor(Date.now() / 1000),
-  exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24), // Validité: 24 heures
-};
+async function generateSessionToken() {
+  try {
+    console.log('Tentative de création d\'un token JWT...');
+    
+    // Ajout du paramètre template_name requis
+    const response = await axios.post(
+      `https://api.clerk.com/v1/tokens`,
+      {
+        user_id: TEST_USER_ID,
+        expires_in: 3600,
+        template_name: "verification" // Paramètre obligatoire manquant
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${CLERK_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
-const token = jwt.sign(payload, CLERK_SECRET_KEY);
-console.log('Token JWT pour les tests:');
-console.log(token);
+    console.log('Token JWT pour les tests:');
+    console.log(response.data.jwt);
+  } catch (error) {
+    console.error('Erreur lors de la génération du token:');
+    if (error.response) {
+      console.error('Status:', error.response.status);
+      console.error('Data:', JSON.stringify(error.response.data, null, 2));
+    } else {
+      console.error('Erreur:', error.message);
+    }
+  }
+}
+
+generateSessionToken();
