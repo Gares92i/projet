@@ -7,11 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
   Query,
-  Req,
-  Logger,
-  HttpException,
-  HttpStatus,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -32,8 +29,6 @@ import { RequestWithAuth } from '../types/express';
 @Controller('projects')
 @UseGuards(AuthGuard)
 export class ProjectsController {
-  private readonly logger = new Logger(ProjectsController.name);
-
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Post()
@@ -42,20 +37,14 @@ export class ProjectsController {
   @ApiResponse({ status: 400, description: 'Données invalides.' })
   @ApiResponse({ status: 401, description: 'Non autorisé.' })
   @ApiResponse({ status: 500, description: 'Erreur serveur.' })
-  async create(@Body() createProjectDto: CreateProjectDto, @Req() req: RequestWithAuth) {
-    try {
-      const userId = req.auth?.userId;
-      if (!userId) {
-        throw new HttpException('Utilisateur non authentifié', HttpStatus.UNAUTHORIZED);
-      }
-      return await this.projectsService.create(createProjectDto, userId);
-    } catch (error) {
-      this.logger.error(`Erreur lors de la création du projet: ${error.message}`, error.stack);
-      throw new HttpException(
-        `Erreur lors de la création du projet: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  async create(@Body() createProjectDto: CreateProjectDto, @Request() req: RequestWithAuth) {
+    // Option 1: Utiliser l'opérateur non-null si on est sûr que auth existe grâce à AuthGuard
+    const userId = req.auth!.userId;
+
+    // Option 2: Vérification explicite (plus sûr)
+    // const userId = req.auth?.userId || 'default-user-id';
+
+    return await this.projectsService.create(createProjectDto, userId);
   }
 
   @Get()
@@ -68,20 +57,11 @@ export class ProjectsController {
     required: false,
     description: 'ID du client pour filtrer les projets',
   })
-  async findAll(@Req() req: RequestWithAuth, @Query('clientId') clientId?: string) {
-    try {
-      const userId = req.auth?.userId;
-      return await this.projectsService.findAll(clientId, userId);
-    } catch (error) {
-      this.logger.error(
-        `Erreur lors de la récupération des projets: ${error.message}`,
-        error.stack,
-      );
-      throw new HttpException(
-        `Erreur lors de la récupération des projets: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  async findAll(@Query('clientId') clientId: string, @Request() req: RequestWithAuth) {
+    // Utiliser l'opérateur non-null pour indiquer à TypeScript que auth ne sera jamais undefined
+    const userId = req.auth!.userId;
+
+    return await this.projectsService.findAll(userId);
   }
 
   @Get(':id')
@@ -92,18 +72,7 @@ export class ProjectsController {
   @ApiResponse({ status: 500, description: 'Erreur serveur.' })
   @ApiParam({ name: 'id', description: 'ID du projet' })
   async findOne(@Param('id') id: string) {
-    try {
-      return await this.projectsService.findOne(id);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      this.logger.error(`Erreur lors de la récupération du projet: ${error.message}`, error.stack);
-      throw new HttpException(
-        `Erreur lors de la récupération du projet: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return await this.projectsService.findOne(id);
   }
 
   @Patch(':id')
@@ -114,18 +83,7 @@ export class ProjectsController {
   @ApiResponse({ status: 500, description: 'Erreur serveur.' })
   @ApiParam({ name: 'id', description: 'ID du projet' })
   async update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    try {
-      return await this.projectsService.update(id, updateProjectDto);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      this.logger.error(`Erreur lors de la mise à jour du projet: ${error.message}`, error.stack);
-      throw new HttpException(
-        `Erreur lors de la mise à jour du projet: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return await this.projectsService.update(id, updateProjectDto);
   }
 
   @Delete(':id')
@@ -136,18 +94,6 @@ export class ProjectsController {
   @ApiResponse({ status: 500, description: 'Erreur serveur.' })
   @ApiParam({ name: 'id', description: 'ID du projet' })
   async remove(@Param('id') id: string) {
-    try {
-      await this.projectsService.remove(id);
-      return { message: `Projet avec ID ${id} supprimé avec succès` };
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      this.logger.error(`Erreur lors de la suppression du projet: ${error.message}`, error.stack);
-      throw new HttpException(
-        `Erreur lors de la suppression du projet: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return await this.projectsService.remove(id);
   }
 }

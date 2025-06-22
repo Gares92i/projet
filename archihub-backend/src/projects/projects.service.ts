@@ -1,11 +1,17 @@
-import { Injectable, Logger, NotFoundException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
 import { Project } from './entities/project.entity';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class ProjectsService {
@@ -13,100 +19,84 @@ export class ProjectsService {
 
   constructor(
     @InjectRepository(Project)
-    private projectsRepository: Repository<Project>,
+    private readonly projectRepository: Repository<Project>,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async create(createProjectDto: CreateProjectDto, userId: string): Promise<Project> {
-    const project = this.projectsRepository.create({
-      ...createProjectDto,
-      ownerId: userId,
-    });
+    try {
+      // Ne pas utiliser l'ID Clerk directement, enlevez le createdByUserId pour l'instant
+      const project = this.projectRepository.create({
+        ...createProjectDto,
+        // createdByUserId: userId, // Commentez cette ligne
+      });
 
-    const savedProject = await this.projectsRepository.save(project);
+      const savedProject = await this.projectRepository.save(project);
 
-    // Invalidate cache when creating new project
-    await this.cacheManager.del(`projects_all_${userId}`);
-    if (createProjectDto.clientId) {
-      await this.cacheManager.del(`projects_client_${createProjectDto.clientId}`);
+      // Invalider le cache
+      await this.cacheManager.del(`projects_all_${userId}`);
+
+      return savedProject;
+    } catch (error) {
+      this.logger.error(`Erreur lors de la création du projet: ${error.message}`);
+      throw new InternalServerErrorException(
+        `Erreur lors de la création du projet: ${error.message}`,
+      );
     }
-
-    return savedProject;
   }
 
-  async findAll(clientId?: string, userId?: string): Promise<Project[]> {
+  async findAll(userId?: string): Promise<Project[]> {
     try {
-      // Cache key based on parameters
-      const cacheKey = clientId ? `projects_client_${clientId}` : `projects_all_${userId}`;
+      let cacheKey = 'projects_all';
+      if (userId) {
+        cacheKey = `projects_all_${userId}`;
+      }
 
-      // Try to get from cache first
+      // Vérifier le cache
       const cachedProjects = await this.cacheManager.get<Project[]>(cacheKey);
       if (cachedProjects) {
-        this.logger.log(`Retrieved projects from cache (${cacheKey})`);
         return cachedProjects;
       }
 
-      // Query construction
-      const queryBuilder = this.projectsRepository.createQueryBuilder('project');
+      // Construire la requête
+      const queryBuilder = this.projectRepository.createQueryBuilder('project');
 
-      // Filter by client if provided
-      if (clientId) {
-        queryBuilder.where('project.clientId = :clientId', { clientId });
-      }
-
-      // Filter by owner if provided
-      if (userId) {
-        if (clientId) {
-          queryBuilder.andWhere('project.ownerId = :userId', { userId });
-        } else {
-          queryBuilder.where('project.ownerId = :userId', { userId });
-        }
-      }
-
-      queryBuilder.orderBy('project.updatedAt', 'DESC');
+      // Commenter temporairement cette partie pour tester sans filtre utilisateur
+      // if (userId) {
+      //   queryBuilder.where('project.created_by_user_id = :userId', { userId });
+      // }
 
       const projects = await queryBuilder.getMany();
 
-      // Store in cache for 5 minutes
-      await this.cacheManager.set(cacheKey, projects, 300000);
+      // Mettre en cache
+      await this.cacheManager.set(cacheKey, projects, 300);
 
       return projects;
     } catch (error) {
-      this.logger.error(`Error fetching projects: ${error.message}`, error.stack);
-      throw error;
+      this.logger.error(`Erreur lors de la récupération des projets: ${error.message}`);
+      throw new InternalServerErrorException(
+        `Erreur lors de la récupération des projets: ${error.message}`,
+      );
     }
   }
 
   async findOne(id: string): Promise<Project> {
     try {
-      const cacheKey = `project_${id}`;
-
-      // Try to get from cache first
-      const cachedProject = await this.cacheManager.get<Project>(cacheKey);
-      if (cachedProject) {
-        this.logger.log(`Retrieved project from cache (${cacheKey})`);
-        return cachedProject;
-      }
-
-      const project = await this.projectsRepository.findOne({
-        where: { id },
-        relations: ['client'],
-      });
+      const project = await this.projectRepository.findOne({ where: { id } });
 
       if (!project) {
-        throw new NotFoundException(`Project with ID ${id} not found`);
+        throw new NotFoundException(`Projet avec ID ${id} non trouvé`);
       }
-
-      // Store in cache for 5 minutes
-      await this.cacheManager.set(cacheKey, project, 300000);
 
       return project;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      this.logger.error(`Error fetching project ${id}: ${error.message}`, error.stack);
-      throw error;
+      this.logger.error(`Erreur lors de la récupération du projet: ${error.message}`);
+      throw new InternalServerErrorException(
+        `Erreur lors de la récupération du projet: ${error.message}`,
+      );
     }
   }
 
@@ -114,44 +104,44 @@ export class ProjectsService {
     try {
       const project = await this.findOne(id);
 
-      // Update the project
-      await this.projectsRepository.update(id, updateProjectDto);
+      // Mettre à jour les propriétés
+      Object.assign(project, updateProjectDto);
 
-      // Invalidate caches
-      await this.cacheManager.del(`project_${id}`);
-      await this.cacheManager.del(`projects_all_${project.ownerId}`);
-      if (project.clientId) {
-        await this.cacheManager.del(`projects_client_${project.clientId}`);
-      }
+      const updatedProject = await this.projectRepository.save(project);
 
-      // Get updated project
-      return this.findOne(id);
+      // Invalider le cache
+      await this.cacheManager.del(`projects_all`);
+      await this.cacheManager.del(`projects_all_${project.createdByUserId}`); // Utiliser createdByUserId
+
+      return updatedProject;
     } catch (error) {
-      this.logger.error(`Error updating project ${id}: ${error.message}`, error.stack);
-      throw error;
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      this.logger.error(`Erreur lors de la mise à jour du projet: ${error.message}`);
+      throw new InternalServerErrorException(
+        `Erreur lors de la mise à jour du projet: ${error.message}`,
+      );
     }
   }
 
   async remove(id: string): Promise<void> {
     try {
-      // Get project before deletion to invalidate caches
       const project = await this.findOne(id);
 
-      const result = await this.projectsRepository.delete(id);
+      await this.projectRepository.remove(project);
 
-      if (result.affected === 0) {
-        throw new NotFoundException(`Project with ID ${id} not found`);
-      }
-
-      // Invalidate caches
-      await this.cacheManager.del(`project_${id}`);
-      await this.cacheManager.del(`projects_all_${project.ownerId}`);
-      if (project.clientId) {
-        await this.cacheManager.del(`projects_client_${project.clientId}`);
-      }
+      // Invalider le cache
+      await this.cacheManager.del(`projects_all`);
+      await this.cacheManager.del(`projects_all_${project.createdByUserId}`); // Utiliser createdByUserId
     } catch (error) {
-      this.logger.error(`Error removing project ${id}: ${error.message}`, error.stack);
-      throw error;
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      this.logger.error(`Erreur lors de la suppression du projet: ${error.message}`);
+      throw new InternalServerErrorException(
+        `Erreur lors de la suppression du projet: ${error.message}`,
+      );
     }
   }
 }
