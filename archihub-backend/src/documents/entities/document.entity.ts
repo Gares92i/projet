@@ -4,11 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
-import { Project } from '../../projects/entities/project.entity';
-import { User } from '../../users/entities/user.entity';
 
 @Entity('documents')
 export class Document {
@@ -18,29 +14,22 @@ export class Document {
   @Column({ name: 'project_id' })
   projectId: string;
 
-  @ManyToOne(() => Project, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'project_id' })
-  project: Project;
-
   @Column()
   name: string;
 
-  @Column({ nullable: true, name: 'file_type', length: 50 })
+  @Column({ name: 'file_type', nullable: true })
   fileType: string;
 
-  @Column({ name: 'storage_url', type: 'text' })
+  @Column({ name: 'storage_url' })
   storageUrl: string;
 
-  @Column({ nullable: true, name: 'uploaded_by_user_id' })
+  @Column({ name: 'uploaded_by_user_id', nullable: true })
   uploadedByUserId: string;
-
-  @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'uploaded_by_user_id' })
-  uploadedByUser: User;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
 }

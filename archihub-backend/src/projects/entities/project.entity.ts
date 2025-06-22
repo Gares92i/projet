@@ -4,11 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
-import { Client } from '../../clients/entities/client.entity';
-import { User } from '../../users/entities/user.entity';
 
 @Entity('projects')
 export class Project {
@@ -18,49 +14,43 @@ export class Project {
   @Column()
   name: string;
 
-  @Column({ nullable: true })
-  description: string;
+  @Column({ name: 'client_id', nullable: true })
+  clientId: string;
 
   @Column({ nullable: true })
-  address: string;
+  location: string;
 
-  @Column({ nullable: true })
-  city: string;
+  @Column({ name: 'start_date', nullable: true })
+  startDate: Date;
 
-  @Column({ nullable: true })
-  postalCode: string;
+  @Column({ name: 'end_date', nullable: true })
+  endDate: Date;
 
   @Column({ nullable: true })
   status: string;
 
-  @Column({ nullable: true })
-  budget: number;
+  @Column({ nullable: true, default: 0 })
+  progress: number;
 
-  @Column({ nullable: true })
-  startDate: Date;
+  @Column({ name: 'project_type', nullable: true })
+  projectType: string;
 
-  @Column({ nullable: true })
-  endDate: Date;
+  @Column({ name: 'project_area', nullable: true })
+  projectArea: number;
 
-  @Column({ nullable: true })
-  thumbnail: string;
+  @Column({ name: 'room_count', nullable: true })
+  roomCount: number;
 
-  @Column({ nullable: true })
-  ownerId: string; // ID de l'utilisateur Clerk propriétaire
+  @Column({ name: 'image_url', nullable: true })
+  imageUrl: string;
 
-  @Column('simple-array', { nullable: true })
-  tags: string[];
+  @Column({ name: 'created_by_user_id', nullable: true })
+  createdByUserId: string;
 
-  @ManyToOne(() => Client, { nullable: true })
-  @JoinColumn({ name: 'clientId' })
-  client: Client;
-
-  @Column({ nullable: true })
-  clientId: string;
-
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
 }

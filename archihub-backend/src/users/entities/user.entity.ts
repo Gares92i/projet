@@ -1,17 +1,11 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('users_clerk')
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
+  @Column({ name: 'clerkId', unique: true }) // Nom correct de la colonne
   clerkId: string;
 
   @Column({ nullable: true })
@@ -26,12 +20,12 @@ export class User {
   @Column({ nullable: true })
   profileImageUrl: string;
 
-  @Column('simple-array', { default: '[]' })
-  roles: string[];
+  @Column({ type: 'text', default: '[]' })
+  roles: string;
 
-  @CreateDateColumn()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 }

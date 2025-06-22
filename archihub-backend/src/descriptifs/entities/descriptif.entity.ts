@@ -6,28 +6,28 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('clients')
-export class Client {
+@Entity('descriptifs')
+export class Descriptif {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  name: string;
+  @Column({ name: 'project_id' })
+  projectId: string;
 
-  @Column({ name: 'company_name', nullable: true })
-  companyName: string;
-
-  @Column({ nullable: true })
-  email: string;
+  @Column({ name: 'lot_name' })
+  lotName: string;
 
   @Column({ nullable: true })
-  phone: string;
+  description: string;
 
   @Column({ nullable: true })
-  address: string;
+  status: string;
 
-  @Column({ name: 'created_by_user_id', nullable: true })
-  createdByUserId: string;
+  @Column({ nullable: true })
+  budget: number;
+
+  @Column({ nullable: true, type: 'jsonb' })
+  travaux: any;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

@@ -4,11 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
-import { Project } from '../../projects/entities/project.entity';
-import { User } from '../../users/entities/user.entity';
 
 @Entity('reports')
 export class Report {
@@ -18,26 +14,22 @@ export class Report {
   @Column({ name: 'project_id' })
   projectId: string;
 
-  @ManyToOne(() => Project, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'project_id' })
-  project: Project;
-
-  @Column({ nullable: true, name: 'report_number', length: 100 })
+  @Column({ name: 'report_number', nullable: true })
   reportNumber: string;
 
   @Column({ name: 'visit_date' })
   visitDate: Date;
 
-  @Column({ nullable: true, length: 255 })
+  @Column({ nullable: true })
   contractor: string;
 
-  @Column({ nullable: true, length: 255 })
+  @Column({ name: 'in_charge', nullable: true })
   inCharge: string;
 
   @Column({ nullable: true })
   progress: number;
 
-  @Column({ nullable: true, type: 'text' })
+  @Column({ nullable: true })
   weather: string;
 
   @Column({ nullable: true, type: 'jsonb' })
@@ -52,19 +44,16 @@ export class Report {
   @Column({ nullable: true, type: 'jsonb' })
   reserves: any;
 
-  @Column({ nullable: true, name: 'additional_details', type: 'text' })
+  @Column({ name: 'additional_details', nullable: true })
   additionalDetails: string;
 
-  @Column({ nullable: true, name: 'created_by_user_id' })
+  @Column({ name: 'created_by_user_id', nullable: true })
   createdByUserId: string;
-
-  @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'created_by_user_id' })
-  createdByUser: User;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
 }
