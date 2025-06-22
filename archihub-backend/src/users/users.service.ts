@@ -2,8 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { ConfigService } from '@nestjs/config';
-import axios from 'axios';
 
 @Injectable()
 export class UsersService {
@@ -11,8 +9,7 @@ export class UsersService {
 
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
-    private configService: ConfigService,
+    private readonly userRepository: Repository<User>,
   ) {}
 
   /**
@@ -20,87 +17,78 @@ export class UsersService {
    */
   async findByClerkId(clerkId: string): Promise<User | null> {
     try {
-      return await this.usersRepository.findOne({ where: { clerkId } });
+      return await this.userRepository.findOne({ where: { clerkId } });
     } catch (error) {
       this.logger.error(
         `Erreur lors de la recherche de l'utilisateur par clerkId: ${error.message}`,
         error.stack,
       );
-      throw error;
+      return null;
     }
   }
 
   /**
-   * Créer un utilisateur à partir des informations Clerk
+   * Créer ou trouver un utilisateur par son ID Clerk
    */
-  async createFromClerk(clerkId: string): Promise<User> {
+  async findOrCreateByClerkId(clerkId: string): Promise<User> {
     try {
-      const secretKey = this.configService.get<string>('CLERK_SECRET_KEY');
-
-      // Utiliser l'API REST de Clerk
-      const response = await axios.get(`https://api.clerk.com/v1/users/${clerkId}`, {
-        headers: {
-          Authorization: `Bearer ${secretKey}`,
-        },
-      });
-
-      const clerkUser = response.data;
-
-      // Créer l'utilisateur dans notre base de données
-      const user = new User();
-      user.clerkId = clerkId;
-      user.email = clerkUser.email_addresses?.[0]?.email_address || '';
-      user.firstName = clerkUser.first_name || '';
-      user.lastName = clerkUser.last_name || '';
-      user.profileImageUrl = clerkUser.image_url || '';
-      user.roles = ['user'];
-
-      return await this.usersRepository.save(user);
-    } catch (error) {
-      this.logger.error(
-        `Erreur lors de la création de l'utilisateur depuis Clerk: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Mettre à jour un utilisateur
-   */
-  async update(id: string, updateData: Partial<User>): Promise<User | null> {
-    try {
-      await this.usersRepository.update(id, updateData);
-      return this.usersRepository.findOne({ where: { id } });
-    } catch (error) {
-      this.logger.error(
-        `Erreur lors de la mise à jour de l'utilisateur: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Attribuer un rôle à un utilisateur
-   */
-  async assignRole(userId: string, role: string): Promise<User | null> {
-    try {
-      const user = await this.usersRepository.findOne({ where: { id: userId } });
+      let user = await this.findByClerkId(clerkId);
 
       if (!user) {
-        throw new Error(`Utilisateur avec ID ${userId} non trouvé`);
-      }
-
-      if (!user.roles.includes(role)) {
-        user.roles.push(role);
-        return await this.usersRepository.save(user);
+        this.logger.log(`Création d'un nouvel utilisateur pour clerkId: ${clerkId}`);
+        user = this.userRepository.create({
+          clerkId,
+          roles: JSON.stringify(['user']),
+        });
+        await this.userRepository.save(user);
       }
 
       return user;
     } catch (error) {
-      this.logger.error(`Erreur lors de l'attribution du rôle: ${error.message}`, error.stack);
+      this.logger.error(
+        `Erreur lors de la création ou de la recherche de l'utilisateur: ${error.message}`,
+        error.stack,
+      );
       throw error;
+    }
+  }
+
+  /**
+   * Synchroniser un utilisateur à partir des données de Clerk
+   */
+  async syncUserFromClerk(clerkId: string, userProfile: any): Promise<User> {
+    let user = await this.findByClerkId(clerkId);
+
+    if (!user) {
+      user = this.userRepository.create({
+        clerkId,
+        firstName: userProfile.firstName,
+        lastName: userProfile.lastName,
+        email: userProfile.emailAddresses[0]?.emailAddress,
+        profileImageUrl: userProfile.imageUrl,
+        roles: JSON.stringify(['user']),
+      });
+    } else {
+      // Mettre à jour les informations existantes
+      user.firstName = userProfile.firstName;
+      user.lastName = userProfile.lastName;
+      user.email = userProfile.emailAddresses[0]?.emailAddress;
+      user.profileImageUrl = userProfile.imageUrl;
+      // etc.
+    }
+
+    return this.userRepository.save(user);
+  }
+
+  /**
+   * Trouver un utilisateur par son ID
+   */
+  async findById(id: string): Promise<User | null> {
+    try {
+      return await this.userRepository.findOne({ where: { id } });
+    } catch (error) {
+      this.logger.error(`Erreur lors de la recherche de l'utilisateur par ID: ${error.message}`);
+      return null;
     }
   }
 }

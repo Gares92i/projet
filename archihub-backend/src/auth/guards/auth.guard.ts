@@ -3,15 +3,16 @@ import { Observable } from 'rxjs';
 import { RequestWithAuth } from '../../types/express';
 
 @Injectable()
+// Assurez-vous que le garde vérifie req.auth et autorise les utilisateurs authentifiés
 export class AuthGuard implements CanActivate {
-  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-    const request = context.switchToHttp().getRequest<RequestWithAuth>();
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest();
+    console.log('Auth Guard - État auth:', request.auth);
 
-    // Vérifier si l'utilisateur est authentifié
-    if (request.auth && request.auth.isAuthenticated) {
-      return true;
+    if (!request.auth || !request.auth.isAuthenticated) {
+      throw new UnauthorizedException('Vous devez être connecté pour accéder à cette ressource');
     }
 
-    throw new UnauthorizedException('Vous devez être connecté pour accéder à cette ressource');
+    return true;
   }
 }

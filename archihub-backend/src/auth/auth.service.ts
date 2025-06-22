@@ -53,6 +53,19 @@ export class AuthService {
    * Vérifier un token JWT en utilisant les clés JWKS de Clerk
    */
   async verifyToken(token: string) {
+    // UNIQUEMENT POUR LE DÉVELOPPEMENT - À SUPPRIMER EN PRODUCTION
+    if (token.startsWith('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.')) {
+      try {
+        // Assurez-vous que cette clé correspond exactement à celle utilisée dans create-test-token.js
+        const decoded = jwt.verify(token, 'test-secret-key-not-for-production');
+        console.log('Token de test validé:', decoded);
+        return decoded;
+      } catch (e) {
+        console.error('Erreur validation token de test:', e.message);
+        // Continuer avec la vérification normale
+      }
+    }
+
     try {
       // Décoder le header du token pour obtenir le kid (Key ID)
       const decodedHeader = jwt.decode(token, { complete: true })?.header as { kid?: string };

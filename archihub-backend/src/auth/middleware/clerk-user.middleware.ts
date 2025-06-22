@@ -9,23 +9,18 @@ export class ClerkUserMiddleware implements NestMiddleware {
 
   async use(req: RequestWithAuth, res: Response, next: NextFunction) {
     try {
-      // Vérifier si l'utilisateur est authentifié et a un ID Clerk
       if (req.auth && req.auth.userId) {
-        const userId = req.auth.userId;
+        const clerkId = req.auth.userId;
+        const user = await this.usersService.findOrCreateByClerkId(clerkId);
 
-        // Essayer de trouver l'utilisateur dans notre base de données
-        const user = await this.usersService.findByClerkId(userId);
-
-        // Si l'utilisateur n'existe pas en DB, le créer
-        if (!user) {
-          await this.usersService.createFromClerk(userId);
+        // Mettre à jour req.auth avec l'ID interne de l'utilisateur
+        if (user) {
+          req.auth.internalUserId = user.id;
         }
       }
-
-      next();
     } catch (error) {
       console.error('Erreur lors de la synchronisation utilisateur:', error);
-      next();
     }
+    next();
   }
 }
