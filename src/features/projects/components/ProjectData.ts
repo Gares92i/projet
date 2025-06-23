@@ -1,6 +1,6 @@
 import { Task } from "@/components/gantt/types";
 import { Document } from "@/components/DocumentsList";
-import { ProjectCardProps, TeamMemberInfo } from "@/components/ProjectCard";
+import { ProjectCardProps, TeamMemberInfo } from "@/features/projects/components/ProjectCard";
 
 // Conversion des ID de membres en objets TeamMemberInfo
 const convertTeamMemberIds = (memberIds: string[]): TeamMemberInfo[] => {

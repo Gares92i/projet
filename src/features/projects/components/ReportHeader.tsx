@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { getArchitectInfo } from "@/services/reportService";
-import { getProjectById } from "@/services/projectService";
+import { getProjectById } from "@/features/projects/services/projectService";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Building, MapPin, User, Calendar, FileText } from "lucide-react";
-import { ProjectCardProps } from "@/components/ProjectCard";
+import { ProjectCardProps } from "@/features/projects/components/ProjectCard";
 import { ArchitectInfo } from "@/types";
 
 interface ReportHeaderProps {

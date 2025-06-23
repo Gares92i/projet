@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Index from "@/pages/Index";
-import Projects from "@/pages/Projects";
+import Projects from "@/features/projects/pages/Projects";
 import Clients from "@/pages/Clients";
 import Team from "@/pages/Team";
 import Tasks from "@/pages/Tasks";
@@ -9,8 +9,8 @@ import GanttChart from "@/pages/GanttChart";
 import Documents from "@/pages/Documents";
 import Resources from "@/pages/Resources";
 import Settings from "@/pages/Settings";
-import ProjectDetails from "@/pages/ProjectDetails";
-import EditProject from "@/pages/EditProject";
+import ProjectDetails from "@/features/projects/pages/ProjectDetails";
+import EditProject from "@/features/projects/pages/EditProject";
 import { Toaster } from "@/components/ui/sonner";
 import NotFound from "@/pages/NotFound";
 import SiteVisitReportForm from "@/pages/SiteVisitReportForm";

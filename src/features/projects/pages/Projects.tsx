@@ -12,7 +12,7 @@ import {
   DoorOpen
 } from "lucide-react";
 import MainLayout from "@/components/layout/MainLayout";
-import ProjectCard, { ProjectCardProps, normalizeTeamMembers, TeamMemberInfo } from "@/components/ProjectCard";
+import ProjectCard, { ProjectCardProps, normalizeTeamMembers, TeamMemberInfo } from "@/features/projects/components/ProjectCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -49,12 +49,12 @@ import { toast } from "sonner";
 import {
   getAllProjects,
   addProject,
-  addProjectToMember,
-} from "@/services/projectService";
+} from "@/features/projects/services/projectService";
+import { assignMemberToProject } from "@/services/team/teamProjectRelationService";
 import { TeamMember } from "@/types/team";
 import { getAllTeamMembers } from "@/services/team/legacyTeamService";
 import { getAllClients, ClientData } from "@/components/services/clientService";
-import { SiteVisitReportUploader } from "@/components/project/SiteVisitReportUploader";
+import { SiteVisitReportUploader } from "@/features/projects/components/SiteVisitReportUploader";
 import { safeSetItem } from "@/services/storage/localStorageService";
 import { getMilestonesByProjectId } from "@/components/services/milestonesService";
 
@@ -237,7 +237,7 @@ const Projects = () => {
         // Ajouter le projet à chaque membre
         await Promise.allSettled(
           selectedTeamMembers.map(memberId => 
-            addProjectToMember(memberId, newProjectId.id)
+            assignMemberToProject(memberId, newProjectId.id)
           )
         );
       }

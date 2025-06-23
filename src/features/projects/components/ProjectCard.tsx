@@ -27,7 +27,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { deleteProject } from "@services/projectService";
+import { deleteProject } from "../services/projectService";
 import { toast } from "sonner";
 
 // Ajout des propriétés manquantes dans l'interface ProjectCardProps
