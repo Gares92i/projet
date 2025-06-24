@@ -1,10 +1,9 @@
-
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { signupSchema, SignupFormValues } from '@/schemas/authSchemas';
+import { Button } from '@/ui/button';
+import { Input } from '@/ui/input';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/form';
+import { signupSchema, SignupFormValues } from '@/features/auth/schemas/authSchemas';
 
 interface SignupFormProps {
   onSubmit: (data: SignupFormValues) => Promise<void>;

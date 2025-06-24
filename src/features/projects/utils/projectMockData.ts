@@ -1,4 +1,4 @@
-import { Task } from "@/components/gantt/types";
+import { Task } from "@/features/projects/types/gantt";
 import { Document } from "@/features/documents/components/DocumentsList";
 import { ProjectCardProps, TeamMemberInfo } from "@/features/projects/components/ProjectCard";
 

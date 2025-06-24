@@ -1,10 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { ProjectCardProps } from "@/features/projects/components/ProjectCard";
 import { getProjectById, updateProject } from "@/features/projects/services/projectService";
-import { getAllTeamMembers, TeamMember as LegacyTeamMember } from "@/features/team";
+import { getAllTeamMembers } from "@/features/team/services/teamService";
+import { TeamMember as LegacyTeamMember } from "@/features/team/types/team";
 import { getAllClients, ClientData } from "@/features/clients/services/clientService";
 
 export const useEditProject = (projectId: string | undefined) => {

@@ -45,18 +45,6 @@ fi
 echo -e "${GREEN}Installing dependencies...${NC}"
 npm install
 
-# Setup Supabase local development
-if command -v docker &> /dev/null && command -v docker-compose &> /dev/null; then
-    echo -e "${GREEN}Setting up Supabase local development...${NC}"
-    docker-compose up -d supabase-local
-    
-    echo -e "${YELLOW}Waiting for Supabase to start...${NC}"
-    sleep 10
-    
-    echo -e "${GREEN}Running migrations...${NC}"
-    npx supabase db push
-else
-    echo -e "${YELLOW}Skipping Supabase local setup due to missing Docker or Docker Compose.${NC}"
-fi
+# Fin du setup
 
 echo -e "${GREEN}Setup complete! You can now start the development server with 'npm run dev'${NC}"

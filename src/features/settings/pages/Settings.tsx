@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import MainLayout from "@/components/layout/MainLayout";
+import MainLayout from "@/features/layout/components/MainLayout";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/ui/card";
 import { Badge } from "@/ui/badge";

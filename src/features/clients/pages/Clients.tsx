@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import MainLayout from "@/components/layout/MainLayout";
+import MainLayout from "@/features/layout/components/MainLayout";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import { Plus, Search, Edit, Trash2, Building } from "lucide-react";

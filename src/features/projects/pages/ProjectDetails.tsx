@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import MainLayout from "@/components/layout/MainLayout";
+import MainLayout from "@/features/layout/components/MainLayout";
 import { getTasksByProjectId } from "@/features/tasks/services/taskService";
 import { getProjectById, getProjectMilestones, updateProjectMilestones } from "@/features/projects/services/projectService";
-import { getProjectMembers } from "@/features/team/teamProjectRelationService"; // Ajout de l'import manquant
-import { Task } from "@/components/gantt/types";
+import { getProjectMembers } from "@/features/team/services/teamProjectRelationService"; // Ajout de l'import manquant
+import { Task } from "@/features/projects/types/gantt";
 import { toast } from "sonner";
 import { ProjectHeader } from "@/features/projects/components/ProjectHeader";
 import { ProjectDetailsCard } from "@/features/projects/components/ProjectDetailsCard";

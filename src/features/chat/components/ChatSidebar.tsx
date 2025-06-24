@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { ChatConversation } from '@/types/chat';
 import { SearchInput } from './SearchInput';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/ui/scroll-area';
 import { ConversationList } from './ConversationList';
 
 interface ChatSidebarProps {

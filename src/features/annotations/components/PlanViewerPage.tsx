@@ -5,17 +5,17 @@ import { MainContent } from "./MainContent";
 import { AnnotationDialog } from "./AnnotationDialog";
 import { ConvertToTaskDialog } from "./ConvertToTaskDialog";
 import { toast } from "sonner";
-import { useAnnotations } from "./useAnnotations";
+import { useAnnotations } from "../hooks/useAnnotations";
 import { Document, Annotation } from "@/app/styles";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/features/common/hooks/use-mobile";
 import { Sheet, SheetContent, SheetTrigger } from "@/ui/sheet";
 import { Button } from "@/ui/button";
 import { FileText, MessageSquare, Trash2 } from "lucide-react";
 import { useParams } from "react-router-dom";
-import { ErrorBoundary } from "../ErrorBoundary";
-import { uploadAnnotation, } from '@/services/storageService';
+import { ErrorBoundary } from "@/features/layout/components/ErrorBoundary";
+// import { uploadAnnotation, } from '@/features/storage/services/storageService';
 // Ajoutez cet import
-import { deleteDocument, deleteAnnotation, updateDocument } from '../../services/annotationService';
+import { deleteDocument, deleteAnnotation, updateDocument } from '../services/annotationService';
 
 import html2canvas from 'html2canvas';
 

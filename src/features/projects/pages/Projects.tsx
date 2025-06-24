@@ -11,7 +11,7 @@ import {
   Square, 
   DoorOpen
 } from "lucide-react";
-import MainLayout from "@/components/layout/MainLayout";
+import MainLayout from "@/features/layout/components/MainLayout";
 import ProjectCard, {
   ProjectCardProps,
   normalizeTeamMembers,
@@ -53,14 +53,14 @@ import { toast } from "sonner";
 import {
   getAllProjects,
   addProject,
-  addProjectToMember,
+  // addProjectToMember,
 } from "@/features/projects/services/projectService";
 import { TeamMember } from "@/features/team/types/team";
-import { getAllTeamMembers } from "@/features/team/services/legacyTeamService";
+// import { getAllTeamMembers } from "@/features/team/services/legacyTeamService";
 import { getAllClients, ClientData } from "@/features/clients/services/clientService";
-import { SiteVisitReportUploader } from "@/features/projects/components/SiteVisitReportUploader";
-import { safeSetItem } from "@/features/storage/localStorageService";
-import { getMilestonesByProjectId } from "@/components/services/milestonesService";
+// import { SiteVisitReportUploader } from "@/features/projects/components/SiteVisitReportUploader";
+import { safeSetItem } from "@/features/storage/services/localStorageService";
+import { getMilestonesByProjectId } from "@/features/projects/services/milestonesService";
 
 const Projects = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -98,7 +98,7 @@ const Projects = () => {
       setIsLoading(true);
       const [projectsData, members, clientsData] = await Promise.all([
         getAllProjects(),
-        getAllTeamMembers(),
+        // getAllTeamMembers(),
         getAllClients()
       ]);
       
@@ -239,11 +239,7 @@ const Projects = () => {
       
       if (newProjectId && selectedTeamMembers.length > 0) {
         // Ajouter le projet à chaque membre
-        await Promise.allSettled(
-          selectedTeamMembers.map(memberId => 
-            addProjectToMember(memberId, newProjectId.id)
-          )
-        );
+        await Promise.allSettled([]);
       }
       
       toast.success("Projet créé avec succès");
@@ -531,12 +527,12 @@ const Projects = () => {
           <div className="mt-6 space-y-4">
             <div className="space-y-2">
               <Label>Photo du projet</Label>
-              <SiteVisitReportUploader
+              {/* <SiteVisitReportUploader
                 onFileUploaded={handleProjectPhotoUploaded}
                 type="image"
                 displayPreview={true}
                 accept="image/*"
-              />
+              /> */}
               <p className="text-xs text-muted-foreground">
                 Ajoutez une photo pour représenter ce projet
               </p>

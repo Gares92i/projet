@@ -1,11 +1,10 @@
-
 import { useEffect, useState } from 'react';
 import { ChatConversation } from '@/types/chat';
-import { Skeleton } from '@/components/ui/skeleton';
-import { getUserConversations } from '@/services/chat';
-import { supabase } from '@/integrations/supabase/client';
+import { Skeleton } from '@/ui/skeleton';
+// import { getUserConversations } from '../services/conversationService';
 import { ConversationItem } from './ConversationItem';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
+import { conversationService } from "../services/conversationService";
 
 interface ConversationListProps {
   selectedConversationId?: string;
@@ -28,9 +27,9 @@ export function ConversationList({
     const loadConversations = async () => {
       setIsLoading(true);
       try {
-        const data = await getUserConversations();
-        console.log('Loaded conversations:', data);
-        setConversations(data);
+        // const data = await getUserConversations();
+        console.log('Loaded conversations:', conversations);
+        setConversations(conversations);
       } catch (error) {
         console.error('Error loading conversations:', error);
       } finally {
@@ -39,39 +38,6 @@ export function ConversationList({
     };
 
     loadConversations();
-
-    // Subscribe to realtime updates for conversations
-    const channel = supabase
-      .channel('chat-conversations-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'chat_conversations'
-        },
-        async () => {
-          // Reload conversations when a new one is created
-          loadConversations();
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'chat_conversations'
-        },
-        async () => {
-          // Reload conversations when one is updated
-          loadConversations();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, [user]);
 
   // No need to add demo conversations here, as they are already included in getUserConversations

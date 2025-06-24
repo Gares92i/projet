@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
-import MainLayout from '@/components/layout/MainLayout';
-import { useAuth } from '@/contexts/AuthContext';
+import MainLayout from '@/features/layout/components/MainLayout';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { Button } from '@/ui/button';
 import { Input } from '@/ui/input';
 import { Label } from '@/ui/label';

@@ -1,5 +1,2 @@
-
-// Export all the conversation services from their respective modules
-export { createConversation } from './createConversationService';
-export { getUserConversations } from './getConversationsService';
-export { getConversationById } from './getConversationService';
+// Ce fichier est désactivé car les services de conversation n'existent plus.
+export {};

@@ -4,12 +4,13 @@ import { Badge } from "@/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
 import { Calendar, FileText, MessageCircle, ListChecks } from "lucide-react";
 import TaskList from "@/features/tasks/components/TaskList";
-import { Task } from "@/components/gantt/types";
+import { Task } from "@/features/projects/types/gantt";
 import { Document } from "@/features/documents/components/DocumentsList";
 import { TeamMember } from "@/types/team";
-import { MilestonesSection } from "./overview/MilestonesSection";
-// Nous supprimons l'import qui n'existe pas
-import { StatisticsSection } from "./overview/StatisticsSection";
+// import { MilestonesSection } from "./overview/MilestonesSection";
+// Le composant MilestonesSection n'existe pas, il faudra l'implémenter ou le remplacer.
+// import { StatisticsSection } from "./overview/StatisticsSection";
+// Le composant StatisticsSection n'existe pas, il faudra l'implémenter ou le remplacer.
 import { useEffect, useState } from "react";
 
 interface ProjectMilestone {

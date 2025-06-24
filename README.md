@@ -16,8 +16,8 @@ ArchiPro est une application web et mobile de gestion de projets destinée aux a
 ## Technologies
 
 - **Frontend** : React, TypeScript, Tailwind CSS, Shadcn UI
-- **Backend** : Supabase (PostgreSQL, Auth, Storage, Functions)
-- **Stockage** : Supabase Storage, Backblaze B2
+- **Backend** : NestJS (PostgreSQL, Auth, Storage, Functions)
+- **Stockage** : Backblaze B2
 - **Déploiement** : Docker, GitHub Actions
 
 ## Prérequis
@@ -25,7 +25,6 @@ ArchiPro est une application web et mobile de gestion de projets destinée aux a
 - Node.js 18+
 - npm 9+
 - Docker et Docker Compose (pour le développement local)
-- Compte Supabase
 
 ## Installation
 
@@ -72,9 +71,6 @@ archipro/
 │   ├── schemas/         # Schémas de validation
 │   ├── services/        # Services pour la logique métier
 │   └── types/           # Types TypeScript
-├── supabase/            # Configuration Supabase
-│   ├── functions/       # Edge Functions Supabase
-│   └── migrations/      # Migrations SQL
 ├── scripts/             # Scripts utilitaires
 └── docker-compose.yml   # Configuration Docker Compose
 ```

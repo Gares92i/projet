@@ -14,7 +14,7 @@ import {
   SheetTitle,
 } from "@/ui/sheet";
 import { updateTask } from "@/features/tasks/services/taskService";
-import { Task } from "@/components/gantt/types";
+import { Task } from "@/features/projects/types/gantt";
 import { toast } from "sonner";
 import { Textarea } from "@/ui/textarea";
 

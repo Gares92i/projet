@@ -1,5 +1,4 @@
-import { User, Session } from '@supabase/supabase-js';
-
+// Types d'utilisateur et de session adaptés pour Clerk
 
 export type UserRole = 'admin' | 'user' | 'guest';
 
@@ -30,8 +29,8 @@ export interface UserSubscription {
 }
 
 export interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: UserProfile | null;
+  session: any | null;
   profile: UserProfile | null;
   roles: UserRole[];
   subscription: UserSubscription | null;

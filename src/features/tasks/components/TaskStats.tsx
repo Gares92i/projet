@@ -1,7 +1,7 @@
 
 import { Clock, CheckCircle, AlertCircle, Calendar } from "lucide-react";
 import { Card, CardContent } from "@/ui/card";
-import { Task } from "@/components/gantt/types";
+import { Task } from "@/features/projects/types/gantt";
 
 interface TaskStatsProps {
   pendingTasks: Task[];

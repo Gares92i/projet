@@ -1,4 +1,4 @@
-import { uploadImage, uploadAnnotation, uploadDocument, base64ToBlob } from '@/services/storageService';
+// import { storageService } from "@/features/storage/services/storageService";
 import type { Annotation as BaseAnnotation } from '@/app/styles';
 
 // Extension de l'interface Annotation pour inclure imageUrl

@@ -66,8 +66,8 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { usePersistence } from "@/contexts/DataPersistenceContext";
+import { useLocalStorage } from "@/features/storage/hooks/useLocalStorage";
+import { usePersistence } from "@/features/auth/contexts/DataPersistenceContext";
 
 // Modifier l'import pour utiliser l'interface existante
 import {

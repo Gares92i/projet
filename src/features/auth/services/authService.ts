@@ -3,7 +3,6 @@ import {
     useAuth as useClerkAuth
   } from "@clerk/clerk-react";
   import { UserProfile, UserRole } from "@/features/auth/types/auth";
-  import { useAuth as useAuthContext } from '@/features/auth/contexts/AuthContext';
 
   // Adapter les fonctions d'authentification de Clerk pour notre application
   export const useAuth = () => {
@@ -61,9 +60,6 @@ import {
       getToken
     };
   };
-
-  // Réexporter useAuth depuis le contexte pour simplifier les imports
-  export const useAuth = useAuthContext;
 
   // Fonctions auxiliaires pour l'authentification
   export const isValidEmail = (email: string): boolean => {

@@ -1,12 +1,11 @@
-
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/ui/dialog';
+import { Button } from '@/ui/button';
+import { Label } from '@/ui/label';
+import { Input } from '@/ui/input';
 import { ChatConversation } from '@/types/chat';
-import { createConversation } from '@/services/chat/conversationService';
-import { Checkbox } from '@/components/ui/checkbox';
+//import { conversationService } from "@/features/chat/services/conversationService";
+import { Checkbox } from '@/ui/checkbox';
 import { toast } from 'sonner';
 
 interface NewConversationDialogProps {
@@ -33,7 +32,7 @@ export function NewConversationDialog({
 
     setIsCreating(true);
     try {
-      const conversationId = await createConversation(name, [], undefined, isPrivate);
+      const conversationId = await conversationService.createConversation(name, [], undefined, isPrivate);
       
       if (conversationId) {
         // Créer un objet ChatConversation temporaire

@@ -1,5 +1,5 @@
 import { SiteVisitReport, Observation, Recommendation, ArchitectInfo, Reserve, TaskProgress } from "@/app/styles";
-import { createApiClient } from "./apiClient";
+import { createApiClient } from "@/features/common/services/apiClient";
 import { updateProject } from "./projectService";
 
 // Fonctions utilitaires pour la compression d'images

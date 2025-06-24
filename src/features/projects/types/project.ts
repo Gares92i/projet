@@ -54,3 +54,12 @@ export interface LotTravaux {
 }
 
 export type DescriptifData = LotTravaux[];
+
+export interface ProjectMilestone {
+  id: string;
+  title: string;
+  description?: string;
+  dueDate?: string;
+  completed?: boolean;
+  inProgress?: boolean;
+}

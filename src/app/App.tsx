@@ -1,5 +1,5 @@
-import { Routes, Route } from "react-router-dom";
-import Index from "@/pages/Index";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Index from "@/features/dashboard/pages/Index";
 import Projects from "@/features/projects/pages/Projects";
 import Clients from "@/features/clients/pages/Clients";
 import Team from "@/features/team/pages/Team";
@@ -12,19 +12,20 @@ import Settings from "@/features/settings/pages/Settings";
 import ProjectDetails from "@/features/projects/pages/ProjectDetails";
 import EditProject from "@/features/projects/pages/EditProject";
 import { Toaster } from "@/ui/sonner";
-import NotFound from "@/pages/NotFound";
+import NotFound from "@/features/common/pages/NotFound";
 import SiteVisitReportForm from "@/features/reports/pages/SiteVisitReportForm";
 import SiteVisitReportDetail from "@/features/reports/pages/SiteVisitReportDetail";
 import ProjectAnnotations from "@/features/annotations/pages/ProjectAnnotations";
 import Auth from "@/features/auth/pages/Auth";
 import Profile from "@/features/profile/pages/Profile";
-import Pricing from "@/pages/Pricing";
-import SubscriptionSuccess from "@/pages/SubscriptionSuccess";
+import Pricing from "@/features/pricing/pages/Pricing";
+import SubscriptionSuccess from "@/features/subscription/pages/SubscriptionSuccess";
 import { AuthGuard } from "@/features/auth/components/AuthGuard";
 import { GuestGuard } from "@/features/auth/components/GuestGuard";
 import Chat from "@/features/chat/pages/Chat";
-import { ThemeProvider } from "@/contexts/ThemeContext";
+import { ThemeProvider } from "@/features/auth/contexts/ThemeContext";
 import ProjectDescriptif from "@/features/descriptif/pages/ProjectDescriptif";
+import SignUpPage from "@/features/auth/pages/SignUp";
 
 import { useEffect } from 'react';
 
@@ -44,6 +45,8 @@ function App() {
             </GuestGuard>
           }
         />
+        {/* Redirection /auth/login vers /auth */}
+        <Route path="/auth/login" element={<Navigate to="/auth" replace />} />
 
         {/* Pages protégées par authentification */}
         <Route
@@ -223,6 +226,9 @@ function App() {
 
         {/* Page 404 */}
         <Route path="*" element={<NotFound />} />
+
+        {/* New route for sign-up */}
+        <Route path="/auth/sign-up" element={<SignUpPage />} />
       </Routes>
       <Toaster position="top-right" />
     </ThemeProvider>

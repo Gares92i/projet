@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { Building2, CalendarDays, User2, MapPin, Map, FileText } from "lucide-react";
 import { ProjectCardProps } from "@/features/projects/components/ProjectCard";
-import { ProjectLocationMap } from "@/features/maps/components/ProjectLocationMap";
+import { ProjectLocationMap } from "@/features/projects/components/ProjectLocationMap";
 
 interface ProjectDetailsCardProps {
   project: ProjectCardProps | null;

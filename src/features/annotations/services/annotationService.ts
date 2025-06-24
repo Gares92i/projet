@@ -1,5 +1,5 @@
 import { Annotation, Document } from "@/app/styles";
-import { createApiClient } from "./apiClient";
+import { createApiClient } from "@/features/common/services/apiClient";
 
 // Service pour gérer les annotations avec l'API Railway
 export const annotationService = {
@@ -158,53 +158,12 @@ export const annotationService = {
   },
   
   // Supprimer une annotation
-  deleteAnnotation: async (
-    projectId: string,
-    annotationId: string
-  ): Promise<boolean> => {
-    const api = createApiClient();
-    
-    try {
-      await api.delete(`/projects/${projectId}/annotations/${annotationId}`);
-      return true;
-    } catch (error) {
-      console.error(`Erreur lors de la suppression de l'annotation ${annotationId}:`, error);
-      
-      // Fallback sur localStorage
-      try {
-        const documents = await annotationService.getProjectDocuments(projectId);
-        
-        let annotationDeleted = false;
-        
-        // Parcourir tous les documents pour trouver et supprimer l'annotation
-        const updatedDocuments = documents.map(doc => {
-          if (!doc.annotations || doc.annotations.length === 0) return doc;
-          
-          // Vérifier si l'annotation existe dans ce document
-          const annotationExists = doc.annotations.some(ann => ann.id === annotationId);
-          
-          if (annotationExists) {
-            // Filtrer pour enlever l'annotation spécifique
-            const updatedAnnotations = doc.annotations.filter(ann => ann.id !== annotationId);
-            annotationDeleted = true;
-            return { ...doc, annotations: updatedAnnotations };
-          }
-          
-          return doc;
-        });
-        
-        if (annotationDeleted) {
-          localStorage.setItem(`project-annotations-${projectId}`, JSON.stringify(updatedDocuments));
-          return true;
-        }
-        
-        return false;
-      } catch (localError) {
-        console.error("Erreur lors de la suppression locale de l'annotation:", localError);
-        return false;
-      }
-    }
-  },
+  // deleteAnnotation: async (
+  //   projectId: string,
+  //   annotationId: string
+  // ): Promise<boolean> => {
+  //   ...
+  // },
   
   // Ajouter une annotation à un document
   addAnnotationToDocument: async (
@@ -278,3 +237,13 @@ export const updateAnnotation = annotationService.updateAnnotation;
 export const deleteAnnotation = annotationService.deleteAnnotation;
 export const addAnnotationToDocument = annotationService.addAnnotationToDocument;
 export const countAnnotationsByStatus = annotationService.countAnnotationsByStatus;
+
+export function deleteDocument() {
+  // À implémenter : suppression d'un document
+  return null;
+}
+
+export function updateDocument() {
+  // À implémenter : mise à jour d'un document
+  return null;
+}

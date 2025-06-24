@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus } from "lucide-react";
-import MainLayout from "@/components/layout/MainLayout";
+import MainLayout from "@/features/layout/components/MainLayout";
 import { Button } from "@/ui/button";
 import { Calendar } from "@/ui/calendar";
 import {
@@ -29,7 +29,7 @@ import {
 } from "@/ui/sheet";
 import { Label } from "@/ui/label";
 import { Input } from "@/ui/input";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/features/common/hooks/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/ui/radio-group";
 
 interface Event {

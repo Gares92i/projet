@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { uploadAnnotation } from "@/services/storageService";
+// import { storageService } from "@/features/storage/services/storageService";
 
 export interface AsyncImageProps {
   src: string | undefined;

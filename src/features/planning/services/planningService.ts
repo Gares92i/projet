@@ -1,6 +1,6 @@
 import { Task, Group, ExportOptions } from "@/features/planning/types/planning";
 import { TaskProgress } from "@/app/styles";
-import { createApiClient } from "@/services/apiClient";
+import { createApiClient } from "@/features/common/services/apiClient";
 
 export const planningService = {
   // Récupérer toutes les tâches d'un planning de projet

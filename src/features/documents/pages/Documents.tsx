@@ -1,5 +1,4 @@
-
-import MainLayout from "@/components/layout/MainLayout";
+import MainLayout from "@/features/layout/components/MainLayout";
 import DocumentsList, { Document } from "@/features/documents/components/DocumentsList";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { Input } from "@/ui/input";

@@ -5,10 +5,9 @@ import {
   addTeamMember,
   updateTeamMember,
   deleteTeamMember,
-  syncLocalMembersWithReports
+  // syncLocalMembersWithReports
 } from "@/features/team/services/teamService"; // Utiliser les fonctions Supabase
 import { toast } from 'sonner';
-import { useProfile } from '@/hooks/useProfile';
 
 export const useTeamMemberManager = () => {
   const [membersData, setMembersData] = useState<TeamMember[]>([]);
@@ -17,7 +16,6 @@ export const useTeamMemberManager = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
   const [currentMember, setCurrentMember] = useState<TeamMember | null>(null);
-  const { profile } = useProfile();
 
 
   // États pour les modales et dialogues
@@ -29,7 +27,7 @@ export const useTeamMemberManager = () => {
   }, []);
 
   // ID d'équipe par défaut
-  const teamId = profile?.team_id || localStorage.getItem('default_team_id') || 'default';
+  const teamId = localStorage.getItem('default_team_id') || 'default';
 
   // Charger les membres avec la bonne fonction
   useEffect(() => {
@@ -93,7 +91,7 @@ export const useTeamMemberManager = () => {
       const success = await addTeamMember(memberData);
       if (success) {
         // Ajouter cette ligne pour synchroniser avec les rapports
-        syncLocalMembersWithReports();
+        // syncLocalMembersWithReports();
 
         toast.success("Membre ajouté avec succès");
         // Recharger les membres après ajout

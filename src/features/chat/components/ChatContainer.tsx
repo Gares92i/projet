@@ -7,7 +7,7 @@ import { NewConversationDialog } from './NewConversationDialog';
 import { ChatHeader } from './ChatHeader';
 import { ChatSidebarHeader } from './ChatSidebarHeader';
 import { EmptyConversation } from './EmptyConversation';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { toast } from 'sonner';
 
 export function ChatContainer() {

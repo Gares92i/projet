@@ -39,7 +39,7 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { Calendar as CalendarComponent } from "@/ui/calendar";
-import { uploadAnnotation } from "@/services/storageService";
+// import { uploadAnnotation } from "@/features/storage/services/storageService";
 import { DialogImageEditor, DrawingElement } from "./DialogImageEditor";
 
 // Liste des lots disponibles
@@ -255,10 +255,10 @@ export const AnnotationDialog: React.FC<AnnotationDialogProps> = ({
     if (!selectedAnnotation) return;
 
     try {
-      // Si c'est une base64, l'uploader vers Supabase
+      // Si c'est une base64, l'uploader vers un service de stockage (à adapter)
       let photoUrl = photoData;
       if (photoData.startsWith("data:")) {
-        photoUrl = await uploadAnnotation(photoData, projectId);
+        // photoUrl = await uploadAnnotation(photoData, projectId);
       }
 
       // Ajouter la photo avec l'URL au lieu du base64
@@ -299,7 +299,7 @@ export const AnnotationDialog: React.FC<AnnotationDialogProps> = ({
       let finalImageUrl = editedImageUrl;
       if (editedImageUrl.startsWith("data:")) {
         // Uploader la nouvelle version de l'image
-        finalImageUrl = await uploadAnnotation(editedImageUrl, projectId);
+        // finalImageUrl = await uploadAnnotation(editedImageUrl, projectId);
         console.log("Image modifiée uploadée:", finalImageUrl);
       }
 

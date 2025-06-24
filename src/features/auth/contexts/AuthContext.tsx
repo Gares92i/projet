@@ -1,138 +1,205 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  RedirectToSignIn,
+  useUser,
+  useAuth as useClerkAuth,
+} from "@clerk/clerk-react";
+import { AuthContextType, UserProfile, UserRole } from "@/features/auth/types/auth";
 
-// Type pour l'utilisateur
-interface User {
-  id: string;
-  email: string;
-  firstName?: string;
-  lastName?: string;
-}
-
-// Type pour le contexte d'authentification
-interface AuthContextType {
-  user: User | null;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
-  logout: () => Promise<void>;
-}
-
-// Création du contexte avec une valeur par défaut
+// Créer le contexte
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Hook pour utiliser le contexte d'authentification
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth doit être utilisé avec un AuthProvider');
-  }
-  return context;
-}
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-// Provider du contexte d'authentification
-export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
+// Provider personnalisé qui utilise Clerk
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [roles, setRoles] = useState<UserRole[]>(["guest"]);
+  const [subscription, setSubscription] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Vérification de l'authentification au chargement
+  const { isSignedIn, user } = useUser();
+  const { signOut } = useClerkAuth();
+
+  // Charger les données utilisateur depuis Clerk
   useEffect(() => {
-    // Simuler une vérification d'authentification
-    const checkAuth = async () => {
-      try {
-        // Pour le développement, nous simulons un utilisateur connecté
-        // Dans une vraie application, vous vérifieriez le token ou la session
-        const savedUser = localStorage.getItem('user');
-        if (savedUser) {
-          setUser(JSON.parse(savedUser));
-        }
-      } catch (error) {
-        console.error('Erreur lors de la vérification de l\'authentification:', error);
-      } finally {
-        setIsLoading(false);
-      }
+    if (!isSignedIn || !user) {
+      setProfile({
+        id: 'default',
+        first_name: 'Utilisateur',
+        last_name: '',
+        email: 'user@example.com',
+        avatar_url: '',
+        title: '',
+        company: '',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+      setRoles(["user"]);
+      setSubscription({
+        id: 'sub_default',
+        user_id: 'default',
+        stripe_customer_id: null,
+        stripe_subscription_id: null,
+        plan_type: 'Basique',
+        status: 'active',
+        seats: 1,
+        current_period_start: null,
+        current_period_end: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    // Convertir les données Clerk en format UserProfile
+    const userProfile: UserProfile = {
+      id: user.id,
+      first_name: user.firstName || "",
+      last_name: user.lastName || "",
+      email: user.primaryEmailAddress?.emailAddress || "",
+      avatar_url: user.imageUrl || "",
+      title: (user.publicMetadata?.title as string) || "",
+      company: (user.publicMetadata?.company as string) || "",
+      created_at: user.createdAt || new Date().toISOString(),
+      updated_at: user.updatedAt || new Date().toISOString(),
     };
 
-    checkAuth();
-  }, []);
+    // Récupérer les rôles depuis les métadonnées
+    const userRoles = (user.publicMetadata?.roles as string[]) || ["user"];
 
-  // Fonction de connexion
-  const login = async (email: string, password: string) => {
-    setIsLoading(true);
+    setProfile(userProfile);
+    setRoles(userRoles as UserRole[]);
+    setSubscription({
+      id: 'sub_' + user.id,
+      user_id: user.id,
+      stripe_customer_id: null,
+      stripe_subscription_id: null,
+      plan_type: 'Basique',
+      status: 'active',
+      seats: 1,
+      current_period_start: null,
+      current_period_end: null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
+    setIsLoading(false);
+
+    // TODO: Récupérer les informations d'abonnement si nécessaire
+  }, [isSignedIn, user]);
+
+  // Méthode pour mettre à jour le profil utilisateur
+  const updateProfile = async (data: Partial<UserProfile>): Promise<void> => {
+    if (!isSignedIn || !user) {
+      throw new Error("Utilisateur non authentifié");
+    }
+
     try {
-      // Simuler une requête API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Utilisateur factice pour le développement
-      const mockUser = {
-        id: '1',
-        email,
-        firstName: 'Utilisateur',
-        lastName: 'Test'
-      };
-      
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
+      await user.update({
+        firstName: data.first_name || undefined,
+        lastName: data.last_name || undefined,
+        publicMetadata: {
+          ...user.publicMetadata,
+          title: data.title,
+          company: data.company,
+        },
+      });
+
+      // Mettre à jour l'état local
+      setProfile(
+        (prev) =>
+          ({
+            ...prev!,
+            ...data,
+          } as UserProfile)
+      );
     } catch (error) {
-      console.error('Erreur lors de la connexion:', error);
+      console.error("Erreur lors de la mise à jour du profil:", error);
       throw error;
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  // Fonction d'inscription
-  const signup = async (email: string, password: string, firstName: string, lastName: string) => {
-    setIsLoading(true);
-    try {
-      // Simuler une requête API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Utilisateur factice pour le développement
-      const mockUser = {
-        id: '1',
-        email,
-        firstName,
-        lastName
-      };
-      
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-    } catch (error) {
-      console.error('Erreur lors de l\'inscription:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+  // Ces méthodes ne sont plus nécessaires avec Clerk mais gardées pour compatibilité
+  const signIn = async (email: string, password: string): Promise<void> => {
+    console.warn(
+      "La méthode signIn est obsolète avec Clerk. Utilisez <SignIn /> à la place."
+    );
+    throw new Error("Non implémenté. Utilisez les composants Clerk.");
   };
 
-  // Fonction de déconnexion
-  const logout = async () => {
-    setIsLoading(true);
-    try {
-      // Simuler une requête API
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setUser(null);
-      localStorage.removeItem('user');
-    } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+  const signUp = async (
+    email: string,
+    password: string,
+    metadata: { first_name: string; last_name: string }
+  ): Promise<void> => {
+    console.warn(
+      "La méthode signUp est obsolète avec Clerk. Utilisez <SignUp /> à la place."
+    );
+    throw new Error("Non implémenté. Utilisez les composants Clerk.");
   };
 
-  const value = {
-    user,
+  const value: AuthContextType = {
+    user: isSignedIn ? user : null,
+    session: null, // Clerk gère les sessions différemment
+    profile,
+    roles,
+    subscription,
     isLoading,
-    login,
-    signup,
-    logout
+    isAuthenticated: isSignedIn,
+    signIn,
+    signUp,
+    signOut,
+    updateProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
+};
+
+// Hook pour utiliser le contexte d'authentification
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error(
+      "useAuth doit être utilisé à l'intérieur d'un AuthProvider"
+    );
+  }
+  return context;
+};
+
+// Composant racine avec Clerk Provider
+export const ClerkAuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+  if (!clerkPubKey) {
+    console.error(
+      "VITE_CLERK_PUBLISHABLE_KEY est manquante dans les variables d'environnement"
+    );
+    return <div>Erreur de configuration d'authentification</div>;
+  }
+
+  return (
+    <ClerkProvider publishableKey={clerkPubKey}>
+      <AuthProvider>{children}</AuthProvider>
+    </ClerkProvider>
+  );
+};
+
+// Composant pour protéger les routes
+export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  return (
+    <>
+      <SignedIn>{children}</SignedIn>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
+    </>
+  );
+};

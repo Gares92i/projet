@@ -40,9 +40,6 @@ build
 # Testing
 coverage
 
-# Supabase
-.supabase
-
 # Misc
 .cache
 .temp

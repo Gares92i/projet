@@ -3,43 +3,47 @@
 
 echo "🔄 Démarrage de la correction des imports..."
 
-# 1. Correction des imports de services
-echo "🔧 Correction des imports de services..."
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/services/taskService"|from "@/features/tasks/services/taskService"|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/services/reportService"|from "@/features/reports/services/reportService"|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/services/clientService"|from "@/features/clients/services/clientService"|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/services/planningService"|from "@/features/planning/services/planningService"|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/services/stripeService"|from "@/services/stripeService"|g'
+echo "🔧 Correction automatique des imports..."
 
-# 2. Correction des imports de features
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/features/projectService"|from "@/features/projects/services/projectService"|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/features/annotationService"|from "@/features/annotations/services/annotationService"|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/features/teamService"|from "@/features/team/services/teamService"|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/features/storageService"|from "@/services/storageService"|g'
+# Correction des imports de MainLayout
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/components/layout/MainLayout|@/features/layout/components/MainLayout|g'
 
-# 3. Correction des imports UI
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/ui/|from "@/ui/|g'
+# Correction des imports de composants de layout
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/components/Navbar|@/features/layout/components/Navbar|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/components/Sidebar|@/features/layout/components/Sidebar|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/components/UserMenu|@/features/layout/components/UserMenu|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/components/ErrorBoundary|@/features/layout/components/ErrorBoundary|g'
 
-# 4. Correction des imports avec @services
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@services/|from "@/services/|g'
+# Correction des imports de services
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/services/apiClient|@/features/common/services/apiClient|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/services/projectService|@/features/projects/services/projectService|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/services/reportService|@/features/reports/services/reportService|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/services/storageService|@/features/storage/services/storageService|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/services/annotationService|@/features/annotations/services/annotationService|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/services/teamService|@/features/team/services/teamService|g'
 
-# 5. Correction des imports de components
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/project/|from "@/features/projects/components/|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/team/|from "@/features/team/components/|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/settings/|from "@/features/settings/components/|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/maps/|from "@/features/maps/components/|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/resources/|from "@/features/resources/components/|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/annotations/|from "@/features/annotations/components/|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/tasks/|from "@/features/tasks/components/|g'
+# Correction des imports de hooks
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/hooks/use-mobile|@/features/common/hooks/use-mobile|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/hooks/use-toast|@/features/common/hooks/use-toast|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/hooks/useLocalStorage|@/features/storage/hooks/useLocalStorage|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/hooks/useSubscription|@/features/subscription/hooks/useSubscription|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/hooks/use-report-form|@/features/reports/hooks/use-report-form|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/hooks/useTeamMemberManager|@/features/team/hooks/useTeamMemberManager|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/hooks/useEditProject|@/features/projects/hooks/useEditProject|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/hooks/use-storage-upload|@/features/storage/hooks/use-storage-upload|g'
 
-# 6. Correction des imports spécifiques problématiques
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/project/tabs/DescriptifDetailTab"|from "@/features/descriptif/components/DescriptifDetailTab"|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/TaskList"|from "@/features/tasks/components/TaskList"|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/DocumentsList"|from "@/features/documents/components/DocumentsList"|g'
-find src -type f \( -name "*.ts" -o -name "*.tsx" \) | xargs sed -i '' -E 's|from "@/components/ProjectCard"|from "@/features/projects/components/ProjectCard"|g'
+# Correction des imports de contextes
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/contexts/AuthContext|@/features/auth/contexts/AuthContext|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/contexts/ThemeContext|@/features/auth/contexts/ThemeContext|g'
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/contexts/DataPersistenceContext|@/features/auth/contexts/DataPersistenceContext|g'
 
-# 7. Création des dossiers manquants
-mkdir -p src/features/team/utils
-mkdir -p src/services
+# Correction des imports de types
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/components/gantt/types|@/features/projects/types/gantt|g'
+
+# Correction des imports de localStorageService
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/features/storage/localStorageService|@/features/storage/services/localStorageService|g'
+
+# Correction des imports de milestonesService
+find src -name "*.tsx" -o -name "*.ts" | xargs sed -i '' 's|@/components/services/milestonesService|@/features/projects/services/milestonesService|g'
 
 echo "✅ Correction des imports terminée!"

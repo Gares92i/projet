@@ -5,7 +5,7 @@ import { Button } from "@/ui/button";
 import { Plus } from "lucide-react";
 import { AnnotationsTable } from "@/features/projects/components/AnnotationsTable";
 import { Annotation } from "@/app/styles";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ErrorBoundary } from "@/features/layout/components/ErrorBoundary";
 
 interface AnnotationsTabProps {
   annotations: Annotation[];

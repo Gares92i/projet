@@ -1,5 +1,5 @@
-import { Project } from "@/types/project";
-import { createApiClient } from "./apiClient";
+import { Project } from "@/features/projects/types/project";
+import { createApiClient } from "@/features/common/services/apiClient";
 import { ProjectMilestone } from "@/app/styles";
 
 // Service pour gérer les projets avec l'API Railway

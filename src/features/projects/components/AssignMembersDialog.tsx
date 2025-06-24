@@ -35,7 +35,7 @@ export const AssignMembersDialog: React.FC<AssignMembersDialogProps> = ({
         setIsLoading(true);
 
         // Utiliser le service pour charger tous les membres
-        const { getAllTeamMembers } = await import('@/services/teamService');
+        const { getAllTeamMembers } = await import('@/features/team/services/teamService');
         const allMembers = await getAllTeamMembers();
         setAllMembers(allMembers);
 

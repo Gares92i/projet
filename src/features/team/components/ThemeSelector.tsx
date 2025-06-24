@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { useTheme } from '@/contexts/ThemeContext';
-import { Button } from '@/components/ui/button';
+import { useTheme } from '@/features/auth/contexts/ThemeContext';
+import { Button } from '@/ui/button';
 import { Moon, Sun, Palette } from 'lucide-react';
 
 export const ThemeSelector = () => {

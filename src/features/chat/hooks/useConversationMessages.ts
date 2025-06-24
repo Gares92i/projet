@@ -1,8 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { ChatMessage, ChatConversation } from '@/types/chat';
-import { useDemoMessages } from './chat/useDemoMessages';
-import { useRealMessages } from './chat/useRealMessages';
+import { useDemoMessages } from "./useDemoMessages";
 
 export function useConversationMessages(
   conversation: ChatConversation | null, 
@@ -17,36 +15,15 @@ export function useConversationMessages(
 
   // Hook for demo conversations
   const { 
-    messages: demoMessages, 
-    sendMessage: sendDemoMessage,
+    messages, 
+    sendMessage,
     isDemo
   } = useDemoMessages(conversation, userId);
 
-  // Hook for real conversations
-  const {
-    messages: realMessages,
-    isLoading,
-    isSending,
-    sendMessage: sendRealMessage
-  } = useRealMessages(conversation, userId);
-
-  // Choose the appropriate implementation based on conversation type
-  const messages = isDemo ? demoMessages : realMessages;
-  
-  // Unified send message handler
-  const handleSendMessage = async (text: string): Promise<void> => {
-    if (isDemo) {
-      sendDemoMessage(text);
-      return Promise.resolve();
-    } else {
-      return sendRealMessage(text);
-    }
-  };
-
   return {
     messages,
-    isLoading: !isDemo && isLoading,
-    isSending: !isDemo && isSending,
-    sendMessage: handleSendMessage
+    isLoading: false,
+    isSending: false,
+    sendMessage
   };
 }

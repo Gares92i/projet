@@ -11,7 +11,7 @@ import {
 } from "@/ui/dropdown-menu";
 import { Badge } from "@/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
-import { Task } from "@/components/gantt/types";
+import { Task } from "@/features/projects/types/gantt";
 import { toggleTaskCompletion, deleteTask } from "@/features/tasks/services/taskService";
 import { toast } from "sonner";
 import { useState } from "react";

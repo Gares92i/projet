@@ -1,5 +1,5 @@
 import { TeamMember } from "@/features/team/types/team";
-import { createApiClient } from "./apiClient";
+import { createApiClient } from "@/features/common/services/apiClient";
 
 // Fonction utilitaire pour normaliser les données de membre d'équipe
 export function normalizeTeamMember(member: any): TeamMember {
@@ -141,3 +141,18 @@ export const getTeamMemberById = teamService.getTeamMemberById;
 export const addTeamMember = teamService.addTeamMember;
 export const updateTeamMember = teamService.updateTeamMember;
 export const deleteTeamMember = teamService.deleteTeamMember;
+
+export async function getOrCreateDefaultTeam() {
+  // À implémenter : retourne une équipe par défaut ou la crée
+  return null;
+}
+
+// Squelette à implémenter
+export function syncLocalMembersWithReports() {
+  // TODO: synchroniser les membres locaux avec les rapports
+}
+
+// Squelette à implémenter
+export function syncReportParticipantsWithTeamMembers() {
+  // TODO: synchroniser les participants du rapport avec les membres d'équipe
+}

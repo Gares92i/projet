@@ -1,5 +1,5 @@
 import { Annotation } from '@/app/styles';
-import { captureDocumentWithAnnotations } from '@/utils/captureService';
+import { captureDocumentWithAnnotations } from "./captureService";
 
 /**
  * Normalise les coordonnées d'une annotation en fonction des dimensions originales et cibles

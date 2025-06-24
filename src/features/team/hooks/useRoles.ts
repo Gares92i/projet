@@ -1,5 +1,5 @@
 
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
 import { UserRole } from '@/types/auth';
 
 export const useRoles = () => {

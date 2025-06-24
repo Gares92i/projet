@@ -6,7 +6,7 @@ import { Plus, Filter } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/ui/dialog";
 import { Badge } from "@/ui/badge";
 import { Annotation } from "@/app/styles";
-import { AnnotationReserve } from "@/hooks/use-report-form";
+import { AnnotationReserve } from "@/features/reports/hooks/use-report-form";
 import { AnnotationReserveItem } from "./AnnotationReserveItem";
 import { AnnotationsTable } from "./AnnotationsTable";
 import { format } from "date-fns";

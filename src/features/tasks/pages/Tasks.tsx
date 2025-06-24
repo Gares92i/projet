@@ -1,12 +1,11 @@
-
 import { useState, useEffect } from "react";
-import MainLayout from "@/components/layout/MainLayout";
+import MainLayout from "@/features/layout/components/MainLayout";
 import { Button } from "@/ui/button";
 import { Card, CardContent } from "@/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs";
 import TaskList from "@/features/tasks/components/TaskList";
 import { Plus } from "lucide-react";
-import { Task } from "@/components/gantt/types";
+import { Task } from "@/features/projects/types/gantt";
 import { getAllTasks, toggleTaskCompletion } from "@/features/tasks/services/taskService";
 import TaskFilters from "@/features/tasks/components/TaskFilters";
 import TaskStats from "@/features/tasks/components/TaskStats";

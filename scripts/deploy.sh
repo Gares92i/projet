@@ -45,12 +45,4 @@ else
     exit 1
 fi
 
-# Apply database migrations
-echo -e "${GREEN}Applying database migrations...${NC}"
-npx supabase db push
-
-# Configurer les buckets de stockage et leurs politiques
-echo -e "${GREEN}Configuring storage buckets...${NC}"
-npx supabase db execute --file ./supabase/migrations/20250410_storage_buckets.sql
-
 echo -e "${GREEN}Deployment to ${ENVIRONMENT} completed successfully!${NC}"

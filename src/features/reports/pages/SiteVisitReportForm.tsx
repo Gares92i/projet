@@ -1,24 +1,24 @@
 import { useNavigate, useParams } from "react-router-dom";
-import MainLayout from "@/components/layout/MainLayout";
+import MainLayout from "@/features/layout/components/MainLayout";
 import { Form } from "@/ui/form";
 import { Button } from "@/ui/button";
 import { Card } from "@/ui/card";
 import { ChevronLeft } from "lucide-react";
-import { useReportForm, AnnotationReserve } from "@/hooks/use-report-form";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { ReportTemplateSelector } from "@/features/projects/components/ReportTemplateSelector";
-import ReportHeader from "@/features/projects/components/ReportHeader";
+import { useReportForm, AnnotationReserve } from "@/features/reports/hooks/use-report-form";
+import { useIsMobile } from "@/features/common/hooks/use-mobile";
+import { ReportTemplateSelector } from "@/features/reports/components/ReportTemplateSelector";
+import ReportHeader from "@/features/reports/components/ReportHeader";
 import { GeneralInfoSection } from "@/features/projects/components/GeneralInfoSection";
-import { PhotosSection } from "@/features/projects/components/PhotosSection";
-import { ObservationsSection } from "@/features/projects/components/ObservationsSection";
-import { RecommendationsSection } from "@/features/projects/components/RecommendationsSection";
-import { useStorageUpload } from "@/hooks/use-storage-upload";
+import { PhotosSection } from "@/features/reports/components/PhotosSection";
+import { ObservationsSection } from "@/features/reports/components/ObservationsSection";
+import { RecommendationsSection } from "@/features/reports/components/RecommendationsSection";
+import { useStorageUpload } from "@/features/storage/hooks/use-storage-upload";
 import { AdditionalDetailsSection } from "@/features/projects/components/AdditionalDetailsSection";
-import { ParticipantsSection } from "@/features/projects/components/ParticipantsSection";
-import { ReportAnnotationsSection } from "@/features/projects/components/ReportAnnotationsSection";
+import { ParticipantsSection } from "@/features/reports/components/ParticipantsSection";
+import { ReportAnnotationsSection } from "@/features/reports/components/ReportAnnotationsSection";
 import { TaskProgressSelector } from "@/features/projects/components/TaskProgressSelector";
 import { TaskProgressDisplay } from "@/features/projects/components/TaskProgressDisplay";
-import { syncReportParticipantsWithTeamMembers } from "@/features/team/teamMembersService";
+import { syncReportParticipantsWithTeamMembers } from "@/features/team/services/teamService";
 import { calculateAverageProgress } from "@/utils/progressUtils";
 
 import { getOrCreateDefaultTeam } from "@/features/team/services/teamService"; // Ajustez le chemin si nécessaire

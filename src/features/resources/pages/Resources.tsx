@@ -1,8 +1,8 @@
 import { useState } from "react";
-import MainLayout from "@/components/layout/MainLayout";
+import MainLayout from "@/features/layout/components/MainLayout";
 import { Button } from "@/ui/button";
 import { Plus, Search } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/features/common/hooks/use-toast";
 import { ResourceForm } from "@/features/resources/components/ResourceForm";
 import { ResourceSearchBar } from "@/features/resources/components/ResourceSearchBar";
 import { ResourceCategories } from "@/features/resources/components/ResourceCategories";

@@ -341,7 +341,7 @@ export const useAnnotations = (initialDocuments: Document[] = [], projectId: str
                   updatedData.photos = updatedData.photos.map((photo, index) => {
                     // Si c'est une nouvelle image éditée (base64)
                     if (photo.startsWith('data:image') && photo !== ann.photos?.[index]) {
-                      // On pourrait ici envoyer l'image à Supabase ou un autre stockage
+                      // On pourrait ici envoyer l'image à un service de stockage
                       // Pour l'instant, on garde l'URL base64
                       console.log("Image modifiée détectée:", photo.substring(0, 30) + "...");
                     }

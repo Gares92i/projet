@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import MainLayout from "@/components/layout/MainLayout";
+import MainLayout from "@/features/layout/components/MainLayout";
 import { Button } from "@/ui/button";
 
 import { TaskProgressDisplay } from "@/features/projects/components/TaskProgressDisplay";
@@ -62,7 +62,7 @@ import {
 } from "@/ui/dialog";
 import { reportTemplates } from "@/features/reports/components/ReportTemplateSelector";
 import { Annotation } from "@/app/styles";
-import { AnnotationReserve } from "@/hooks/use-report-form";
+import { AnnotationReserve } from "@/features/reports/hooks/use-report-form";
 import { AnnotationReserveItem } from "@/features/projects/components/AnnotationReserveItem";
 import { AnnotationsTable } from "@/features/annotations/components/AnnotationsTable";
 // Ajout de l'import pour AsyncImage
@@ -164,7 +164,7 @@ const SiteVisitReportDetail = () => {
 
         if (reportData?.participants?.length > 0) {
           // Ajouter cette ligne pour synchroniser les participants avec l'équipe
-          import('@/services/teamService').then(({ syncLocalMembersWithReports }) => {
+          import('@/features/team/services/teamService').then(({ syncLocalMembersWithReports }) => {
             // D'abord sauvegarder les participants comme membres potentiels
             try {
               const participantsAsMembers = reportData.participants.map(p => ({

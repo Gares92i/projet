@@ -14,7 +14,7 @@ import {
   SheetTitle,
 } from "@/ui/sheet";
 import { addTask } from "@/features/tasks/services/taskService";
-import { Task } from "@/components/gantt/types";
+import { Task } from "@/features/projects/types/gantt";
 
 interface NewTaskSheetProps {
   isOpen: boolean;

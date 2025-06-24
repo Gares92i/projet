@@ -1,9 +1,9 @@
 import { useState } from "react";
-import MainLayout from "@/components/layout/MainLayout";
+import MainLayout from "@/features/layout/components/MainLayout";
 import { TeamMemberDisplay } from "@/features/team/components/TeamMemberDisplay";
 import { Button } from "@/ui/button";
 import { PlusCircle, Search, Grid, List, Filter } from "lucide-react"; // Ajout des icônes Grid et List
-import { useTeamMemberManager } from "@/hooks/useTeamMemberManager";
+import { useTeamMemberManager } from "@/features/team/hooks/useTeamMemberManager";
 import { TeamMemberDialogs } from "@/features/team/components/TeamMemberDialogs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/ui/select";
 import { Input } from "@/ui/input";

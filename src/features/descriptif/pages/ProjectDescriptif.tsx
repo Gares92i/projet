@@ -8,9 +8,9 @@ import {
   ExtendedTask,
   ComponentExtendedLotTravaux,
 } from "@/features/descriptif/components/DescriptifDetailTab";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useLocalStorage } from "@/features/storage/hooks/useLocalStorage";
 import { useToast } from "@/ui/use-toast";
-import { DataPersistenceProvider } from "@/contexts/DataPersistenceContext";
+import { DataPersistenceProvider } from "@/features/auth/contexts/DataPersistenceContext";
 
 // Fonction pour convertir LotTravaux[] en ProjectExtendedLotTravaux[]
 const convertToExtendedFormat = (lots: LotTravaux[]): ProjectExtendedLotTravaux[] => {
