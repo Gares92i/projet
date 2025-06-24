@@ -13,7 +13,16 @@ async function bootstrap() {
   app.use(helmet.default()); // Utiliser helmet.default()
 
   // Activer CORS
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      'https://archihub-frontend.vercel.app',
+      'http://localhost:5173',
+      'http://localhost:3000'
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  });
 
   // Validation globale
   app.useGlobalPipes(
