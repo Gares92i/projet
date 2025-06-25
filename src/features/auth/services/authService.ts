@@ -9,6 +9,14 @@ import {
     const { isSignedIn, user, isLoaded } = useUser();
     const { signOut, getToken } = useClerkAuth();
 
+    // Debug: afficher l'état de Clerk
+    console.log('useAuth Debug:', {
+      isSignedIn,
+      user: !!user,
+      isLoaded,
+      userId: user?.id
+    });
+
     // Convertir les données utilisateur de Clerk en UserProfile
     const mapToUserProfile = (): UserProfile | null => {
       if (!user) return null;

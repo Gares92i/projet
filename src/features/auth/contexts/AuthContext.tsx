@@ -176,6 +176,11 @@ export const ClerkAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
+  console.log('ClerkAuthProvider Debug:', {
+    clerkPubKey: clerkPubKey ? clerkPubKey.substring(0, 20) + '...' : 'undefined',
+    envKeys: Object.keys(import.meta.env).filter(key => key.includes('CLERK'))
+  });
+
   if (!clerkPubKey) {
     console.error(
       "VITE_CLERK_PUBLISHABLE_KEY est manquante dans les variables d'environnement"

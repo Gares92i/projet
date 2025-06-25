@@ -53,10 +53,9 @@ export const createApiClient = (): {
         
         // Gérer les erreurs d'authentification
         if (error.response.status === 401) {
-          // Rediriger vers la page de connexion ou rafraîchir le token
-          console.log('Session expirée, redirection vers la page de connexion');
+          console.warn('[apiClient] Redirection vers /auth suite à une erreur d\'authentification ou session expirée');
           localStorage.removeItem('auth_token');
-          window.location.href = '/login';
+          window.location.href = '/auth';
         }
       } else if (error.request) {
         // La requête a été faite mais aucune réponse n'a été reçue

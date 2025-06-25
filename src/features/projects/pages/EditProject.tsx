@@ -58,6 +58,7 @@ const EditProject = () => {
           <ProjectImageCard 
             imageUrl={project.imageUrl}
             projectName={project.name}
+            projectId={project.id}
             onImageUploaded={handleImageUploaded}
           />
         </div>

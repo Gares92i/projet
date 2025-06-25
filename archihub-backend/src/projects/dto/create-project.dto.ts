@@ -65,4 +65,9 @@ export class CreateProjectDto {
   @IsArray()
   @IsString({ each: true })
   tags?: string[];
+
+  @ApiPropertyOptional({ description: "URL de l'image du projet" })
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
 }

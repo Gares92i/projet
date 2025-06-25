@@ -13,6 +13,14 @@ const AuthGuard = ({ children, allowedRoles }: AuthGuardProps) => {
   const { user, isLoading, roles } = useAuth();
   const location = useLocation();
 
+  // Debug: afficher l'état de l'authentification
+  console.log('AuthGuard Debug:', {
+    user: !!user,
+    isLoading,
+    roles,
+    location: location.pathname
+  });
+
   // Si l'authentification est en cours de chargement, afficher un indicateur de chargement
   if (isLoading) {
     return (
@@ -24,7 +32,8 @@ const AuthGuard = ({ children, allowedRoles }: AuthGuardProps) => {
 
   // Si l'utilisateur n'est pas authentifié, rediriger vers la page de connexion
   if (!user) {
-    return <Navigate to="/auth/login" state={{ from: location }} replace />;
+    console.log('AuthGuard: Utilisateur non authentifié, redirection vers /auth');
+    return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
   // Si des rôles spécifiques sont requis et que l'utilisateur ne les a pas

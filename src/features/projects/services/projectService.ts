@@ -218,3 +218,21 @@ export const updateProject = projectService.updateProject;
 export const deleteProject = projectService.deleteProject;
 export const getProjectMilestones = projectService.getProjectMilestones;
 export const updateProjectMilestones = projectService.updateProjectMilestones;
+
+export async function uploadProjectImage(projectId: string, file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/projects/${projectId}/upload`, {
+    method: 'POST',
+    body: formData,
+    credentials: 'include', // si besoin d'envoyer les cookies d'auth
+  });
+
+  if (!response.ok) {
+    throw new Error('Erreur lors de l\'upload');
+  }
+
+  const data = await response.json();
+  return data.imageUrl;
+}

@@ -3,17 +3,14 @@ import ReactDOM from 'react-dom/client';
 import App from "./App";
 import "../styles/index.css"; // Chemin corrigé
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from '@/features/auth/contexts/AuthContext';
-import { ClerkProvider } from '@clerk/clerk-react';
+import { ClerkAuthProvider } from '@/features/auth/contexts/AuthContext';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
+    <ClerkAuthProvider>
       <BrowserRouter>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
+        <App />
       </BrowserRouter>
-    </ClerkProvider>
+    </ClerkAuthProvider>
   </React.StrictMode>,
 )
