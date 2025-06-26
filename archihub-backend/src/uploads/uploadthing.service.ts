@@ -1,25 +1,41 @@
 import { Injectable, Logger } from '@nestjs/common';
-// @ts-ignore
-const { UploadThing } = require('uploadthing');
+import axios from 'axios';
+import * as FormData from 'form-data';
 
 @Injectable()
 export class UploadThingService {
   private readonly logger = new Logger(UploadThingService.name);
-  private readonly uploadthing = new UploadThing({
-    apiKey: process.env.UPLOADTHING_SECRET,
-  });
+  private readonly apiKey = process.env.UPLOADTHING_SECRET;
 
   /**
    * Upload un fichier vers UploadThing et retourne l'URL
    */
   async uploadFile(fileBuffer: Buffer, fileName: string, mimeType: string): Promise<string> {
     try {
-      const result = await this.uploadthing.upload({
-        file: fileBuffer,
-        fileName,
+      // Créer un FormData avec le fichier
+      const formData = new FormData();
+      formData.append('file', fileBuffer, {
+        filename: fileName,
         contentType: mimeType,
       });
-      return result.url;
+
+      // Appeler l'API UploadThing
+      const response = await axios.post(
+        'https://uploadthing.com/api/upload',
+        formData,
+        {
+          headers: {
+            ...formData.getHeaders(),
+            'Authorization': `Bearer ${this.apiKey}`,
+          },
+        }
+      );
+
+      if (response.data && response.data.url) {
+        return response.data.url;
+      } else {
+        throw new Error('URL non trouvée dans la réponse UploadThing');
+      }
     } catch (error) {
       this.logger.error(`Erreur UploadThing: ${error.message}`);
       throw error;
