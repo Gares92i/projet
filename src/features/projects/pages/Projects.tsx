@@ -51,7 +51,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/ui/avatar";
 import { toast } from "sonner";
 import {
-  getAllProjects,
+  projectService,
   addProject,
   // addProjectToMember,
 } from "@/features/projects/services/projectService";
@@ -89,38 +89,27 @@ const Projects = () => {
     imageUrl: undefined,
     projectType: "",
     projectArea: undefined,
-    roomCount: undefined
+    roomCount: undefined,
+    description: "" // Ajouté pour la compatibilité avec le type Project
   });
   
   // Simplifier pour éviter la duplication - utiliser une seule fonction
   const loadProjects = useCallback(async () => {
     try {
       setIsLoading(true);
-      const [projectsData, members, clientsData] = await Promise.all([
-        getAllProjects(),
-        // getAllTeamMembers(),
-        getAllClients()
-      ]);
       
-      const normalizedProjects = projectsData.map(project => ({
-        ...project,
-        startDate: project.startDate || undefined,
-        endDate: project.endDate || undefined,
-        teamMembers: Array.isArray(project.teamMembers) 
-          ? (typeof project.teamMembers[0] === 'string' 
-              ? project.teamMembers.map(id => ({ id, name: "Membre", role: "non spécifié" })) 
-              : project.teamMembers)
-          : [],
-        milestones: project.milestones || []
-      }));
+      // Utiliser directement les données locales pour le test
+      const stored = localStorage.getItem("projectsData");
+      const projectsData = stored ? JSON.parse(stored) : [];
       
-      console.log("Projets chargés:", normalizedProjects.length);
-      setProjectsData(normalizedProjects);
-      setFilteredProjects(normalizedProjects);
+      // Charger les clients
+      const clientsData = await getAllClients();
       
-      // Ne mettre à jour ces états que lors du chargement initial
-      if (members) setTeamMembers(members);
-      if (clientsData) setClients(clientsData);
+      console.log("Projets chargés:", projectsData.length);
+      setProjectsData(projectsData);
+      setFilteredProjects(projectsData);
+      setClients(clientsData);
+      
     } catch (error) {
       console.error("Erreur lors du chargement des projets:", error);
       toast.error("Impossible de charger les données");
@@ -197,7 +186,7 @@ const Projects = () => {
   // handleCreateProject amélioré avec vérification de type
   const handleCreateProject = async () => {
     // Validation des champs
-    if (!newProject.name || !newProject.clientId || !newProject.location) {
+    if (!newProject.name || !newProject.location) {
       toast.error("Veuillez remplir tous les champs obligatoires");
       return;
     }
@@ -259,7 +248,8 @@ const Projects = () => {
         imageUrl: undefined,
         projectType: "",
         projectArea: undefined,
-        roomCount: undefined
+        roomCount: undefined,
+        description: ""
       });
       
       setSelectedTeamMembers([]);
