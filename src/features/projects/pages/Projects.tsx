@@ -77,6 +77,7 @@ const Projects = () => {
   // État du formulaire pour un nouveau projet
   const [newProject, setNewProject] = useState<Omit<ProjectCardProps, "id">>({
     name: "",
+    description: "",
     client: "",
     clientId: "",
     location: "",
@@ -89,8 +90,7 @@ const Projects = () => {
     imageUrl: undefined,
     projectType: "",
     projectArea: undefined,
-    roomCount: undefined,
-    description: "" // Ajouté pour la compatibilité avec le type Project
+    roomCount: undefined
   });
   
   // Simplifier pour éviter la duplication - utiliser une seule fonction
@@ -236,6 +236,7 @@ const Projects = () => {
       // Réinitialiser le formulaire et recharger les projets
       setNewProject({
         name: "",
+        description: "",
         client: "",
         clientId: "",
         location: "",
@@ -248,8 +249,7 @@ const Projects = () => {
         imageUrl: undefined,
         projectType: "",
         projectArea: undefined,
-        roomCount: undefined,
-        description: ""
+        roomCount: undefined
       });
       
       setSelectedTeamMembers([]);
@@ -535,6 +535,17 @@ const Projects = () => {
                 placeholder="Entrez le nom du projet" 
                 value={newProject.name}
                 onChange={(e) => setNewProject({...newProject, name: e.target.value})}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="project-description">Description du projet</Label>
+              <textarea 
+                id="project-description" 
+                placeholder="Décrivez brièvement le projet..." 
+                value={newProject.description || ""}
+                onChange={(e) => setNewProject({...newProject, description: e.target.value})}
+                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
             

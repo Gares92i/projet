@@ -34,6 +34,7 @@ import { toast } from "sonner";
 export interface ProjectCardProps {
   id: string;
   name: string;
+  description?: string;
   client: string;
   clientId: string;
   location: string;

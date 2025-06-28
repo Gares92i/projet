@@ -47,6 +47,9 @@ export class Project {
   @Column({ name: 'created_by_user_id', nullable: true })
   createdByUserId: string;
 
+  @Column({ nullable: true })
+  description: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

@@ -31,6 +31,18 @@ export const ProjectDetailsCard = ({ project, formatDate }: ProjectDetailsCardPr
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
+          {project.description && (
+            <div className="flex items-start gap-3">
+              <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
+              <div>
+                <div className="text-sm font-medium">Description</div>
+                <div className="text-sm text-muted-foreground">
+                  {project.description}
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center gap-3">
             <Building2 className="h-4 w-4 text-muted-foreground" />
             <div>
