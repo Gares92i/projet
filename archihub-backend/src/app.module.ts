@@ -29,14 +29,13 @@ import { ClerkAuthMiddleware } from './auth/middleware/clerk-auth.middleware';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        url: configService.get('DATABASE_URL'),
+        url: configService.get('DATABASE_PUBLIC_URL'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        ssl: false, // Désactiver SSL complètement pour Railway
-        synchronize: false, // Toujours false en production
+        ssl: { rejectUnauthorized: false },
+        synchronize: false,
         migrationsRun: true,
-        migrations: [__dirname + '/../migrations/**/*.ts'],
+        migrations: [__dirname + '/../migrations/*.js'],
         logging: ['query', 'error'],
-        // Ajouter des options de connexion pour éviter les timeouts
         extra: {
           connectionLimit: 10,
           acquireTimeout: 60000,
