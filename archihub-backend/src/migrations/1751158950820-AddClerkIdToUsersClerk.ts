@@ -113,7 +113,9 @@ export class AddClerkIdToUsersClerk1751158950820 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "project_team_members" DROP COLUMN "role_in_project"`);
         await queryRunner.query(`ALTER TABLE "project_team_members" ADD "role_in_project" character varying`);
         await queryRunner.query(`ALTER TABLE "projects" DROP COLUMN "name"`);
-        await queryRunner.query(`ALTER TABLE "projects" ADD "name" character varying NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "projects" ADD "name" character varying`);
+        await queryRunner.query(`UPDATE "projects" SET "name" = 'Projet sans nom' WHERE "name" IS NULL`);
+        await queryRunner.query(`ALTER TABLE "projects" ALTER COLUMN "name" SET NOT NULL`);
         await queryRunner.query(`ALTER TABLE "projects" DROP COLUMN "client_id"`);
         await queryRunner.query(`ALTER TABLE "projects" ADD "client_id" character varying`);
         await queryRunner.query(`ALTER TABLE "projects" DROP COLUMN "location"`);
