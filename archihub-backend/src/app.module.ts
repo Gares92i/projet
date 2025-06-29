@@ -34,7 +34,7 @@ import { ClerkAuthMiddleware } from './auth/middleware/clerk-auth.middleware';
         ssl: { rejectUnauthorized: false },
         synchronize: false,
         migrationsRun: true,
-        migrations: [__dirname + '/../migrations/*.js'],
+        migrations: [__dirname + '/migrations/*.js'],
         logging: ['query', 'error'],
         extra: {
           connectionLimit: 10,
