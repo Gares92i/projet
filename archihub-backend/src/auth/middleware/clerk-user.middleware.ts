@@ -9,7 +9,7 @@ export class ClerkUserMiddleware implements NestMiddleware {
 
   async use(req: RequestWithAuth, res: Response, next: NextFunction) {
     try {
-      if (req.auth && req.auth.userId) {
+      if (req.auth && req.auth.userId && req.auth.userId !== 'guest') {
         const clerkId = req.auth.userId;
         const user = await this.usersService.findOrCreateByClerkId(clerkId);
 

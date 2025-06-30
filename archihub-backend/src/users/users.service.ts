@@ -30,7 +30,11 @@ export class UsersService {
   /**
    * Créer ou trouver un utilisateur par son ID Clerk
    */
-  async findOrCreateByClerkId(clerkId: string): Promise<User> {
+  async findOrCreateByClerkId(clerkId: string): Promise<User | null> {
+    if (!clerkId || clerkId === 'guest') {
+      this.logger.warn(`Tentative de création/recherche d'un utilisateur Clerk sans ID valide: ${clerkId}`);
+      return null;
+    }
     try {
       let user = await this.findByClerkId(clerkId);
 
