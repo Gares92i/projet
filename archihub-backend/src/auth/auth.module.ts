@@ -4,14 +4,15 @@ import { AuthService } from './auth.service';
 import { ClerkAuthMiddleware } from './middleware/clerk-auth.middleware';
 import { UsersModule } from '../users/users.module';
 import { ClerkUserMiddleware } from './middleware/clerk-user.middleware';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [
     ConfigModule,
     UsersModule,
   ],
-  providers: [AuthService],
-  exports: [AuthService],
+  providers: [AuthService, RolesGuard],
+  exports: [AuthService, RolesGuard],
 })
 export class AuthModule {
   configure(consumer: MiddlewareConsumer) {

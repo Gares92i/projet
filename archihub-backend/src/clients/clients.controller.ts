@@ -33,14 +33,13 @@ import { RequestWithAuth } from '../types/express';
 @ApiTags('clients')
 @ApiBearerAuth()
 @Controller('clients')
-@UseGuards(AuthGuard, RolesGuard)
+@UseGuards(AuthGuard)
 export class ClientsController {
   private readonly logger = new Logger(ClientsController.name);
 
   constructor(private readonly clientsService: ClientsService) {}
 
   @Post()
-  @Roles('admin', 'manager')
   @ApiOperation({ summary: 'Créer un nouveau client' })
   @ApiResponse({ status: 201, description: 'Le client a été créé avec succès.' })
   @ApiResponse({ status: 400, description: 'Données invalides.' })
