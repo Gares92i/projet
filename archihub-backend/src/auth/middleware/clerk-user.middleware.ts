@@ -10,8 +10,8 @@ export class ClerkUserMiddleware implements NestMiddleware {
   async use(req: RequestWithAuth, res: Response, next: NextFunction) {
     try {
       if (req.auth && req.auth.userId && req.auth.userId !== 'guest') {
-        const clerkId = req.auth.userId;
-        const user = await this.usersService.findOrCreateByClerkId(clerkId);
+        const clerkUserId = req.auth.userId;
+        const user = await this.usersService.findOrCreateByClerkId(clerkUserId);
 
         // Mettre à jour req.auth avec l'ID interne de l'utilisateur
         if (user) {

@@ -6,7 +6,7 @@ export class User {
   id: string;
 
   @Column({ name: 'clerk_user_id', unique: true }) // Nom correct de la colonne en base
-  clerkId: string;
+  clerkUserId: string;
 
   @Column({ nullable: true })
   firstName: string;
