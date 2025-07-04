@@ -4,9 +4,10 @@ import { PdfController } from './pdf.controller';
 import { ConfigModule } from '@nestjs/config';
 import { ProjectsModule } from '../projects/projects.module';
 import { ReportsModule } from '../reports/reports.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [ConfigModule, ProjectsModule, ReportsModule],
+  imports: [ConfigModule, ProjectsModule, ReportsModule, UsersModule],
   controllers: [PdfController],
   providers: [PdfService],
   exports: [PdfService],
