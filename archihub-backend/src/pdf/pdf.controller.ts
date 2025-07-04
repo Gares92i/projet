@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { PdfService } from './pdf.service';
 import { ReportDto } from './dto/report.dto';
-import { Response } from 'express';
+import type { Response } from 'express';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { AuthGuard } from '../auth/guards/auth.guard';
