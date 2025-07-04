@@ -4,7 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Workspace } from '../../workspaces/entities/workspace.entity';
 
 @Entity('projects')
 export class Project {
@@ -50,10 +53,17 @@ export class Project {
   @Column({ nullable: true })
   description: string;
 
+  @Column({ name: 'workspace_id', nullable: true })
+  workspaceId: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
+  // Relations
+  @ManyToOne(() => Workspace, workspace => workspace.projects, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'workspace_id' })
+  workspace: Workspace;
 }

@@ -11,8 +11,9 @@ import { ReportsModule } from './reports/reports.module';
 import { TeamsModule } from './teams/teams.module';
 import { DocumentsModule } from './documents/documents.module';
 import { PdfModule } from './pdf/pdf.module';
-import { UploadsModule } from './uploads/uploads.module'; // Ajoutez cette ligne
+import { UploadsModule } from './uploads/uploads.module';
 import { AuthModule } from './auth/auth.module';
+import { WorkspacesModule } from './workspaces/workspaces.module';
 import { ClerkAuthMiddleware } from './auth/middleware/clerk-auth.middleware';
 
 @Module({
@@ -51,8 +52,9 @@ import { ClerkAuthMiddleware } from './auth/middleware/clerk-auth.middleware';
     TeamsModule,
     DocumentsModule,
     PdfModule,
-    UploadsModule, // Ajoutez cette ligne
+    UploadsModule,
     AuthModule,
+    WorkspacesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

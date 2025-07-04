@@ -9,8 +9,18 @@ import * as path from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Sécurité avec Helmet
-  app.use(helmet.default()); // Utiliser helmet.default()
+  // Sécurité avec Helmet - configuration permissive pour CORS
+  app.use(helmet.default({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", "data:", "https:"],
+      },
+    },
+  }));
 
   // Configuration pour augmenter la limite de taille des requêtes
   app.use((req: any, res: any, next: any) => {
