@@ -12,7 +12,7 @@ import {
   HttpException,
   HttpStatus,
   Req,
-  NotFoundException, // Ajout de l'import manquant
+  NotFoundException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -26,25 +26,21 @@ import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
-import { Request } from 'express';
-
-interface RequestWithAuth extends Request {
-  auth?: {
-    userId: string;
-    isAuthenticated: boolean;
-  };
-}
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RequestWithAuth } from '../types/express';
 
 @ApiTags('clients')
 @ApiBearerAuth()
 @Controller('clients')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 export class ClientsController {
   private readonly logger = new Logger(ClientsController.name);
 
   constructor(private readonly clientsService: ClientsService) {}
 
   @Post()
+  @Roles('admin', 'manager')
   @ApiOperation({ summary: 'Créer un nouveau client' })
   @ApiResponse({ status: 201, description: 'Le client a été créé avec succès.' })
   @ApiResponse({ status: 400, description: 'Données invalides.' })
@@ -64,6 +60,7 @@ export class ClientsController {
   }
 
   @Get()
+  @Roles('admin', 'manager', 'user')
   @ApiOperation({ summary: 'Récupérer tous les clients' })
   @ApiResponse({ status: 200, description: 'Liste des clients récupérée avec succès.' })
   @ApiResponse({ status: 401, description: 'Non autorisé.' })
@@ -103,6 +100,7 @@ export class ClientsController {
   }
 
   @Get(':id')
+  @Roles('admin', 'manager', 'user')
   @ApiOperation({ summary: 'Récupérer un client par ID' })
   @ApiResponse({ status: 200, description: 'Client récupéré avec succès.' })
   @ApiResponse({ status: 404, description: 'Client non trouvé.' })
@@ -123,6 +121,7 @@ export class ClientsController {
   }
 
   @Patch(':id')
+  @Roles('admin', 'manager')
   @ApiOperation({ summary: 'Mettre à jour un client par ID' })
   @ApiResponse({ status: 200, description: 'Client mis à jour avec succès.' })
   @ApiResponse({ status: 404, description: 'Client non trouvé.' })
@@ -143,6 +142,7 @@ export class ClientsController {
   }
 
   @Delete(':id')
+  @Roles('admin')
   @ApiOperation({ summary: 'Supprimer un client par ID' })
   @ApiResponse({ status: 200, description: 'Client supprimé avec succès.' })
   @ApiResponse({ status: 404, description: 'Client non trouvé.' })

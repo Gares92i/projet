@@ -16,7 +16,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
-import { Express, Response } from 'express';
+import { Response } from '../types/express';
 import { UploadsService } from './uploads.service';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import * as fs from 'fs-extra';

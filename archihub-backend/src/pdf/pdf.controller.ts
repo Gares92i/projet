@@ -8,36 +8,43 @@ import {
   Logger,
   HttpStatus,
   HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { PdfService } from './pdf.service';
 import { ReportDto } from './dto/report.dto';
-import { Response } from 'express';
+import { Response } from '../types/express';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import { AuthGuard } from '../auth/guards/auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('pdf')
+@UseGuards(AuthGuard, RolesGuard)
 export class PdfController {
   private readonly logger = new Logger(PdfController.name);
 
   constructor(private readonly pdfService: PdfService) {}
 
   @Post('generate-report')
-  async generateReport(@Body() reportData: ReportDto) {
+  @Roles('admin', 'manager', 'user')
+  async generateReport(@Body() reportData: ReportDto, @Res() res: Response) {
     try {
       const pdfPath = await this.pdfService.generateSiteVisitReport(reportData);
-
-      // Renvoyer uniquement le nom du fichier pour référence ultérieure
-      return {
-        success: true,
-        fileName: path.basename(pdfPath),
-        message: 'PDF généré avec succès',
-      };
+      const pdfBuffer = await fs.readFile(pdfPath);
+      
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'attachment; filename="rapport.pdf"',
+        'Content-Length': pdfBuffer.length,
+      });
+      
+      res.end(pdfBuffer);
+      
+      // Nettoyer le fichier temporaire
+      await fs.remove(pdfPath);
     } catch (error) {
-      this.logger.error(`Erreur lors de la génération du PDF: ${error.message}`, error.stack);
-      throw new HttpException(
-        'Erreur lors de la génération du PDF',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      res.status(500).json({ error: 'Erreur lors de la génération du PDF' });
     }
   }
 
