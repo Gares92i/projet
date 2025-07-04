@@ -3,8 +3,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
-import * as helmet from 'helmet'; // Changer l'import
+import * as helmet from 'helmet';
 import * as path from 'path';
+import { Request, Response, NextFunction } from 'express';
 import { RolesGuard } from './auth/guards/roles.guard';
 
 async function bootstrap() {
@@ -19,27 +20,31 @@ async function bootstrap() {
         styleSrc: ["'self'", "'unsafe-inline'"],
         scriptSrc: ["'self'"],
         imgSrc: ["'self'", "data:", "https:"],
+        connectSrc: ["'self'", "https:", "ws:", "wss:"],
+        fontSrc: ["'self'", "https:", "data:"],
+        objectSrc: ["'none'"],
+        mediaSrc: ["'self'"],
+        frameSrc: ["'none'"],
       },
     },
   }));
 
-  // Configuration pour augmenter la limite de taille des requêtes
-  app.use((req: any, res: any, next: any) => {
-    res.setHeader('Content-Type', 'application/json');
-    next();
-  });
-
-  // Activer CORS avec configuration complète
+  // Configuration CORS complète et robuste
   app.enableCors({
     origin: [
       'https://archihub-frontend.vercel.app',
       'http://localhost:5173',
       'http://localhost:3000',
-      'http://localhost:8084',
-      'http://localhost:8083',
-      'http://localhost:8082',
+      'http://localhost:8080',
       'http://localhost:8081',
-      'http://localhost:8080'
+      'http://localhost:8082',
+      'http://localhost:8083',
+      'http://localhost:8084',
+      'http://127.0.0.1:8080',
+      'http://127.0.0.1:8081',
+      'http://127.0.0.1:8082',
+      'http://127.0.0.1:8083',
+      'http://127.0.0.1:8084',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -52,45 +57,53 @@ async function bootstrap() {
       'Access-Control-Request-Method',
       'Access-Control-Request-Headers'
     ],
-    exposedHeaders: ['Content-Length', 'X-Requested-With'],
+    exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar'],
+    maxAge: 86400, // 24 heures
     preflightContinue: false,
-    optionsSuccessStatus: 204
+    optionsSuccessStatus: 200
   });
 
-  // Validation globale avec limite de taille augmentée
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-    }),
-  );
+  // Middleware pour gérer les requêtes OPTIONS manuellement
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (req.method === 'OPTIONS') {
+      res.header('Access-Control-Allow-Origin', req.headers.origin);
+      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin, Access-Control-Request-Method, Access-Control-Request-Headers');
+      res.header('Access-Control-Allow-Credentials', 'true');
+      res.header('Access-Control-Max-Age', '86400');
+      res.status(200).end();
+      return;
+    }
+    next();
+  });
+
+  // Validation globale
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }));
 
   // Configuration Swagger
   const config = new DocumentBuilder()
-    .setTitle('ArchiHub API')
-    .setDescription("API pour la gestion de projets d'architecture")
+    .setTitle('Archihub API')
+    .setDescription('API de gestion de chantiers')
     .setVersion('1.0')
-    .addTag('authentication')
-    .addTag('clients')
-    .addTag('projects')
-    .addTag('documents')
-    .addTag('reports')
-    .addTag('teams')
-    .addTag('stats')
-    .addBearerAuth() // Important pour l'authentification
+    .addBearerAuth()
     .build();
-
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api-docs', app, document);
+  SwaggerModule.setup('api', app, document);
 
-  // Servir les fichiers statiques
+  // Configuration des fichiers statiques
   app.useStaticAssets(path.join(__dirname, '..', 'uploads'), {
-    prefix: '/uploads',
+    prefix: '/uploads/',
   });
 
+  // Configuration du port
   const port = process.env.PORT || 3000;
-  await app.listen(port, '0.0.0.0');
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  await app.listen(port);
+  console.log(`🚀 Application is running on: http://localhost:${port}`);
+  console.log(`📚 Swagger documentation: http://localhost:${port}/api`);
 }
+
 bootstrap();
-// Force redeploy
