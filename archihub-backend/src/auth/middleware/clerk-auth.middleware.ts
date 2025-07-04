@@ -1,12 +1,12 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { RequestWithAuth, Response, NextFunction } from '../../types/express';
+import { Request, Response, NextFunction } from 'express';
 import { AuthService } from '../auth.service';
 
 @Injectable()
 export class ClerkAuthMiddleware implements NestMiddleware {
   constructor(private authService: AuthService) {}
 
-  use(req: RequestWithAuth, res: Response, next: NextFunction) {
+  use(req: Request, res: Response, next: NextFunction) {
     try {
       // Extraire le token d'autorisation
       const authHeader = req.headers.authorization;

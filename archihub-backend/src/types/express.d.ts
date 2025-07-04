@@ -27,7 +27,7 @@ declare global {
   }
 }
 
-export interface RequestWithAuth extends Request {
+export interface RequestWithAuth extends Express.Request {
   auth?: {
     userId: string;
     email?: string;
