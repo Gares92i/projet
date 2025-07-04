@@ -45,11 +45,11 @@ export class ProjectsController {
   @ApiResponse({ status: 401, description: 'Non autorisé.' })
   @ApiResponse({ status: 500, description: 'Erreur serveur.' })
   async create(@Body() createProjectDto: CreateProjectDto, @Request() req: RequestWithAuth) {
-    // Option 1: Utiliser l'opérateur non-null si on est sûr que auth existe grâce à AuthGuard
-    const userId = req.auth!.userId;
-
-    // Option 2: Vérification explicite (plus sûr)
-    // const userId = req.auth?.userId || 'default-user-id';
+    // Vérification explicite et sûre de l'authentification
+    if (!req.auth?.userId) {
+      throw new Error('Utilisateur non authentifié');
+    }
+    const userId = req.auth.userId;
 
     return await this.projectsService.create(createProjectDto, userId);
   }
@@ -65,8 +65,11 @@ export class ProjectsController {
     description: 'ID du client pour filtrer les projets',
   })
   async findAll(@Query('clientId') clientId: string, @Request() req: RequestWithAuth) {
-    // Utiliser l'opérateur non-null pour indiquer à TypeScript que auth ne sera jamais undefined
-    const userId = req.auth!.userId;
+    // Vérification explicite et sûre de l'authentification
+    if (!req.auth?.userId) {
+      throw new Error('Utilisateur non authentifié');
+    }
+    const userId = req.auth.userId;
 
     return await this.projectsService.findAll(userId);
   }

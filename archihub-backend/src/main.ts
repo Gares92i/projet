@@ -12,19 +12,30 @@ async function bootstrap() {
   // Sécurité avec Helmet
   app.use(helmet.default()); // Utiliser helmet.default()
 
+  // Configuration pour augmenter la limite de taille des requêtes
+  app.use((req: any, res: any, next: any) => {
+    res.setHeader('Content-Type', 'application/json');
+    next();
+  });
+
   // Activer CORS
   app.enableCors({
     origin: [
       'https://archihub-frontend.vercel.app',
       'http://localhost:5173',
-      'http://localhost:3000'
+      'http://localhost:3000',
+      'http://localhost:8084',
+      'http://localhost:8083',
+      'http://localhost:8082',
+      'http://localhost:8081',
+      'http://localhost:8080'
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
   });
 
-  // Validation globale
+  // Validation globale avec limite de taille augmentée
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

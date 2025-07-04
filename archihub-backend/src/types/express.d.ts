@@ -1,5 +1,6 @@
 import { Request } from 'express';
 
+// Étendre Request sans le redéclarer
 export interface RequestWithAuth extends Request {
   auth?: {
     userId: string; // ID Clerk
@@ -7,4 +8,16 @@ export interface RequestWithAuth extends Request {
     isAuthenticated: boolean;
     roles?: string[];
   };
+}
+
+// Déclarer le module express pour éviter les conflits
+declare module 'express' {
+  interface Request {
+    auth?: {
+      userId: string;
+      internalUserId?: string;
+      isAuthenticated: boolean;
+      roles?: string[];
+    };
+  }
 }
