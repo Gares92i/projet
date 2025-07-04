@@ -73,24 +73,51 @@ export class FixWorkspacesAndTeams1751200000003 implements MigrationInterface {
             ADD COLUMN IF NOT EXISTS "updated_at" TIMESTAMP NOT NULL DEFAULT now()
         `);
 
-        // Ajouter les contraintes de clés étrangères
-        await queryRunner.query(`
-            ALTER TABLE "workspace_members" 
-            ADD CONSTRAINT "FK_workspace_members_workspace" 
-            FOREIGN KEY ("workspace_id") REFERENCES "workspaces"("id") ON DELETE CASCADE ON UPDATE NO ACTION
+        // Ajouter les contraintes de clés étrangères seulement si elles n'existent pas
+        const workspaceMembersConstraintExists = await queryRunner.query(`
+            SELECT COUNT(*) as count 
+            FROM information_schema.table_constraints 
+            WHERE constraint_name = 'FK_workspace_members_workspace' 
+            AND table_name = 'workspace_members'
         `);
+        
+        if (workspaceMembersConstraintExists[0].count === '0') {
+            await queryRunner.query(`
+                ALTER TABLE "workspace_members" 
+                ADD CONSTRAINT "FK_workspace_members_workspace" 
+                FOREIGN KEY ("workspace_id") REFERENCES "workspaces"("id") ON DELETE CASCADE ON UPDATE NO ACTION
+            `);
+        }
 
-        await queryRunner.query(`
-            ALTER TABLE "workspace_invitations" 
-            ADD CONSTRAINT "FK_workspace_invitations_workspace" 
-            FOREIGN KEY ("workspace_id") REFERENCES "workspaces"("id") ON DELETE CASCADE ON UPDATE NO ACTION
+        const workspaceInvitationsConstraintExists = await queryRunner.query(`
+            SELECT COUNT(*) as count 
+            FROM information_schema.table_constraints 
+            WHERE constraint_name = 'FK_workspace_invitations_workspace' 
+            AND table_name = 'workspace_invitations'
         `);
+        
+        if (workspaceInvitationsConstraintExists[0].count === '0') {
+            await queryRunner.query(`
+                ALTER TABLE "workspace_invitations" 
+                ADD CONSTRAINT "FK_workspace_invitations_workspace" 
+                FOREIGN KEY ("workspace_id") REFERENCES "workspaces"("id") ON DELETE CASCADE ON UPDATE NO ACTION
+            `);
+        }
 
-        await queryRunner.query(`
-            ALTER TABLE "team_members" 
-            ADD CONSTRAINT "FK_team_members_workspace" 
-            FOREIGN KEY ("workspace_id") REFERENCES "workspaces"("id") ON DELETE CASCADE ON UPDATE NO ACTION
+        const teamMembersConstraintExists = await queryRunner.query(`
+            SELECT COUNT(*) as count 
+            FROM information_schema.table_constraints 
+            WHERE constraint_name = 'FK_team_members_workspace' 
+            AND table_name = 'team_members'
         `);
+        
+        if (teamMembersConstraintExists[0].count === '0') {
+            await queryRunner.query(`
+                ALTER TABLE "team_members" 
+                ADD CONSTRAINT "FK_team_members_workspace" 
+                FOREIGN KEY ("workspace_id") REFERENCES "workspaces"("id") ON DELETE CASCADE ON UPDATE NO ACTION
+            `);
+        }
 
         // Créer les index pour améliorer les performances
         await queryRunner.query(`
