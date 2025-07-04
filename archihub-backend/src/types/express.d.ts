@@ -1,5 +1,3 @@
-import { Request, Response, NextFunction } from "express";
-
 declare global {
   namespace Express {
     interface Request {
@@ -35,5 +33,3 @@ export interface RequestWithAuth extends Express.Request {
     internalUserId?: string;
   };
 }
-
-export { Response, NextFunction };
