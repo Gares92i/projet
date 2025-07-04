@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import * as PDFDocument from 'pdfkit';
+import PDFDocument from 'pdfkit';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as os from 'os';
@@ -71,7 +71,7 @@ export class PdfService {
   /**
    * Génère le contenu du rapport
    */
-  private async generateReportContent(doc: PDFKit.PDFDocument, data: ReportDto): Promise<void> {
+  private async generateReportContent(doc: any, data: ReportDto): Promise<void> {
     // Styles communs
     const titleFont = 'Helvetica-Bold';
     const regularFont = 'Helvetica';
@@ -188,7 +188,7 @@ export class PdfService {
   /**
    * Génère l'en-tête du rapport
    */
-  private async generateHeader(doc: PDFKit.PDFDocument, data: ReportDto): Promise<void> {
+  private async generateHeader(doc: any, data: ReportDto): Promise<void> {
     const title = 'COMPTE RENDU DE VISITE';
     const architectInfo = data.architectInfo || {
       name: "Cabinet d'Architecture",
@@ -249,7 +249,7 @@ export class PdfService {
    * Génère la section des participants
    */
   private async generateParticipantsSection(
-    doc: PDFKit.PDFDocument,
+    doc: any,
     data: ReportDto,
   ): Promise<void> {
     doc.addPage();
@@ -280,7 +280,7 @@ export class PdfService {
    * Génère la section d'avancement des lots
    */
   private async generateTaskProgressSection(
-    doc: PDFKit.PDFDocument,
+    doc: any,
     data: ReportDto,
   ): Promise<void> {
     doc.addPage();
@@ -315,7 +315,7 @@ export class PdfService {
   /**
    * Génère la section des réserves
    */
-  private async generateReservesSection(doc: PDFKit.PDFDocument, data: ReportDto): Promise<void> {
+  private async generateReservesSection(doc: any, data: ReportDto): Promise<void> {
     if (!data.reserves || data.reserves.length === 0) return;
 
     doc.addPage();
@@ -389,7 +389,7 @@ export class PdfService {
    * Génère la section des plans annotés
    */
   private async generateAnnotatedPlansSection(
-    doc: PDFKit.PDFDocument,
+    doc: any,
     data: ReportDto,
   ): Promise<void> {
     if (!data.annotationsByDocument || Object.keys(data.annotationsByDocument).length === 0) return;
@@ -459,7 +459,7 @@ export class PdfService {
   /**
    * Génère la section des photos
    */
-  private async generatePhotosSection(doc: PDFKit.PDFDocument, data: ReportDto): Promise<void> {
+  private async generatePhotosSection(doc: any, data: ReportDto): Promise<void> {
     if (!data.photos || data.photos.length === 0) return;
 
     doc.addPage();
@@ -526,7 +526,7 @@ export class PdfService {
    * Génère la section des observations
    */
   private async generateObservationsSection(
-    doc: PDFKit.PDFDocument,
+    doc: any,
     data: ReportDto,
   ): Promise<void> {
     if (!data.observations || data.observations.length === 0) return;
@@ -572,7 +572,7 @@ export class PdfService {
    * Génère la section des recommandations
    */
   private async generateRecommendationsSection(
-    doc: PDFKit.PDFDocument,
+    doc: any,
     data: ReportDto,
   ): Promise<void> {
     if (!data.recommendations || data.recommendations.length === 0) return;
@@ -613,7 +613,7 @@ export class PdfService {
   /**
    * Génère la section des signatures
    */
-  private async generateSignaturesSection(doc: PDFKit.PDFDocument, data: ReportDto): Promise<void> {
+  private async generateSignaturesSection(doc: any, data: ReportDto): Promise<void> {
     doc.font('Helvetica-Bold').fontSize(14).text('Signatures', { underline: true });
     doc.moveDown(0.5);
 
@@ -670,7 +670,7 @@ export class PdfService {
    * Génère le pied de page
    */
   private generateFooter(
-    doc: PDFKit.PDFDocument,
+    doc: any,
     pageNumber: number,
     totalPages: number,
     data: ReportDto,
@@ -708,7 +708,7 @@ export class PdfService {
    * Dessine une barre de progression
    */
   private drawProgressBar(
-    doc: PDFKit.PDFDocument,
+    doc: any,
     progress: number,
     x: number = 50,
     y: number = doc.y + 5,
@@ -738,7 +738,7 @@ export class PdfService {
   /**
    * Crée un tableau simple
    */
-  private createTable(doc: PDFKit.PDFDocument, headers: string[], data: string[][]): void {
+  private createTable(doc: any, headers: string[], data: string[][]): void {
     const rowHeight = 20;
     const colWidths: number[] = [];
     const tableWidth = doc.page.width - 100;
