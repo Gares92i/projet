@@ -16,7 +16,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
-import type { Response } from 'express';
 import { UploadsService } from './uploads.service';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import * as fs from 'fs-extra';
@@ -87,7 +86,7 @@ export class UploadsController {
     @Query('url') imageUrl: string,
     @Query('width', ParseIntPipe) width: number,
     @Query('height', ParseIntPipe) height: number,
-    @Res() res: Response,
+    @Res() res: any,
   ) {
     try {
       const resizedUrl = await this.uploadsService.resizeImage(imageUrl, width, height);
@@ -106,7 +105,7 @@ export class UploadsController {
   }
 
   @Get(':filename')
-  async serveFile(@Param('filename') filename: string, @Res() res: Response) {
+  async serveFile(@Param('filename') filename: string, @Res() res: any) {
     try {
       const baseUrl = 'http://localhost:3000'; // À récupérer de la config
       const fileUrl = `${baseUrl}/uploads/${filename}`;
@@ -127,7 +126,7 @@ export class UploadsController {
   }
 
   @Get('thumbnails/:filename')
-  async serveThumbnail(@Param('filename') filename: string, @Res() res: Response) {
+  async serveThumbnail(@Param('filename') filename: string, @Res() res: any) {
     try {
       const baseUrl = 'http://localhost:3000'; // À récupérer de la config
       const fileUrl = `${baseUrl}/uploads/thumbnails/${filename}`;

@@ -1,12 +1,11 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import type { Request, Response, NextFunction } from 'express';
 import { UsersService } from '../../users/users.service';
 
 @Injectable()
 export class ClerkUserMiddleware implements NestMiddleware {
   constructor(private readonly usersService: UsersService) {}
 
-  async use(req: Request & { auth?: any }, res: Response, next: NextFunction) {
+  async use(req: any & { auth?: any }, res: any, next: any) {
     try {
       if (req.auth && req.auth.userId && req.auth.userId !== 'guest') {
         const clerkUserId = req.auth.userId;

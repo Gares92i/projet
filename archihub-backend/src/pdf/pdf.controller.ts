@@ -12,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { PdfService } from './pdf.service';
 import { ReportDto } from './dto/report.dto';
-import type { Response } from 'express';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { AuthGuard } from '../auth/guards/auth.guard';
@@ -28,7 +27,7 @@ export class PdfController {
 
   @Post('generate-report')
   @Roles('admin', 'manager', 'user')
-  async generateReport(@Body() reportData: ReportDto, @Res() res: Response) {
+  async generateReport(@Body() reportData: ReportDto, @Res() res: any) {
     try {
       const pdfPath = await this.pdfService.generateSiteVisitReport(reportData);
       const pdfBuffer = await fs.readFile(pdfPath);
@@ -49,7 +48,7 @@ export class PdfController {
   }
 
   @Get('download/:filename')
-  async downloadPdf(@Param('filename') filename: string, @Res() res: Response) {
+  async downloadPdf(@Param('filename') filename: string, @Res() res: any) {
     try {
       const tempDir = path.join(require('os').tmpdir(), 'archihub-pdf');
       const filePath = path.join(tempDir, filename);
@@ -73,7 +72,7 @@ export class PdfController {
   }
 
   @Get('preview/:filename')
-  async previewPdf(@Param('filename') filename: string, @Res() res: Response) {
+  async previewPdf(@Param('filename') filename: string, @Res() res: any) {
     try {
       const tempDir = path.join(require('os').tmpdir(), 'archihub-pdf');
       const filePath = path.join(tempDir, filename);
