@@ -29,7 +29,7 @@ async function bootstrap() {
     next();
   });
 
-  // Activer CORS
+  // Activer CORS avec configuration complète
   app.enableCors({
     origin: [
       'https://archihub-frontend.vercel.app',
@@ -43,7 +43,18 @@ async function bootstrap() {
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    allowedHeaders: [
+      'Content-Type', 
+      'Authorization', 
+      'X-Requested-With',
+      'Accept',
+      'Origin',
+      'Access-Control-Request-Method',
+      'Access-Control-Request-Headers'
+    ],
+    exposedHeaders: ['Content-Length', 'X-Requested-With'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204
   });
 
   // Validation globale avec limite de taille augmentée

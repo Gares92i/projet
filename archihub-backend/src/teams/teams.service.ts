@@ -31,7 +31,7 @@ export class TeamsService {
     try {
       return await this.teamMembersRepository.find({
         order: { name: 'ASC' },
-        relations: ['userClerk'],
+        relations: ['workspace'],
       });
     } catch (error) {
       this.logger.error(
@@ -46,7 +46,7 @@ export class TeamsService {
     try {
       const teamMember = await this.teamMembersRepository.findOne({
         where: { id },
-        relations: ['userClerk'],
+        relations: ['workspace'],
       });
 
       if (!teamMember) {
