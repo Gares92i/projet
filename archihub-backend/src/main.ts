@@ -5,7 +5,6 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import * as helmet from 'helmet';
 import * as path from 'path';
-import { Request, Response, NextFunction } from 'express';
 import { RolesGuard } from './auth/guards/roles.guard';
 
 async function bootstrap() {
@@ -64,7 +63,7 @@ async function bootstrap() {
   });
 
   // Middleware pour gérer les requêtes OPTIONS manuellement
-  app.use((req: Request, res: Response, next: NextFunction) => {
+  app.use((req: any, res: any, next: any) => {
     if (req.method === 'OPTIONS') {
       res.header('Access-Control-Allow-Origin', req.headers.origin);
       res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
