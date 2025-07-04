@@ -5,7 +5,6 @@ import { UploadsService } from './uploads.service';
 import { ConfigModule } from '@nestjs/config';
 import { UploadThingService } from './uploadthing.service';
 import { UsersModule } from '../users/users.module';
-import { UsersModule } from '../users/users.module';
 
 const multer = require('multer');
 
