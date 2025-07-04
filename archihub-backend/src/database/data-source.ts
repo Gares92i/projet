@@ -10,6 +10,14 @@ export const dataSourceOptions: DataSourceOptions = {
   migrations: ['dist/migrations/*.js'],
   ssl: {
     rejectUnauthorized: false,
+    ca: undefined,
+    key: undefined,
+    cert: undefined,
+  },
+  extra: {
+    ssl: {
+      rejectUnauthorized: false,
+    },
   },
 };
 
