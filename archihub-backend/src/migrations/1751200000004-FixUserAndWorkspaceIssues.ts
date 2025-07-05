@@ -51,16 +51,25 @@ export class FixUserAndWorkspaceIssues1751200000004 implements MigrationInterfac
             `);
         }
 
-        // ÉTAPE 1: Supprimer toutes les contraintes FK qui référencent users_clerk.id
-        await queryRunner.query(`
-            ALTER TABLE "workspace_members" DROP CONSTRAINT IF EXISTS "FK_workspace_members_user"
+        // ÉTAPE 1: Trouver et supprimer TOUTES les contraintes FK qui référencent users_clerk.id
+        const foreignKeys = await queryRunner.query(`
+            SELECT 
+                tc.table_name,
+                tc.constraint_name
+            FROM information_schema.table_constraints tc
+            JOIN information_schema.key_column_usage kcu 
+                ON tc.constraint_name = kcu.constraint_name
+            WHERE tc.constraint_type = 'FOREIGN KEY' 
+                AND kcu.referenced_table_name = 'users_clerk'
+                AND kcu.referenced_column_name = 'id'
         `);
-        await queryRunner.query(`
-            ALTER TABLE "project_team_members" DROP CONSTRAINT IF EXISTS "FK_project_team_members_user"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "workspaces" DROP CONSTRAINT IF EXISTS "FK_workspaces_created_by_user"
-        `);
+
+        // Supprimer toutes les contraintes FK trouvées
+        for (const fk of foreignKeys) {
+            await queryRunner.query(`
+                ALTER TABLE "${fk.table_name}" DROP CONSTRAINT IF EXISTS "${fk.constraint_name}"
+            `);
+        }
 
         // ÉTAPE 2: Vérifier et corriger le type de la colonne id dans users_clerk
         const usersClerkIdType = await queryRunner.query(`
