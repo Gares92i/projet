@@ -51,7 +51,32 @@ export class FixUserAndWorkspaceIssues1751200000004 implements MigrationInterfac
             `);
         }
 
-        // Vérifier le type de la colonne user_id dans workspace_members
+        // ÉTAPE 1: Supprimer toutes les contraintes FK qui référencent users_clerk.id
+        await queryRunner.query(`
+            ALTER TABLE "workspace_members" DROP CONSTRAINT IF EXISTS "FK_workspace_members_user"
+        `);
+        await queryRunner.query(`
+            ALTER TABLE "project_team_members" DROP CONSTRAINT IF EXISTS "FK_project_team_members_user"
+        `);
+        await queryRunner.query(`
+            ALTER TABLE "workspaces" DROP CONSTRAINT IF EXISTS "FK_workspaces_created_by_user"
+        `);
+
+        // ÉTAPE 2: Vérifier et corriger le type de la colonne id dans users_clerk
+        const usersClerkIdType = await queryRunner.query(`
+            SELECT data_type 
+            FROM information_schema.columns 
+            WHERE table_name = 'users_clerk' 
+            AND column_name = 'id'
+        `);
+
+        if (usersClerkIdType.length > 0 && usersClerkIdType[0].data_type === 'uuid') {
+            await queryRunner.query(`
+                ALTER TABLE "users_clerk" ALTER COLUMN "id" TYPE character varying
+            `);
+        }
+
+        // ÉTAPE 3: Vérifier et corriger le type de la colonne user_id dans workspace_members
         const userColumnType = await queryRunner.query(`
             SELECT data_type 
             FROM information_schema.columns 
@@ -59,27 +84,13 @@ export class FixUserAndWorkspaceIssues1751200000004 implements MigrationInterfac
             AND column_name = 'user_id'
         `);
 
-        // Si la colonne est de type uuid, la changer en character varying
         if (userColumnType.length > 0 && userColumnType[0].data_type === 'uuid') {
-            // 1. Supprimer la contrainte FK existante
-            await queryRunner.query(`
-                ALTER TABLE "workspace_members" DROP CONSTRAINT IF EXISTS "FK_workspace_members_user"
-            `);
-
-            // 2. Changer le type de la colonne
             await queryRunner.query(`
                 ALTER TABLE "workspace_members" ALTER COLUMN "user_id" TYPE character varying
             `);
-
-            // 3. Recréer la contrainte FK
-            await queryRunner.query(`
-                ALTER TABLE "workspace_members"
-                ADD CONSTRAINT "FK_workspace_members_user"
-                FOREIGN KEY ("user_id") REFERENCES "users_clerk"("id") ON DELETE CASCADE
-            `);
         }
 
-        // Vérifier et corriger le type de la colonne user_id dans project_team_members
+        // ÉTAPE 4: Vérifier et corriger le type de la colonne user_id dans project_team_members
         const projectTeamUserColumnType = await queryRunner.query(`
             SELECT data_type 
             FROM information_schema.columns 
@@ -88,25 +99,12 @@ export class FixUserAndWorkspaceIssues1751200000004 implements MigrationInterfac
         `);
 
         if (projectTeamUserColumnType.length > 0 && projectTeamUserColumnType[0].data_type === 'uuid') {
-            // 1. Supprimer la contrainte FK existante
-            await queryRunner.query(`
-                ALTER TABLE "project_team_members" DROP CONSTRAINT IF EXISTS "FK_project_team_members_user"
-            `);
-
-            // 2. Changer le type de la colonne
             await queryRunner.query(`
                 ALTER TABLE "project_team_members" ALTER COLUMN "user_id" TYPE character varying
             `);
-
-            // 3. Recréer la contrainte FK
-            await queryRunner.query(`
-                ALTER TABLE "project_team_members"
-                ADD CONSTRAINT "FK_project_team_members_user"
-                FOREIGN KEY ("user_id") REFERENCES "users_clerk"("id") ON DELETE CASCADE
-            `);
         }
 
-        // Vérifier et corriger le type de la colonne created_by_user_id dans workspaces
+        // ÉTAPE 5: Vérifier et corriger le type de la colonne created_by_user_id dans workspaces
         const workspaceUserColumnType = await queryRunner.query(`
             SELECT data_type 
             FROM information_schema.columns 
@@ -115,23 +113,29 @@ export class FixUserAndWorkspaceIssues1751200000004 implements MigrationInterfac
         `);
 
         if (workspaceUserColumnType.length > 0 && workspaceUserColumnType[0].data_type === 'uuid') {
-            // 1. Supprimer la contrainte FK existante
-            await queryRunner.query(`
-                ALTER TABLE "workspaces" DROP CONSTRAINT IF EXISTS "FK_workspaces_created_by_user"
-            `);
-
-            // 2. Changer le type de la colonne
             await queryRunner.query(`
                 ALTER TABLE "workspaces" ALTER COLUMN "created_by_user_id" TYPE character varying
             `);
-
-            // 3. Recréer la contrainte FK
-            await queryRunner.query(`
-                ALTER TABLE "workspaces"
-                ADD CONSTRAINT "FK_workspaces_created_by_user"
-                FOREIGN KEY ("created_by_user_id") REFERENCES "users_clerk"("id") ON DELETE CASCADE
-            `);
         }
+
+        // ÉTAPE 6: Recréer toutes les contraintes FK
+        await queryRunner.query(`
+            ALTER TABLE "workspace_members"
+            ADD CONSTRAINT "FK_workspace_members_user"
+            FOREIGN KEY ("user_id") REFERENCES "users_clerk"("id") ON DELETE CASCADE
+        `);
+
+        await queryRunner.query(`
+            ALTER TABLE "project_team_members"
+            ADD CONSTRAINT "FK_project_team_members_user"
+            FOREIGN KEY ("user_id") REFERENCES "users_clerk"("id") ON DELETE CASCADE
+        `);
+
+        await queryRunner.query(`
+            ALTER TABLE "workspaces"
+            ADD CONSTRAINT "FK_workspaces_created_by_user"
+            FOREIGN KEY ("created_by_user_id") REFERENCES "users_clerk"("id") ON DELETE CASCADE
+        `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
