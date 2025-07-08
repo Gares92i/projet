@@ -14,6 +14,7 @@ import { PdfModule } from './pdf/pdf.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { AuthModule } from './auth/auth.module';
 import { ClerkAuthMiddleware } from './auth/middleware/clerk-auth.middleware';
+import { CompanySettingsModule } from './settings/company-settings.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { ClerkAuthMiddleware } from './auth/middleware/clerk-auth.middleware';
     PdfModule,
     UploadsModule,
     AuthModule,
+    CompanySettingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
