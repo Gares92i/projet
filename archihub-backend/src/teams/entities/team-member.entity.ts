@@ -73,7 +73,4 @@ export class TeamMember {
   updatedAt: Date;
 
   // Relations
-  @ManyToOne(() => Workspace, workspace => workspace.teamMembers, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'workspace_id' })
-  workspace: Workspace;
 }

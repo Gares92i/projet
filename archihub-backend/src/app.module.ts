@@ -13,7 +13,6 @@ import { DocumentsModule } from './documents/documents.module';
 import { PdfModule } from './pdf/pdf.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { AuthModule } from './auth/auth.module';
-import { WorkspacesModule } from './workspaces/workspaces.module';
 import { ClerkAuthMiddleware } from './auth/middleware/clerk-auth.middleware';
 
 @Module({
@@ -28,21 +27,31 @@ import { ClerkAuthMiddleware } from './auth/middleware/clerk-auth.middleware';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        url: configService.get('DATABASE_PUBLIC_URL'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        ssl: { rejectUnauthorized: false },
-        synchronize: false,
-        migrationsRun: true,
-        migrations: [__dirname + '/migrations/*.js'],
-        logging: ['query', 'error'],
-        extra: {
-          connectionLimit: 10,
-          acquireTimeout: 60000,
-          timeout: 60000,
-        },
-      }),
+      useFactory: (configService: ConfigService) => {
+        const isProduction = configService.get('NODE_ENV') === 'production';
+        const databaseUrl = configService.get('DATABASE_URL') || configService.get('DATABASE_PUBLIC_URL');
+        
+        return {
+          type: 'postgres',
+          url: databaseUrl,
+          entities: [__dirname + '/**/*.entity{.ts,.js}'],
+          ssl: isProduction ? { rejectUnauthorized: false } : false,
+          synchronize: false,
+          migrationsRun: true,
+          migrations: [__dirname + '/migrations/*.js'],
+          logging: ['query', 'error'],
+          extra: {
+            connectionLimit: 10,
+            acquireTimeout: 60000,
+            timeout: 60000,
+            ...(isProduction && {
+              ssl: {
+                rejectUnauthorized: false,
+              },
+            }),
+          },
+        };
+      },
       inject: [ConfigService],
     }),
     UsersModule,
@@ -54,7 +63,6 @@ import { ClerkAuthMiddleware } from './auth/middleware/clerk-auth.middleware';
     PdfModule,
     UploadsModule,
     AuthModule,
-    WorkspacesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
