@@ -15,6 +15,7 @@ import { UploadsModule } from './uploads/uploads.module';
 import { AuthModule } from './auth/auth.module';
 import { ClerkAuthMiddleware } from './auth/middleware/clerk-auth.middleware';
 import { CompanySettingsModule } from './settings/company-settings.module';
+import { AgencyMembersModule } from './agency/agency-members.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { CompanySettingsModule } from './settings/company-settings.module';
     UploadsModule,
     AuthModule,
     CompanySettingsModule,
+    AgencyMembersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
