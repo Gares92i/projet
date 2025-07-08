@@ -4,8 +4,9 @@ FROM node:20
 # Crée le dossier de travail
 WORKDIR /app/archihub-backend
 
-# Copie les fichiers package.json et package-lock.json
+# Copie les fichiers de config nécessaires AVANT npm install
 COPY package*.json ./
+COPY tsconfig*.json ./
 
 # Installe les dépendances
 RUN npm install --production
