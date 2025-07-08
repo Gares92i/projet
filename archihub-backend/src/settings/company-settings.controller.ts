@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, UseGuards, Request, UnauthorizedException } from '@nestjs/common';
 import { CompanySettingsService } from './company-settings.service';
 import { CreateCompanySettingsDto } from './dto/create-company-settings.dto';
 import { UpdateCompanySettingsDto } from './dto/update-company-settings.dto';
@@ -12,16 +12,19 @@ export class CompanySettingsController {
 
   @Get('me')
   async getMySettings(@Request() req: RequestWithAuth) {
-    return this.companySettingsService.findByOwnerId(req.auth!.userId);
+    if (!req.auth?.userId) throw new UnauthorizedException();
+    return this.companySettingsService.findByOwnerId(req.auth.userId);
   }
 
   @Post()
   async create(@Request() req: RequestWithAuth, @Body() dto: CreateCompanySettingsDto) {
-    return this.companySettingsService.create(req.auth!.userId, dto);
+    if (!req.auth?.userId) throw new UnauthorizedException();
+    return this.companySettingsService.create(req.auth.userId, dto);
   }
 
   @Put()
   async update(@Request() req: RequestWithAuth, @Body() dto: UpdateCompanySettingsDto) {
-    return this.companySettingsService.update(req.auth!.userId, dto);
+    if (!req.auth?.userId) throw new UnauthorizedException();
+    return this.companySettingsService.update(req.auth.userId, dto);
   }
 } 
