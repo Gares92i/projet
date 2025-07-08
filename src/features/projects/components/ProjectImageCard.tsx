@@ -1,32 +1,37 @@
 import React, { useRef } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@clerk/clerk-react";
+import { createApiClient } from "@/features/common/services/apiClient";
 
-export function ProjectImageCard({ imageUrl, projectName, onImageUploaded, projectId }) {
-  const fileInputRef = useRef(null);
-  const { getToken } = useAuth();
+interface ProjectImageCardProps {
+  imageUrl?: string;
+  projectName: string;
+  onImageUploaded?: (imageUrl: string) => void;
+  projectId: string;
+}
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
+export function ProjectImageCard({ imageUrl, projectName, onImageUploaded, projectId }: ProjectImageCardProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
     const formData = new FormData();
     formData.append("file", file);
 
     try {
-      const token = await getToken();
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/projects/${projectId}/upload`, {
-        method: "POST",
+      const api = createApiClient();
+      const response = await api.post<{ imageUrl: string }>(`/projects/${projectId}/upload`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
-        body: formData,
       });
-      if (!res.ok) throw new Error("Erreur lors de l'upload");
-      const data = await res.json();
+      
       toast.success("Image uploadée !");
-      if (onImageUploaded) onImageUploaded(data.imageUrl);
+      if (onImageUploaded) onImageUploaded(response.imageUrl);
     } catch (err) {
+      console.error("Erreur lors de l'upload:", err);
       toast.error("Échec de l'upload");
     }
   };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/ui/sheet";
 import { TeamMemberForm } from "@/features/team/components/TeamMemberForm";
-import { TeamMember } from "@/types/team";
+import { TeamMember } from "@/features/team/types/team";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/ui/alert-dialog";
 
 interface TeamMemberDialogsProps {

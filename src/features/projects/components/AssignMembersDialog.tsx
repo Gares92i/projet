@@ -5,9 +5,9 @@ import { Checkbox } from "@/ui/checkbox";
 import { ScrollArea } from "@/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
 import { Badge } from "@/ui/badge";
-import { TeamMember } from "@/types/team";
+import { TeamMember } from "@/features/team/types/team";
 import { toast } from "sonner";
-import { assignMemberToProject, removeMemberFromProject, getProjectMembers } from "@/features/team/teamProjectRelationService";
+import { assignMemberToProject, removeMemberFromProject, getProjectMembers } from "@/features/team/services/teamProjectRelationService";
 
 interface AssignMembersDialogProps {
   projectId: string;

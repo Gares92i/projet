@@ -30,7 +30,7 @@ export const GeneralInfoCard = ({ project, clients, onInputChange }: GeneralInfo
           <Label htmlFor="project-name">Nom du projet</Label>
           <Input
             id="project-name" 
-            value={project?.name}
+            value={project?.name || ""}
             onChange={(e) => onInputChange("name", e.target.value)}
           />
         </div>
@@ -49,7 +49,7 @@ export const GeneralInfoCard = ({ project, clients, onInputChange }: GeneralInfo
         <div className="space-y-2">
           <Label htmlFor="project-client">Client</Label>
           <Select 
-            value={project?.clientId}
+            value={project?.clientId || ""}
             onValueChange={(value) => {
               const selectedClient = clients.find(c => c.id === value);
               if (selectedClient) {
@@ -75,7 +75,7 @@ export const GeneralInfoCard = ({ project, clients, onInputChange }: GeneralInfo
           <Label htmlFor="project-location">Emplacement</Label>
           <Input 
             id="project-location" 
-            value={project?.location}
+            value={project?.location || ""}
             onChange={(e) => onInputChange("location", e.target.value)}
           />
         </div>
@@ -85,7 +85,7 @@ export const GeneralInfoCard = ({ project, clients, onInputChange }: GeneralInfo
             <Input 
               id="start-date" 
               type="date" 
-              value={project?.startDate}
+              value={project?.startDate || ""}
               onChange={(e) => onInputChange("startDate", e.target.value)}
             />
           </div>
@@ -94,7 +94,7 @@ export const GeneralInfoCard = ({ project, clients, onInputChange }: GeneralInfo
             <Input 
               id="end-date" 
               type="date" 
-              value={project?.endDate}
+              value={project?.endDate || ""}
               onChange={(e) => onInputChange("endDate", e.target.value)}
             />
           </div>
@@ -102,7 +102,7 @@ export const GeneralInfoCard = ({ project, clients, onInputChange }: GeneralInfo
         <div className="space-y-2">
           <Label htmlFor="project-status">Statut</Label>
           <Select 
-            value={project?.status}
+            value={project?.status || ""}
             onValueChange={(value) => onInputChange("status", value)}
           >
             <SelectTrigger id="project-status">
@@ -126,7 +126,7 @@ export const GeneralInfoCard = ({ project, clients, onInputChange }: GeneralInfo
             type="number" 
             min="0" 
             max="100" 
-            value={project?.progress}
+            value={project?.progress || ""}
             onChange={(e) => onInputChange("progress", parseInt(e.target.value) || 0)}
           />
         </div>

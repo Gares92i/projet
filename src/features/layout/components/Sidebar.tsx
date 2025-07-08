@@ -17,6 +17,7 @@ import {
   CheckSquare,
   Briefcase,
   MessageSquare,
+  Building,
 } from "lucide-react";
 import {
   Sidebar as ShadcnSidebar,
@@ -34,6 +35,11 @@ const menuItems = [
     title: "Tableau de bord",
     href: "/",
     icon: <Home className="h-5 w-5" />,
+  },
+  {
+    title: "Workspaces",
+    href: "/workspaces",
+    icon: <Building className="h-5 w-5" />,
   },
   {
     title: "Projets",

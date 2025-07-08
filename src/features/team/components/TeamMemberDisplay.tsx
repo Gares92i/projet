@@ -1,5 +1,5 @@
 import React from 'react';
-import { TeamMember } from "@/types/team";
+import { TeamMember } from "@/features/team/types/team";
 import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
 import { Button } from "@/ui/button";
 import { Badge } from "@/ui/badge";

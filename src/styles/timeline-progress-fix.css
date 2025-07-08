@@ -1,0 +1,151 @@
+/* Styles pour les barres de progression */
+.progress-bar,
+.visible-progress-bar {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    height: 100% !important;
+    background: rgba(255, 255, 255, 0.4) !important;
+    border-right: 2px solid rgba(255, 255, 255, 0.9) !important;
+    z-index: 3 !important;
+    pointer-events: none !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Classes pour chaque niveau de progression */
+.progress-0::before {
+    width: 0%;
+}
+
+.progress-5::before {
+    width: 5%;
+}
+
+.progress-10::before {
+    width: 10%;
+}
+
+.progress-15::before {
+    width: 15%;
+}
+
+.progress-20::before {
+    width: 20%;
+}
+
+.progress-25::before {
+    width: 25%;
+}
+
+.progress-30::before {
+    width: 30%;
+}
+
+.progress-35::before {
+    width: 35%;
+}
+
+.progress-40::before {
+    width: 40%;
+}
+
+.progress-45::before {
+    width: 45%;
+}
+
+.progress-50::before {
+    width: 50%;
+}
+
+.progress-55::before {
+    width: 55%;
+}
+
+.progress-60::before {
+    width: 60%;
+}
+
+.progress-65::before {
+    width: 65%;
+}
+
+.progress-70::before {
+    width: 70%;
+}
+
+.progress-75::before {
+    width: 75%;
+}
+
+.progress-80::before {
+    width: 80%;
+}
+
+.progress-85::before {
+    width: 85%;
+}
+
+.progress-90::before {
+    width: 90%;
+}
+
+.progress-95::before {
+    width: 95%;
+}
+
+.progress-100::before {
+    width: 100%;
+}
+
+/* Rendre les contours plus visibles */
+.timeline-item-border {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Assurer que les barres de progression sont toujours visibles et pas masquées */
+.visible-progress-bar,
+.progress-bar,
+.timeline-item-border::before {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Styles pour améliorer le contraste de l'indicateur de pourcentage */
+.timeline-item-border span {
+    position: relative;
+    z-index: 20;
+}
+
+/* Styles pour l'affichage de la progression */
+.task-progress-indicator {
+
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 11px;
+
+    z-index: 10;
+}
+
+.task-title-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+
+}
+
+.task-content-container {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 8px;
+    height: 100%;
+    align-items: center;
+    z-index: 10;
+}/* Fichier créé pour le planning. Ajoutez vos styles custom ici. */ 

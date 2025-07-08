@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import MainLayout from "@/features/layout/components/MainLayout";
 import { getTasksByProjectId } from "@/features/tasks/services/taskService";
 import { getProjectById, getProjectMilestones, updateProjectMilestones } from "@/features/projects/services/projectService";
-import { getProjectMembers } from "@/features/team/services/teamProjectRelationService"; // Ajout de l'import manquant
+import { getProjectMembers } from "@/features/team/services/teamProjectRelationService";
 import { Task } from "@/features/projects/types/gantt";
 import { toast } from "sonner";
 import { ProjectHeader } from "@/features/projects/components/ProjectHeader";
@@ -11,19 +11,24 @@ import { ProjectDetailsCard } from "@/features/projects/components/ProjectDetail
 import { ProjectBudgetCard } from "@/features/projects/components/ProjectBudgetCard";
 import { ProjectProgressCard } from "@/features/projects/components/ProjectProgressCard";
 import { ProjectTabs } from "@/features/projects/components/ProjectTabs";
-import {
-  projectDocuments,
-
-
-} from "@/features/projects/components/ProjectData";
-// En haut du fichier ProjectDetails.tsx
+import { ProjectImageCard } from "@/features/projects/components/edit/ProjectImageCard";
 import { getProjectAnnotations } from "@/features/annotations/services/annotationService";
-// Suppression de l'import statique de teamMembers qui sera remplacé par un état
 import { ProjectCardProps as UIProjectCardProps } from "@/features/projects/components/ProjectCard";
-import { Annotation } from "@/app/styles";
 import { Skeleton } from "@/ui/skeleton";
-import { TeamMember } from "@/types/team";
-import { ProjectMilestone } from "@/features/projects/services/projectService"; // Ajouter cet import pour résoudre l'erreur de ProjectMilestone
+import { TeamMember } from "@/features/team/types/team";
+import { ProjectMilestone } from "@/features/projects/types/project";
+import { Annotation } from "@/features/annotations/types/annotation";
+
+
+// Interface locale pour MilestoneInfo
+interface MilestoneInfo {
+  id: string;
+  title: string;
+  description?: string;
+  dueDate?: string;
+  completed: boolean;
+  inProgress?: boolean;
+}
 
 // Ajouter cette interface après les imports
 interface LotTravaux {
@@ -65,7 +70,6 @@ interface AnnotationDocument {
   path?: string;
   type?: string;
   url?: string;
-  // Ajoutez d'autres propriétés si nécessaire selon votre structure
 }
 
 // Fonction de chargement des annotations avec le type défini
@@ -153,83 +157,6 @@ const ProjectDetails = () => {
 
         // Récupérer les données du projet
         const projectData = await getProjectById(id);
-        if (projectData) {
-          setProject(convertToProjectCardProps(projectData));
-        }
-
-
-        // Récupérer spécifiquement les membres mis à jour
-        const updatedTeamMembers = await getProjectMembers(id);
-        setTeamMembers(updatedTeamMembers);
-      } catch (error) {
-        console.error("Erreur lors du rechargement des données:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjectData();
-  }, [id]);
-  // Use the project ID for the stats to ensure we're showing project-specific data
-  const [projectStats, setProjectStats] = useState({
-    budgetTotal: 750000,
-    budgetUsed: 425000,
-    timelineProgress: 58,
-    tasksCompleted: 12,
-    tasksInProgress: 8,
-    tasksTodo: 15,
-    documentsCount: 24,
-    commentsCount: 37,
-    meetingsCount: 8,
-    projectId: id || "",
-    projectType: project?.projectType || "Appartement", // Valeur par défaut ou issue du projet
-    projectArea: project?.projectArea || 120, // Valeur par défaut ou issue du projet
-    roomCount: project?.roomCount || 4, // Valeur par défaut ou issue du projet
-  });
-
-  const projectSpecificStats = {
-    ...projectStats,
-    projectId: id || "",
-  };
-  // Modifier la fonction handleDataUpdate
-  const handleDataUpdate = useCallback(
-    (payload: ProjectDataUpdatePayload) => {
-      console.log("Mise à jour reçue:", payload.type);
-
-      // Ne déclencher refreshProjectData que pour certains types de mises à jour
-      if (payload.type === "milestones" || payload.type === "team") {
-        refreshProjectData();
-      }
-
-      // Pour le descriptif, ajouter une vérification pour éviter les mises à jour inutiles
-      if (payload.type === "descriptif") {
-        // Sérialiser les données pour comparaison
-        const serializedData = JSON.stringify(payload.data);
-
-        // Ne mettre à jour que si les données ont changé
-        if (serializedData !== lastDescriptifUpdateRef.current) {
-          console.log("Descriptif modifié, mise à jour de l'état");
-          lastDescriptifUpdateRef.current = serializedData;
-          setDescriptifData(payload.data);
-        } else {
-          console.log("Descriptif identique, mise à jour ignorée");
-        }
-      }
-    },
-    [refreshProjectData]
-  );
-
-  useEffect(() => {
-    if (!id) {
-      navigate("/projects");
-      return;
-    }
-
-    const fetchProjectData = async () => {
-      try {
-        setLoading(true);
-        // Charger les détails du projet
-        const projectData = await getProjectById(id);
 
         // Comparer avec l'état précédent avant de mettre à jour
         if (
@@ -247,18 +174,9 @@ const ProjectDetails = () => {
             const members = await getProjectMembers(id);
             setTeamMembers(members);
 
-            // Récupérer les jalons du projet
-            // Si les jalons sont déjà dans projectData, les utiliser
-            if (
-              projectData.milestones &&
-              Array.isArray(projectData.milestones)
-            ) {
-              setProjectMilestones(projectData.milestones);
-            } else {
-              // Sinon les récupérer séparément
-              const milestones = await getProjectMilestones(id);
-              setProjectMilestones(milestones);
-            }
+            // Récupérer les jalons du projet depuis l'API
+            const milestones = await getProjectMilestones(id);
+            setProjectMilestones(milestones);
           } else {
             toast.error("Projet non trouvé");
             navigate("/projects");
@@ -283,86 +201,6 @@ const ProjectDetails = () => {
     };
 
     fetchProjectData();
-
-    // Chargement des données de descriptif (exemple avec des données statiques)
-    const mockDescriptifData: LotTravaux[] = [
-      {
-        id: "1",
-        name: "Électricité / Éclairage",
-        tasks: [
-          {
-            id: "1-1",
-            name: "Création de l'ensemble de l'installation électrique",
-            startDate: new Date().toISOString(),
-            endDate: new Date(
-              Date.now() + 5 * 24 * 60 * 60 * 1000
-            ).toISOString(),
-          },
-          {
-            id: "1-2",
-            name: "Création de l'ensemble de l'éclairage",
-            startDate: new Date(
-              Date.now() + 3 * 24 * 60 * 60 * 1000
-            ).toISOString(),
-            endDate: new Date(
-              Date.now() + 7 * 24 * 60 * 60 * 1000
-            ).toISOString(),
-          },
-          {
-            id: "1-3",
-            name: "Fourniture et pose de conduits",
-            startDate: new Date().toISOString(),
-            endDate: new Date(
-              Date.now() + 4 * 24 * 60 * 60 * 1000
-            ).toISOString(),
-          },
-        ],
-      },
-      {
-        id: "2",
-        name: "Serrurerie / Métallerie",
-        tasks: [
-          {
-            id: "2-1",
-            name: "Fourniture et pose d'un escalier",
-            startDate: new Date(
-              Date.now() + 7 * 24 * 60 * 60 * 1000
-            ).toISOString(),
-            endDate: new Date(
-              Date.now() + 14 * 24 * 60 * 60 * 1000
-            ).toISOString(),
-          },
-          {
-            id: "2-3",
-            name: "Fourniture et pose d'une verrière",
-            startDate: new Date(
-              Date.now() + 10 * 24 * 60 * 60 * 1000
-            ).toISOString(),
-            endDate: new Date(
-              Date.now() + 15 * 24 * 60 * 60 * 1000
-            ).toISOString(),
-          },
-        ],
-      },
-      {
-        id: "3",
-        name: "Isolation thermique / acoustique",
-        tasks: [
-          {
-            id: "3-1",
-            name: "Isolation des combles",
-            startDate: new Date(
-              Date.now() + 3 * 24 * 60 * 60 * 1000
-            ).toISOString(),
-            endDate: new Date(
-              Date.now() + 10 * 24 * 60 * 60 * 1000
-            ).toISOString(),
-          },
-        ],
-      },
-    ];
-
-    setDescriptifData(mockDescriptifData);
   }, [id, navigate]);
 
   useEffect(() => {
@@ -393,6 +231,18 @@ const ProjectDetails = () => {
     }
   };
 
+  // Fonction de conversion pour transformer ProjectMilestone en MilestoneInfo
+  const convertToMilestoneInfo = (milestones: ProjectMilestone[]): MilestoneInfo[] => {
+    return milestones.map(milestone => ({
+      id: milestone.id,
+      title: milestone.title,
+      description: milestone.description,
+      dueDate: milestone.dueDate,
+      completed: milestone.completed || false,
+      inProgress: milestone.inProgress || false,
+    }));
+  };
+
   // Format date function
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
@@ -408,13 +258,66 @@ const ProjectDetails = () => {
     }
   };
 
+  // Créer des données vides pour les documents (à remplacer par l'API plus tard)
+  const projectDocuments: any[] = [];
+
   // Filter milestones and documents by project ID
   const filteredMilestones = projectMilestones.filter(
-    (milestone) => milestone.projectId === id
+    (milestone) => milestone.id && milestone.id.includes(id || "")
   );
   const filteredDocuments = projectDocuments.filter(
     (doc) => doc.projectId === id
   );
+
+  // Modifier la fonction handleDataUpdate
+  const handleDataUpdate = useCallback(
+    (payload: ProjectDataUpdatePayload) => {
+      console.log("Mise à jour reçue:", payload.type);
+
+      // Ne déclencher refreshProjectData que pour certains types de mises à jour
+      if (payload.type === "milestones" || payload.type === "team") {
+        refreshProjectData();
+      }
+
+      // Pour le descriptif, ajouter une vérification pour éviter les mises à jour inutiles
+      if (payload.type === "descriptif") {
+        // Sérialiser les données pour comparaison
+        const serializedData = JSON.stringify(payload.data);
+
+        // Ne mettre à jour que si les données ont changé
+        if (serializedData !== lastDescriptifUpdateRef.current) {
+          console.log("Descriptif modifié, mise à jour de l'état");
+          lastDescriptifUpdateRef.current = serializedData;
+          setDescriptifData(payload.data);
+        } else {
+          console.log("Descriptif identique, mise à jour ignorée");
+        }
+      }
+    },
+    [refreshProjectData]
+  );
+
+  // Use the project ID for the stats to ensure we're showing project-specific data
+  const [projectStats, setProjectStats] = useState({
+    budgetTotal: 750000,
+    budgetUsed: 425000,
+    timelineProgress: 58,
+    tasksCompleted: 12,
+    tasksInProgress: 8,
+    tasksTodo: 15,
+    documentsCount: 24,
+    commentsCount: 37,
+    meetingsCount: 8,
+    projectId: id || "",
+    projectType: project?.projectType || "Appartement", // Valeur par défaut ou issue du projet
+    projectArea: project?.projectArea || 120, // Valeur par défaut ou issue du projet
+    roomCount: project?.roomCount || 4, // Valeur par défaut ou issue du projet
+  });
+
+  const projectSpecificStats = {
+    ...projectStats,
+    projectId: id || "",
+  };
 
   // Ajouter cette fonction dans le composant ProjectDetails
   const handleBudgetUpdate = useCallback(
@@ -475,7 +378,7 @@ const ProjectDetails = () => {
           <Skeleton className="h-64" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <ProjectDetailsCard project={project} formatDate={formatDate} />
           <ProjectBudgetCard
             stats={projectStats}
@@ -485,24 +388,37 @@ const ProjectDetails = () => {
             stats={projectSpecificStats}
             projectId={id || ""}
           />
+          <ProjectImageCard
+            imageUrl={project?.imageUrl}
+            projectName={project?.name || "Projet"}
+            projectId={id || ""}
+            onImageUploaded={(imageUrl) => {
+              if (project) {
+                setProject({ ...project, imageUrl });
+              }
+            }}
+          />
         </div>
       )}
 
       <ProjectTabs
         projectId={id || ""}
         projectTasks={tasks}
-        teamMembers={teamMembers} // Utilisation de l'état local au lieu de l'import statique
-        projectMilestones={filteredMilestones}
+        teamMembers={teamMembers}
+        projectMilestones={convertToMilestoneInfo(filteredMilestones)}
         projectDocuments={filteredDocuments}
         projectStats={projectSpecificStats}
         tasks={tasks}
         formatDate={formatDate}
         projectAnnotations={projectAnnotations}
-        descriptifData={descriptifData} // Ajout de cette propriété
-        startDate={project?.startDate} // Ajout de cette propriété
-        endDate={project?.endDate} // Ajout de cette propriété
+        descriptifData={descriptifData}
+        startDate={project?.startDate}
+        endDate={project?.endDate}
         onDataUpdate={handleDataUpdate}
       />
+
+     
+      
     </MainLayout>
   );
 };

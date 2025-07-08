@@ -7,10 +7,8 @@ import TaskList from "@/features/tasks/components/TaskList";
 import { Task } from "@/features/projects/types/gantt";
 import { Document } from "@/features/documents/components/DocumentsList";
 import { TeamMember } from "@/types/team";
-// import { MilestonesSection } from "./overview/MilestonesSection";
-// Le composant MilestonesSection n'existe pas, il faudra l'implémenter ou le remplacer.
-// import { StatisticsSection } from "./overview/StatisticsSection";
-// Le composant StatisticsSection n'existe pas, il faudra l'implémenter ou le remplacer.
+import { MilestonesSection } from "./overview/MilestonesSection";
+import { StatisticsSection } from "./overview/StatisticsSection";
 import { useEffect, useState } from "react";
 
 interface ProjectMilestone {

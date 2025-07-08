@@ -1,13 +1,41 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
+// Déclaration de type pour Clerk
+declare global {
+  interface Window {
+    Clerk?: {
+      session?: {
+        getToken(): Promise<string | null>;
+      };
+    };
+  }
+}
+
 // Configuration de base pour les requêtes API
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://archihub-backend-production.up.railway.app';
+
+console.log("API_BASE_URL utilisé :", API_BASE_URL);
 
 export interface ApiResponse<T> {
   data: T;
   message?: string;
   status: number;
 }
+
+// Fonction pour récupérer le token Clerk
+const getClerkToken = async (): Promise<string | null> => {
+  try {
+    // Vérifier si Clerk est disponible
+    if (window.Clerk && window.Clerk.session) {
+      const token = await window.Clerk.session.getToken();
+      return token;
+    }
+    return null;
+  } catch (error) {
+    console.error("Erreur lors de la récupération du token Clerk:", error);
+    return null;
+  }
+};
 
 export const createApiClient = (): {
   get: <T>(url: string, config?: AxiosRequestConfig) => Promise<T>;
@@ -24,14 +52,17 @@ export const createApiClient = (): {
     timeout: 15000, // 15 secondes
   });
 
-  // Intercepteur pour ajouter le token d'authentification
+  // Intercepteur pour ajouter le token d'authentification Clerk
   instance.interceptors.request.use(async (config) => {
     try {
-      // Récupérer le token depuis le localStorage ou autre mécanisme d'authentification
-      const token = localStorage.getItem('auth_token');
+      // Récupérer le token Clerk
+      const token = await getClerkToken();
       
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
+        console.log("Token Clerk ajouté aux headers");
+      } else {
+        console.warn("Aucun token Clerk disponible");
       }
     } catch (error) {
       console.error("Erreur lors de l'ajout du token d'authentification:", error);
@@ -53,16 +84,15 @@ export const createApiClient = (): {
         
         // Gérer les erreurs d'authentification
         if (error.response.status === 401) {
-          console.warn('[apiClient] Redirection vers /auth suite à une erreur d\'authentification ou session expirée');
-          localStorage.removeItem('auth_token');
-          window.location.href = '/auth';
+          console.warn('[apiClient] Erreur 401 - Token invalide ou expiré');
+          // Ne pas rediriger automatiquement, laisser l'AuthGuard gérer
         }
       } else if (error.request) {
         // La requête a été faite mais aucune réponse n'a été reçue
-        console.error('Erreur de requête:', error.request);
+        console.error('Erreur de requête (pas de réponse):', error.request);
       } else {
         // Une erreur s'est produite lors de la configuration de la requête
-        console.error('Erreur:', error.message);
+        console.error('Erreur de configuration:', error.message);
       }
       
       return Promise.reject(error);

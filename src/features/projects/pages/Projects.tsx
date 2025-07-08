@@ -53,14 +53,38 @@ import { toast } from "sonner";
 import {
   projectService,
   addProject,
+  getAllProjects,
   // addProjectToMember,
 } from "@/features/projects/services/projectService";
+import { Project } from "@/features/projects/types/project";
 import { TeamMember } from "@/features/team/types/team";
 // import { getAllTeamMembers } from "@/features/team/services/legacyTeamService";
-import { getAllClients, ClientData } from "@/features/clients/services/clientService";
+import { getAllClients } from "@/features/clients/services/clientService";
 // import { SiteVisitReportUploader } from "@/features/projects/components/SiteVisitReportUploader";
 import { safeSetItem } from "@/features/storage/services/localStorageService";
 import { getMilestonesByProjectId } from "@/features/projects/services/milestonesService";
+
+// Fonction de conversion des données API vers l'interface UI
+const convertProjectToCardProps = (project: Project): ProjectCardProps => {
+  return {
+    id: project.id,
+    name: project.name,
+    description: project.description,
+    client: project.client,
+    clientId: project.client || "", // Fallback si pas de clientId
+    location: project.location,
+    startDate: project.startDate,
+    endDate: project.endDate,
+    status: project.status as "planning" | "design" | "construction" | "completed" | "on-hold",
+    progress: project.progress,
+    teamSize: 0, // À récupérer depuis l'API si nécessaire
+    teamMembers: [], // À récupérer depuis l'API si nécessaire
+    imageUrl: undefined,
+    projectType: "",
+    projectArea: undefined,
+    roomCount: undefined
+  };
+};
 
 const Projects = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -71,7 +95,7 @@ const Projects = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
-  const [clients, setClients] = useState<ClientData[]>([]);
+  const [clients, setClients] = useState<any[]>([]);
   const [selectedTeamMembers, setSelectedTeamMembers] = useState<string[]>([]);
 
   // État du formulaire pour un nouveau projet
@@ -98,21 +122,26 @@ const Projects = () => {
     try {
       setIsLoading(true);
       
-      // Utiliser directement les données locales pour le test
-      const stored = localStorage.getItem("projectsData");
-      const projectsData = stored ? JSON.parse(stored) : [];
+      // Utiliser l'API Railway pour charger les projets
+      const apiProjects = await getAllProjects();
+      
+      // Convertir les données API vers le format UI
+      const convertedProjects = apiProjects.map(convertProjectToCardProps);
       
       // Charger les clients
       const clientsData = await getAllClients();
       
-      console.log("Projets chargés:", projectsData.length);
-      setProjectsData(projectsData);
-      setFilteredProjects(projectsData);
+      console.log("Projets chargés depuis Railway:", convertedProjects.length);
+      setProjectsData(convertedProjects);
+      setFilteredProjects(convertedProjects);
       setClients(clientsData);
       
     } catch (error) {
       console.error("Erreur lors du chargement des projets:", error);
-      toast.error("Impossible de charger les données");
+      toast.error("Impossible de charger les projets depuis le serveur");
+      // En cas d'erreur, utiliser un tableau vide au lieu de données locales
+      setProjectsData([]);
+      setFilteredProjects([]);
     } finally {
       setIsLoading(false);
     }
@@ -186,27 +215,29 @@ const Projects = () => {
   // handleCreateProject amélioré avec vérification de type
   const handleCreateProject = async () => {
     // Validation des champs
-    if (!newProject.name || !newProject.location) {
+    if (!newProject.name || !newProject.location || !newProject.startDate || !newProject.endDate) {
       toast.error("Veuillez remplir tous les champs obligatoires");
       return;
     }
     
     // Valider les dates
     try {
-      if (newProject.startDate) {
-        const startDate = new Date(newProject.startDate);
-        if (isNaN(startDate.getTime())) {
-          toast.error("La date de début est invalide");
-          return;
-        }
+      const startDate = new Date(newProject.startDate);
+      const endDate = new Date(newProject.endDate);
+      
+      if (isNaN(startDate.getTime())) {
+        toast.error("La date de début est invalide");
+        return;
       }
       
-      if (newProject.endDate) {
-        const endDate = new Date(newProject.endDate);
-        if (isNaN(endDate.getTime())) {
-          toast.error("La date de fin est invalide");
-          return;
-        }
+      if (isNaN(endDate.getTime())) {
+        toast.error("La date de fin est invalide");
+        return;
+      }
+      
+      if (startDate >= endDate) {
+        toast.error("La date de fin doit être postérieure à la date de début");
+        return;
       }
     } catch (e) {
       toast.error("Format de date invalide");
@@ -216,20 +247,20 @@ const Projects = () => {
     try {
       setIsSaving(true);
 
-      // Créer une copie propre pour l'API
-      const projectToCreate = {
-        ...newProject,
-        // S'assurer que les membres sont au format attendu par l'API
-        teamMembers: selectedTeamMembers,
-        teamSize: selectedTeamMembers.length
+      // Créer un objet compatible avec le type Project de l'API
+      const projectToCreate: Omit<Project, "id"> = {
+        name: newProject.name,
+        description: newProject.description || "",
+        startDate: newProject.startDate,
+        endDate: newProject.endDate,
+        status: newProject.status,
+        progress: newProject.progress || 0,
+        client: newProject.client,
+        location: newProject.location,
+        manager: undefined // Optionnel
       };
       
-      const newProjectId = await addProject(projectToCreate);
-      
-      if (newProjectId && selectedTeamMembers.length > 0) {
-        // Ajouter le projet à chaque membre
-        await Promise.allSettled([]);
-      }
+      const createdProject = await addProject(projectToCreate);
       
       toast.success("Projet créé avec succès");
       

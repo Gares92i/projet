@@ -8,6 +8,7 @@ import {
   useAuth as useClerkAuth,
 } from "@clerk/clerk-react";
 import { AuthContextType, UserProfile, UserRole } from "@/features/auth/types/auth";
+import { WorkspaceProvider } from '@/features/workspaces/contexts/WorkspaceContext';
 
 // Créer le contexte
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -156,7 +157,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     updateProfile,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      <WorkspaceProvider>
+        {children}
+      </WorkspaceProvider>
+    </AuthContext.Provider>
+  );
 };
 
 // Hook pour utiliser le contexte d'authentification

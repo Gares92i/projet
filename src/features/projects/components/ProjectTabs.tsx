@@ -10,20 +10,44 @@ import {
   TableCell,
 } from "@/ui/table";
 import { Badge } from "@/ui/badge";
-import { TasksTab } from "@/features/tasks/components/TasksTab";
-import { TeamTab } from "@/features/team/components/TeamTab";
-import { DocumentsTab } from "@/features/documents/components/DocumentsTab";
-// import { MilestonesTab } from "@/features/projects/components/MilestonesTab";
-import { ReportsTab } from "@/features/reports/components/ReportsTab";
-import { AnnotationsTab } from "@/features/annotations/components/AnnotationsTab";
+import { TasksTab } from "./tabs/TasksTab";
+import { TeamTab } from "./tabs/TeamTab";
+import { DocumentsTab } from "./tabs/DocumentsTab";
+import { MilestonesTab } from "./tabs/MilestonesTab";
+import { ReportsTab } from "./tabs/ReportsTab";
+import { AnnotationsTab } from "./tabs/AnnotationsTab";
 import { PlanningTab } from "@/features/planning/components/PlanningTab";
 import { Task } from "@/features/projects/types/gantt";
 import { Document } from "@/features/documents/components/DocumentsList";
 import { Annotation } from "@/features/annotations/types/annotation";
-import { ProjectMilestone, ProjectStats } from "./tabs/types";
 import { TeamMember } from "@/features/team/types/team";
 import { ClipboardPen } from "lucide-react";
-import { DescriptifDetailTab } from "./tabs/DescriptifDetailTab";
+
+// Types locaux pour éviter les imports manquants
+interface ProjectMilestone {
+  id: string;
+  title: string;
+  description?: string;
+  dueDate?: string;
+  completed?: boolean;
+  inProgress?: boolean;
+}
+
+interface ProjectStats {
+  budgetTotal: number;
+  budgetUsed: number;
+  timelineProgress: number;
+  tasksCompleted: number;
+  tasksInProgress: number;
+  tasksTodo: number;
+  documentsCount: number;
+  commentsCount: number;
+  meetingsCount: number;
+  projectId: string;
+  projectType?: string;
+  projectArea?: number;
+  roomCount?: number;
+}
 import { Button } from "@/ui/button";
 import { useNavigate } from "react-router-dom";
 import { LotTravaux, DescriptifData } from "@/features/projects/types/project";
@@ -40,7 +64,7 @@ interface ProjectTabsProps {
   projectId: string;
   projectTasks: Task[];
   teamMembers: TeamMember[];
-  projectMilestones: ProjectMilestone[];
+  projectMilestones: any[];
   projectDocuments: Document[];
   projectStats: ProjectStats;
   tasks: Task[];
@@ -203,6 +227,7 @@ export const ProjectTabs = ({
         <MilestonesTab
           projectMilestones={projectMilestones.map(milestone => ({
             ...milestone,
+            completed: milestone.completed || false,
             inProgress: milestone.completed === false
           }))}
           formatDate={formatDate}

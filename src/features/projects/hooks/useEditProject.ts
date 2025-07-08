@@ -91,12 +91,26 @@ export const useEditProject = (projectId: string | undefined) => {
     try {
       setIsSaving(true);
       
-      // Mise à jour du projet
-      await updateProject(projectId, {
+      // Préparer l'objet de mise à jour SANS l'image si c'est un placeholder
+      const updates: any = {
         ...project,
         teamMembers: selectedTeamMembers,
-        teamSize: selectedTeamMembers.length
-      });
+        teamSize: selectedTeamMembers.length,
+      };
+      
+      // Ne pas envoyer l'image si c'est un placeholder ou une image en base64
+      if (project.imageUrl && 
+          !project.imageUrl.startsWith('placeholder://') && 
+          !project.imageUrl.startsWith('data:image/')) {
+        updates.image_url = project.imageUrl;
+      } else {
+        // Supprimer l'imageUrl du payload pour éviter l'erreur 413
+        delete updates.imageUrl;
+        delete updates.image_url;
+      }
+      
+      // Mise à jour du projet
+      await updateProject(projectId, updates);
       
       toast.success("Projet mis à jour avec succès");
       navigate(`/projects/${projectId}`);

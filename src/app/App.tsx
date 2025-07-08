@@ -5,7 +5,7 @@ import Clients from "@/features/clients/pages/Clients";
 import Team from "@/features/team/pages/Team";
 import Tasks from "@/features/tasks/pages/Tasks";
 import Calendar from "@/features/calendar/pages/Calendar";
-
+import Workspaces from "@/features/workspaces/pages/Workspaces";
 import Documents from "@/features/documents/pages/Documents";
 import Resources from "@/features/resources/pages/Resources";
 import Settings from "@/features/settings/pages/Settings";
@@ -54,6 +54,14 @@ function App() {
           element={
             <AuthGuard>
               <Index />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/workspaces"
+          element={
+            <AuthGuard>
+              <Workspaces />
             </AuthGuard>
           }
         />
