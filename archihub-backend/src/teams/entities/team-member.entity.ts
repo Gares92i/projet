@@ -8,7 +8,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
-import { Workspace } from '../../workspaces/entities/workspace.entity';
+import { UsersClerk } from '../../users/entities/users_clerk.entity';
 
 @Entity('team_members')
 export class TeamMember {
@@ -59,8 +59,12 @@ export class TeamMember {
   @Column({ nullable: true })
   activity: string;
 
-  @Column({ name: 'workspace_id', nullable: true })
-  workspaceId: string;
+  @Column({ name: 'owner_id', nullable: true })
+  ownerId: string;
+
+  @ManyToOne(() => UsersClerk, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'owner_id' })
+  owner: UsersClerk;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

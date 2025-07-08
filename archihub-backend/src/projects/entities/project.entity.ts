@@ -7,7 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Workspace } from '../../workspaces/entities/workspace.entity';
+import { UsersClerk } from '../../users/entities/users_clerk.entity';
 
 @Entity('projects')
 export class Project {
@@ -53,8 +53,12 @@ export class Project {
   @Column({ nullable: true })
   description: string;
 
-  @Column({ name: 'workspace_id', nullable: true })
-  workspaceId: string;
+  @Column({ name: 'owner_id', nullable: true })
+  ownerId: string;
+
+  @ManyToOne(() => UsersClerk, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'owner_id' })
+  owner: UsersClerk;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -63,7 +67,4 @@ export class Project {
   updatedAt: Date;
 
   // Relations
-  @ManyToOne(() => Workspace, workspace => workspace.projects, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'workspace_id' })
-  workspace: Workspace;
 }
