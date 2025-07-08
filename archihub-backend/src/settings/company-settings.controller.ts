@@ -12,17 +12,16 @@ export class CompanySettingsController {
 
   @Get('me')
   async getMySettings(@Request() req: RequestWithAuth) {
-    // ownerId = utilisateur connecté
-    return this.companySettingsService.findByOwnerId(req.auth.userId);
+    return this.companySettingsService.findByOwnerId(req.auth!.userId);
   }
 
   @Post()
   async create(@Request() req: RequestWithAuth, @Body() dto: CreateCompanySettingsDto) {
-    return this.companySettingsService.create(req.auth.userId, dto);
+    return this.companySettingsService.create(req.auth!.userId, dto);
   }
 
   @Put()
   async update(@Request() req: RequestWithAuth, @Body() dto: UpdateCompanySettingsDto) {
-    return this.companySettingsService.update(req.auth.userId, dto);
+    return this.companySettingsService.update(req.auth!.userId, dto);
   }
 } 
