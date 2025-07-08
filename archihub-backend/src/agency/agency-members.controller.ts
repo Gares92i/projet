@@ -3,6 +3,8 @@ import { AgencyMembersService } from './agency-members.service';
 import { CreateAgencyMemberDto } from './dto/create-agency-member.dto';
 import { UpdateAgencyMemberDto } from './dto/update-agency-member.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { OwnerGuard } from '../auth/guards/owner.guard';
+import { OwnerOnly } from '../auth/decorators/owner-only.decorator';
 import { RequestWithAuth } from '../types/express';
 
 @Controller('agency-members')
@@ -23,18 +25,24 @@ export class AgencyMembersController {
   }
 
   @Post()
+  @UseGuards(OwnerGuard)
+  @OwnerOnly()
   async create(@Request() req: RequestWithAuth, @Body() dto: CreateAgencyMemberDto) {
     if (!req.auth?.userId) throw new UnauthorizedException();
     return this.agencyMembersService.create(req.auth.userId, dto);
   }
 
   @Put(':id')
+  @UseGuards(OwnerGuard)
+  @OwnerOnly()
   async update(@Request() req: RequestWithAuth, @Param('id') id: string, @Body() dto: UpdateAgencyMemberDto) {
     if (!req.auth?.userId) throw new UnauthorizedException();
     return this.agencyMembersService.update(id, req.auth.userId, dto);
   }
 
   @Delete(':id')
+  @UseGuards(OwnerGuard)
+  @OwnerOnly()
   async remove(@Request() req: RequestWithAuth, @Param('id') id: string) {
     if (!req.auth?.userId) throw new UnauthorizedException();
     return this.agencyMembersService.remove(id, req.auth.userId);
