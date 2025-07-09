@@ -6,7 +6,7 @@ export class CompanySettings {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'owner_id', type: 'varchar', length: 64 })
+  @Column({ name: 'owner_id', type: 'varchar' })
   ownerId: string;
 
   @ManyToOne(() => UsersClerk, { onDelete: 'CASCADE' })
