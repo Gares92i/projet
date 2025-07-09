@@ -11,19 +11,27 @@ export class UsersClerk {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'clerk_user_id' })
+  @Column({ name: 'clerkId', unique: true })
   clerkUserId: string;
+
+  @Column({ nullable: true })
+  firstName: string;
+
+  @Column({ nullable: true })
+  lastName: string;
 
   @Column({ nullable: true })
   email: string;
 
   @Column({ nullable: true })
-  name: string;
+  profileImageUrl: string;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @Column({ type: 'text', default: '[]' })
+  roles: string;
+
+  @CreateDateColumn({ name: 'createdAt' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({ name: 'updatedAt' })
   updatedAt: Date;
-
 }

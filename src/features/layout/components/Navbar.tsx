@@ -4,7 +4,6 @@ import { Bell, MessageSquare } from "lucide-react";
 import { useIsMobile } from "@/features/common/hooks/use-mobile";
 import { useAuth } from "@/features/auth/contexts/AuthContext";
 import { UserMenu } from "@/features/layout/components/UserMenu";
-import { WorkspaceSelector } from "@/features/workspaces/components/WorkspaceSelector";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/ui/badge";
 import { useSidebar } from "@/ui/sidebar";
@@ -36,9 +35,6 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              {/* Workspace Selector */}
-              <WorkspaceSelector />
-
               {/* Bouton notification */}
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5" />

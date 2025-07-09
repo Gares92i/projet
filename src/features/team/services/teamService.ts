@@ -24,7 +24,7 @@ export const teamService = {
     const api = createApiClient();
     
     try {
-      const response = await api.get('/team-members');
+      const response = await api.get('/teams');
       return response.map(normalizeTeamMember);
     } catch (error) {
       console.error("Erreur lors de la récupération des membres:", error);
@@ -41,7 +41,7 @@ export const teamService = {
     const api = createApiClient();
     
     try {
-      const member = await api.get<TeamMember>(`/team-members/${id}`);
+      const member = await api.get<TeamMember>(`/teams/${id}`);
       return normalizeTeamMember(member);
     } catch (error) {
       console.error(`Erreur lors de la récupération du membre ${id}:`, error);
@@ -61,7 +61,7 @@ export const teamService = {
     const api = createApiClient();
     
     try {
-      const newMember = await api.post<TeamMember>("/team-members", member);
+      const newMember = await api.post<TeamMember>("/teams", member);
       return normalizeTeamMember(newMember);
     } catch (error) {
       console.error("Erreur lors de l'ajout du membre:", error);
@@ -88,7 +88,7 @@ export const teamService = {
     const api = createApiClient();
     
     try {
-      const updatedMember = await api.put<TeamMember>(`/team-members/${id}`, updates);
+      const updatedMember = await api.put<TeamMember>(`/teams/${id}`, updates);
       return normalizeTeamMember(updatedMember);
     } catch (error) {
       console.error(`Erreur lors de la mise à jour du membre ${id}:`, error);
@@ -117,7 +117,7 @@ export const teamService = {
     const api = createApiClient();
     
     try {
-      await api.delete(`/team-members/${id}`);
+      await api.delete(`/teams/${id}`);
       return true;
     } catch (error) {
       console.error(`Erreur lors de la suppression du membre ${id}:`, error);

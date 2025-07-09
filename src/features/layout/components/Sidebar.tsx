@@ -37,11 +37,6 @@ const menuItems = [
     icon: <Home className="h-5 w-5" />,
   },
   {
-    title: "Workspaces",
-    href: "/workspaces",
-    icon: <Building className="h-5 w-5" />,
-  },
-  {
     title: "Projets",
     href: "/projects",
     icon: <Building2 className="h-5 w-5" />,
