@@ -15,12 +15,12 @@ export class UsersService {
   /**
    * Trouver un utilisateur par son ID Clerk
    */
-  async findByClerkId(clerkUserId: string): Promise<User | null> {
+  async findByClerkId(clerkId: string): Promise<User | null> {
     try {
-      return await this.userRepository.findOne({ where: { clerkUserId } });
+      return await this.userRepository.findOne({ where: { clerkId } });
     } catch (error) {
       this.logger.error(
-        `Erreur lors de la recherche de l'utilisateur par clerkUserId: ${error.message}`,
+        `Erreur lors de la recherche de l'utilisateur par clerkId: ${error.message}`,
         error.stack,
       );
       return null;
@@ -30,18 +30,18 @@ export class UsersService {
   /**
    * Créer ou trouver un utilisateur par son ID Clerk
    */
-  async findOrCreateByClerkId(clerkUserId: string): Promise<User | null> {
-    if (!clerkUserId || clerkUserId === 'guest') {
-      this.logger.warn(`Tentative de création/recherche d'un utilisateur Clerk sans ID valide: ${clerkUserId}`);
+  async findOrCreateByClerkId(clerkId: string): Promise<User | null> {
+    if (!clerkId || clerkId === 'guest') {
+      this.logger.warn(`Tentative de création/recherche d'un utilisateur Clerk sans ID valide: ${clerkId}`);
       return null;
     }
     try {
-      let user = await this.findByClerkId(clerkUserId);
+      let user = await this.findByClerkId(clerkId);
 
       if (!user) {
-        this.logger.log(`Création d'un nouvel utilisateur pour clerkUserId: ${clerkUserId}`);
+        this.logger.log(`Création d'un nouvel utilisateur pour clerkId: ${clerkId}`);
         user = this.userRepository.create({
-          clerkUserId,
+          clerkId,
           roles: JSON.stringify(['user']),
         });
         await this.userRepository.save(user);
@@ -60,12 +60,12 @@ export class UsersService {
   /**
    * Synchroniser un utilisateur à partir des données de Clerk
    */
-  async syncUserFromClerk(clerkUserId: string, userProfile: any): Promise<User> {
-    let user = await this.findByClerkId(clerkUserId);
+  async syncUserFromClerk(clerkId: string, userProfile: any): Promise<User> {
+    let user = await this.findByClerkId(clerkId);
 
     if (!user) {
       user = this.userRepository.create({
-        clerkUserId,
+        clerkId,
         firstName: userProfile.firstName,
         lastName: userProfile.lastName,
         email: userProfile.emailAddresses?.[0]?.emailAddress || userProfile.email,

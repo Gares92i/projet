@@ -1,12 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('users_clerk')
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'clerkId', unique: true }) // Utiliser clerkId comme dans l'entity UsersClerk
-  clerkUserId: string;
+  @Column({ name: 'clerkId', unique: true })
+  clerkId: string;
+
+  @Column({ nullable: true })
+  name: string;
 
   @Column({ nullable: true })
   firstName: string;
@@ -23,9 +26,9 @@ export class User {
   @Column({ type: 'text', default: '[]' })
   roles: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }

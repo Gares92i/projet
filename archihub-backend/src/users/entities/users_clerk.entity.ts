@@ -12,7 +12,10 @@ export class UsersClerk {
   id: string;
 
   @Column({ name: 'clerkId', unique: true })
-  clerkUserId: string;
+  clerkId: string;
+
+  @Column({ nullable: true })
+  name: string;
 
   @Column({ nullable: true })
   firstName: string;
@@ -29,9 +32,9 @@ export class UsersClerk {
   @Column({ type: 'text', default: '[]' })
   roles: string;
 
-  @CreateDateColumn({ name: 'createdAt' })
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updatedAt' })
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }

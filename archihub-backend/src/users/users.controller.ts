@@ -5,7 +5,7 @@ import { RequestWithAuth } from '../types/express';
 
 // DTO pour la synchronisation des utilisateurs
 export class SyncUserDto {
-  clerkUserId: string;
+  clerkId: string;
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -18,7 +18,7 @@ export class UsersController {
 
   @Post('/sync')
   async syncUser(@Body() userDto: SyncUserDto) {
-    return this.usersService.syncUserFromClerk(userDto.clerkUserId, userDto);
+    return this.usersService.syncUserFromClerk(userDto.clerkId, userDto);
   }
 
   @UseGuards(AuthGuard)
