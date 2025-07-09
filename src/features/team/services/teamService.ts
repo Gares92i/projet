@@ -61,7 +61,21 @@ export const teamService = {
     const api = createApiClient();
     
     try {
-      const newMember = await api.post<TeamMember>("/teams", member);
+      // Transformer les données pour correspondre au DTO backend
+      const memberData = {
+        name: member.name,
+        email: member.email,
+        phone: member.phone,
+        role: member.role,
+        status: member.status,
+        avatar: member.avatar,
+        activity: member.activity,
+        userId: member.user_id,
+        teamId: member.team_id,
+        ownerId: member.user_id // Utiliser user_id comme owner_id pour l'instant
+      };
+      
+      const newMember = await api.post<TeamMember>("/teams", memberData);
       return normalizeTeamMember(newMember);
     } catch (error) {
       console.error("Erreur lors de l'ajout du membre:", error);
@@ -88,7 +102,21 @@ export const teamService = {
     const api = createApiClient();
     
     try {
-      const updatedMember = await api.put<TeamMember>(`/teams/${id}`, updates);
+      // Transformer les données pour correspondre au DTO backend
+      const updateData = {
+        name: updates.name,
+        email: updates.email,
+        phone: updates.phone,
+        role: updates.role,
+        status: updates.status,
+        avatar: updates.avatar,
+        activity: updates.activity,
+        userId: updates.user_id,
+        teamId: updates.team_id,
+        ownerId: updates.user_id
+      };
+      
+      const updatedMember = await api.put<TeamMember>(`/teams/${id}`, updateData);
       return normalizeTeamMember(updatedMember);
     } catch (error) {
       console.error(`Erreur lors de la mise à jour du membre ${id}:`, error);

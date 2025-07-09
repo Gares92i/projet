@@ -5,7 +5,12 @@ export class CreateTeamMemberDto {
   name: string;
 
   @IsEmail()
-  email: string;
+  @IsOptional()
+  email?: string;
+
+  @IsString()
+  @IsOptional()
+  phone?: string;
 
   @IsString()
   @IsOptional()
@@ -17,9 +22,21 @@ export class CreateTeamMemberDto {
 
   @IsString()
   @IsOptional()
-  avatarUrl?: string;
+  avatar?: string;
+
+  @IsString()
+  @IsOptional()
+  activity?: string;
 
   @IsUUID()
   @IsOptional()
-  userClerkId?: string;
+  userId?: string;
+
+  @IsUUID()
+  @IsOptional()
+  teamId?: string;
+
+  @IsUUID()
+  @IsOptional()
+  ownerId?: string;
 }
