@@ -13,4 +13,7 @@ export class CreateAgencyMemberDto {
   @IsOptional()
   @IsIn(['pending', 'active', 'revoked'])
   status?: string;
+
+  @IsOptional()
+  permissions?: Record<string, boolean>;
 } 

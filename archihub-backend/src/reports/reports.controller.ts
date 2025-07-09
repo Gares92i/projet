@@ -26,17 +26,20 @@ import { ReportsService } from './reports.service';
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { RequirePermission } from '../auth/decorators/permissions.decorator';
 
 @ApiTags('reports')
 @ApiBearerAuth()
 @Controller('reports')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, PermissionsGuard)
 export class ReportsController {
   private readonly logger = new Logger(ReportsController.name);
 
   constructor(private readonly reportsService: ReportsService) {}
 
   @Post()
+  @RequirePermission('stats')
   @ApiOperation({ summary: 'Créer un nouveau rapport' })
   @ApiResponse({ status: 201, description: 'Rapport créé avec succès.' })
   @ApiResponse({ status: 400, description: 'Données invalides.' })
@@ -55,6 +58,7 @@ export class ReportsController {
   }
 
   @Get()
+  @RequirePermission('stats')
   @ApiOperation({ summary: 'Récupérer tous les rapports' })
   @ApiResponse({ status: 200, description: 'Liste des rapports récupérée avec succès.' })
   @ApiResponse({ status: 401, description: 'Non autorisé.' })
@@ -101,6 +105,7 @@ export class ReportsController {
   }
 
   @Get(':id')
+  @RequirePermission('stats')
   @ApiOperation({ summary: 'Récupérer un rapport par ID' })
   @ApiResponse({ status: 200, description: 'Rapport récupéré avec succès.' })
   @ApiResponse({ status: 404, description: 'Rapport non trouvé.' })
@@ -123,6 +128,7 @@ export class ReportsController {
   }
 
   @Patch(':id')
+  @RequirePermission('stats')
   @ApiOperation({ summary: 'Mettre à jour un rapport' })
   @ApiResponse({ status: 200, description: 'Rapport mis à jour avec succès.' })
   @ApiResponse({ status: 404, description: 'Rapport non trouvé.' })
@@ -145,6 +151,7 @@ export class ReportsController {
   }
 
   @Delete(':id')
+  @RequirePermission('stats')
   @ApiOperation({ summary: 'Supprimer un rapport' })
   @ApiResponse({ status: 200, description: 'Rapport supprimé avec succès.' })
   @ApiResponse({ status: 404, description: 'Rapport non trouvé.' })

@@ -25,17 +25,20 @@ import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { RequirePermission } from '../auth/decorators/permissions.decorator';
 
 @ApiTags('documents')
 @ApiBearerAuth()
 @Controller('documents')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, PermissionsGuard)
 export class DocumentsController {
   private readonly logger = new Logger(DocumentsController.name);
 
   constructor(private readonly documentsService: DocumentsService) {}
 
   @Post()
+  @RequirePermission('documents')
   @ApiOperation({ summary: 'Créer un nouveau document' })
   @ApiResponse({ status: 201, description: 'Document créé avec succès.' })
   @ApiResponse({ status: 400, description: 'Données invalides.' })
@@ -54,6 +57,7 @@ export class DocumentsController {
   }
 
   @Get()
+  @RequirePermission('documents')
   @ApiOperation({ summary: 'Récupérer tous les documents' })
   @ApiResponse({ status: 200, description: 'Liste des documents récupérée avec succès.' })
   @ApiResponse({ status: 401, description: 'Non autorisé.' })
@@ -79,6 +83,7 @@ export class DocumentsController {
   }
 
   @Get(':id')
+  @RequirePermission('documents')
   @ApiOperation({ summary: 'Récupérer un document par ID' })
   @ApiResponse({ status: 200, description: 'Document récupéré avec succès.' })
   @ApiResponse({ status: 404, description: 'Document non trouvé.' })
@@ -104,6 +109,7 @@ export class DocumentsController {
   }
 
   @Patch(':id')
+  @RequirePermission('documents')
   @ApiOperation({ summary: 'Mettre à jour un document' })
   @ApiResponse({ status: 200, description: 'Document mis à jour avec succès.' })
   @ApiResponse({ status: 404, description: 'Document non trouvé.' })
@@ -126,6 +132,7 @@ export class DocumentsController {
   }
 
   @Delete(':id')
+  @RequirePermission('documents')
   @ApiOperation({ summary: 'Supprimer un document' })
   @ApiResponse({ status: 200, description: 'Document supprimé avec succès.' })
   @ApiResponse({ status: 404, description: 'Document non trouvé.' })

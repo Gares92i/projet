@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, getRepository } from 'typeorm';
 import { AgencyMember } from './entities/agency-member.entity';
 import { CreateAgencyMemberDto } from './dto/create-agency-member.dto';
 import { UpdateAgencyMemberDto } from './dto/update-agency-member.dto';
+import { CompanySettings } from '../settings/entities/company-settings.entity';
 
 @Injectable()
 export class AgencyMembersService {
@@ -23,6 +24,15 @@ export class AgencyMembersService {
   }
 
   async create(ownerId: string, dto: CreateAgencyMemberDto): Promise<AgencyMember> {
+    // Vérification de la limite d'abonnement
+    const settingsRepo = getRepository(CompanySettings);
+    const settings = await settingsRepo.findOne({ where: { ownerId } });
+    if (settings && settings.maxMembersAllowed) {
+      const count = await this.agencyMembersRepository.count({ where: { ownerId } });
+      if (count >= settings.maxMembersAllowed) {
+        throw new ForbiddenException('Limite de membres atteinte pour votre abonnement.');
+      }
+    }
     const member = this.agencyMembersRepository.create({ ...dto, ownerId });
     return this.agencyMembersRepository.save(member);
   }

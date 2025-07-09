@@ -27,11 +27,13 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { RequestWithAuth } from '../types/express';
 import { UploadThingService } from '../uploads/uploadthing.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { RequirePermission } from '../auth/decorators/permissions.decorator';
 
 @ApiTags('projects')
 @ApiBearerAuth()
 @Controller('projects')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, PermissionsGuard)
 export class ProjectsController {
   constructor(
     private readonly projectsService: ProjectsService,
@@ -39,6 +41,7 @@ export class ProjectsController {
   ) {}
 
   @Post()
+  @RequirePermission('projects')
   @ApiOperation({ summary: 'Créer un nouveau projet' })
   @ApiResponse({ status: 201, description: 'Projet créé avec succès.' })
   @ApiResponse({ status: 400, description: 'Données invalides.' })
@@ -55,6 +58,7 @@ export class ProjectsController {
   }
 
   @Get()
+  @RequirePermission('projects')
   @ApiOperation({ summary: 'Récupérer tous les projets' })
   @ApiResponse({ status: 200, description: 'Liste des projets récupérée avec succès.' })
   @ApiResponse({ status: 401, description: 'Non autorisé.' })
@@ -75,6 +79,7 @@ export class ProjectsController {
   }
 
   @Get(':id')
+  @RequirePermission('projects')
   @ApiOperation({ summary: 'Récupérer un projet par ID' })
   @ApiResponse({ status: 200, description: 'Projet récupéré avec succès.' })
   @ApiResponse({ status: 404, description: 'Projet non trouvé.' })
@@ -86,6 +91,7 @@ export class ProjectsController {
   }
 
   @Patch(':id')
+  @RequirePermission('projects')
   @ApiOperation({ summary: 'Mettre à jour un projet' })
   @ApiResponse({ status: 200, description: 'Projet mis à jour avec succès.' })
   @ApiResponse({ status: 404, description: 'Projet non trouvé.' })
@@ -97,6 +103,7 @@ export class ProjectsController {
   }
 
   @Delete(':id')
+  @RequirePermission('projects')
   @ApiOperation({ summary: 'Supprimer un projet' })
   @ApiResponse({ status: 200, description: 'Projet supprimé avec succès.' })
   @ApiResponse({ status: 404, description: 'Projet non trouvé.' })

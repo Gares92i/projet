@@ -22,6 +22,9 @@ export class AgencyMember {
   @Column({ length: 20, default: 'active' })
   status: string;
 
+  @Column('jsonb', { default: '{}' })
+  permissions: Record<string, boolean>;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 } 

@@ -67,13 +67,14 @@ export class ClientsService {
     }
   }
 
-  async update(id: string, updateClientDto: UpdateClientDto): Promise<Client> {
+  async update(id: string, updateClientDto: UpdateClientDto, userId?: string): Promise<Client> {
     try {
-      const client = await this.findOne(id);
-
-      // Mettre à jour les propriétés du client
+      // On ne peut modifier que ses propres clients
+      const client = await this.clientsRepository.findOne({ where: { id, createdByUserId: userId } });
+      if (!client) {
+        throw new NotFoundException(`Client avec ID ${id} non trouvé ou non autorisé`);
+      }
       Object.assign(client, updateClientDto);
-
       return await this.clientsRepository.save(client);
     } catch (error) {
       this.logger.error(`Erreur lors de la mise à jour du client: ${error.message}`, error.stack);
@@ -81,9 +82,13 @@ export class ClientsService {
     }
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string, userId?: string): Promise<void> {
     try {
-      const client = await this.findOne(id);
+      // On ne peut supprimer que ses propres clients
+      const client = await this.clientsRepository.findOne({ where: { id, createdByUserId: userId } });
+      if (!client) {
+        throw new NotFoundException(`Client avec ID ${id} non trouvé ou non autorisé`);
+      }
       await this.clientsRepository.remove(client);
     } catch (error) {
       this.logger.error(`Erreur lors de la suppression du client: ${error.message}`, error.stack);
