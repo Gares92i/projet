@@ -17,7 +17,6 @@ export const useTeamMemberManager = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [currentMember, setCurrentMember] = useState<TeamMember | null>(null);
 
-
   // États pour les modales et dialogues
   const [isAddMemberSheetOpen, setIsAddMemberSheetOpen] = useState(false);
   const [isEditMemberSheetOpen, setIsEditMemberSheetOpen] = useState(false);

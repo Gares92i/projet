@@ -56,6 +56,7 @@ import {
 } from "@/ui/select";
 import { Label } from "@/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs";
+import { FormField } from "@/ui/form-field";
 
 const Clients = () => {
   const [clients, setClients] = useState<ClientData[]>([]);
@@ -77,6 +78,9 @@ const Clients = () => {
 
   // État pour le formulaire de modification
   const [editingClient, setEditingClient] = useState<ClientData | null>(null);
+
+  // États pour les erreurs de validation
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   // Charger les clients
   const loadClients = useCallback(async () => {
@@ -149,16 +153,45 @@ const Clients = () => {
       address: "",
       company: "",
     });
+    setFormErrors({});
+  };
+
+  // Validation du formulaire
+  const validateForm = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    if (!clientForm.name.trim()) {
+      errors.name = "Le nom du client est obligatoire";
+    }
+
+    if (clientForm.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clientForm.email)) {
+      errors.email = "Veuillez entrer une adresse email valide";
+    }
+
+    if (clientForm.phone && !/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(clientForm.phone.replace(/\s/g, ''))) {
+      errors.phone = "Veuillez entrer un numéro de téléphone français valide";
+    }
+
+    if (clientForm.address && clientForm.address.trim().length < 10) {
+      errors.address = "L'adresse doit contenir au moins 10 caractères";
+    }
+
+    if (clientForm.company && clientForm.company.trim().length < 2) {
+      errors.company = "Le nom de la société doit contenir au moins 2 caractères";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   // Gérer la création d'un client
   const handleCreateClient = async () => {
-    try {
-      if (!clientForm.name) {
-        toast.error("Le nom du client est requis");
-        return;
-      }
+    if (!validateForm()) {
+      toast.error("Veuillez corriger les erreurs dans le formulaire");
+      return;
+    }
 
+    try {
       await addClient({
         ...clientForm,
         projectIds: [],
@@ -174,9 +207,28 @@ const Clients = () => {
 
   // Gérer la mise à jour d'un client
   const handleUpdateClient = async () => {
-    try {
-      if (!editingClient || !editingClient.id) return;
+    if (!editingClient || !editingClient.id) return;
 
+    // Validation pour l'édition
+    const errors: Record<string, string> = {};
+    if (!editingClient.name.trim()) {
+      errors.name = "Le nom du client est obligatoire";
+    }
+
+    if (editingClient.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editingClient.email)) {
+      errors.email = "Veuillez entrer une adresse email valide";
+    }
+
+    if (editingClient.phone && !/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(editingClient.phone.replace(/\s/g, ''))) {
+      errors.phone = "Veuillez entrer un numéro de téléphone français valide";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      toast.error("Veuillez corriger les erreurs dans le formulaire");
+      return;
+    }
+
+    try {
       await updateClient(editingClient.id, {
         name: editingClient.name,
         email: editingClient.email,
@@ -229,66 +281,65 @@ const Clients = () => {
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Nom*</Label>
-                  <Input
-                    id="name"
-                    placeholder="Nom du client"
-                    value={clientForm.name}
-                    onChange={(e) =>
-                      setClientForm({ ...clientForm, name: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="company">Société</Label>
-                  <Input
-                    id="company"
-                    placeholder="Nom de l'entreprise"
-                    value={clientForm.company}
-                    onChange={(e) =>
-                      setClientForm({ ...clientForm, company: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="email@exemple.com"
-                    value={clientForm.email}
-                    onChange={(e) =>
-                      setClientForm({ ...clientForm, email: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Téléphone</Label>
-                  <Input
-                    id="phone"
-                    placeholder="01 23 45 67 89"
-                    value={clientForm.phone}
-                    onChange={(e) =>
-                      setClientForm({ ...clientForm, phone: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="address">Adresse</Label>
-                  <Input
-                    id="address"
-                    placeholder="Adresse complète"
-                    value={clientForm.address}
-                    onChange={(e) =>
-                      setClientForm({ ...clientForm, address: e.target.value })
-                    }
-                  />
-                </div>
+                <FormField
+                  label="Nom"
+                  name="name"
+                  type="text"
+                  value={clientForm.name}
+                  onChange={(value) => setClientForm({ ...clientForm, name: value })}
+                  placeholder="Nom du client"
+                  required
+                  error={formErrors.name}
+                  validation={{ type: "name" }}
+                />
+                
+                <FormField
+                  label="Société"
+                  name="company"
+                  type="text"
+                  value={clientForm.company}
+                  onChange={(value) => setClientForm({ ...clientForm, company: value })}
+                  placeholder="Nom de l'entreprise"
+                  error={formErrors.company}
+                  validation={{ type: "company" }}
+                />
+                
+                <FormField
+                  label="Email"
+                  name="email"
+                  type="email"
+                  value={clientForm.email}
+                  onChange={(value) => setClientForm({ ...clientForm, email: value })}
+                  placeholder="email@exemple.com"
+                  error={formErrors.email}
+                  validation={{ type: "email" }}
+                />
+                
+                <FormField
+                  label="Téléphone"
+                  name="phone"
+                  type="tel"
+                  value={clientForm.phone}
+                  onChange={(value) => setClientForm({ ...clientForm, phone: value })}
+                  placeholder="01 23 45 67 89"
+                  error={formErrors.phone}
+                  validation={{ type: "phone" }}
+                />
+                
+                <FormField
+                  label="Adresse"
+                  name="address"
+                  type="textarea"
+                  value={clientForm.address}
+                  onChange={(value) => setClientForm({ ...clientForm, address: value })}
+                  placeholder="Adresse complète"
+                  error={formErrors.address}
+                  validation={{ type: "address" }}
+                />
               </div>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="outline">Annuler</Button>
+                  <Button variant="outline" onClick={resetForm}>Annuler</Button>
                 </DialogClose>
                 <Button onClick={handleCreateClient}>Créer</Button>
               </DialogFooter>
@@ -352,163 +403,149 @@ const Clients = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredClients.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={5} className="h-24 text-center">
-                        Aucun client trouvé
+                  {filteredClients.map((client) => (
+                    <TableRow key={client.id}>
+                      <TableCell className="font-medium">{client.name}</TableCell>
+                      <TableCell>{client.company}</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {client.email}
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        {client.phone}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setEditingClient(client)}>
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-md">
+                              <DialogHeader>
+                                <DialogTitle>Modifier le client</DialogTitle>
+                                <DialogDescription>
+                                  Modifiez les informations du client.
+                                </DialogDescription>
+                              </DialogHeader>
+                              {editingClient && (
+                                <div className="space-y-4 py-4">
+                                  <FormField
+                                    label="Nom"
+                                    name="edit-name"
+                                    type="text"
+                                    value={editingClient.name}
+                                    onChange={(value) =>
+                                      setEditingClient({
+                                        ...editingClient,
+                                        name: value,
+                                      })
+                                    }
+                                    required
+                                    validation={{ type: "name" }}
+                                  />
+                                  
+                                  <FormField
+                                    label="Société"
+                                    name="edit-company"
+                                    type="text"
+                                    value={editingClient.company}
+                                    onChange={(value) =>
+                                      setEditingClient({
+                                        ...editingClient,
+                                        company: value,
+                                      })
+                                    }
+                                    validation={{ type: "company" }}
+                                  />
+                                  
+                                  <FormField
+                                    label="Email"
+                                    name="edit-email"
+                                    type="email"
+                                    value={editingClient.email}
+                                    onChange={(value) =>
+                                      setEditingClient({
+                                        ...editingClient,
+                                        email: value,
+                                      })
+                                    }
+                                    validation={{ type: "email" }}
+                                  />
+                                  
+                                  <FormField
+                                    label="Téléphone"
+                                    name="edit-phone"
+                                    type="tel"
+                                    value={editingClient.phone}
+                                    onChange={(value) =>
+                                      setEditingClient({
+                                        ...editingClient,
+                                        phone: value,
+                                      })
+                                    }
+                                    validation={{ type: "phone" }}
+                                  />
+                                  
+                                  <FormField
+                                    label="Adresse"
+                                    name="edit-address"
+                                    type="textarea"
+                                    value={editingClient.address}
+                                    onChange={(value) =>
+                                      setEditingClient({
+                                        ...editingClient,
+                                        address: value,
+                                      })
+                                    }
+                                    validation={{ type: "address" }}
+                                  />
+                                </div>
+                              )}
+                              <DialogFooter>
+                                <DialogClose asChild>
+                                  <Button variant="outline">Annuler</Button>
+                                </DialogClose>
+                                <Button onClick={handleUpdateClient}>
+                                  Enregistrer
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Êtes-vous sûr ?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Cette action supprimera définitivement le client{" "}
+                                  <strong>{client.name}</strong> et toutes ses
+                                  données associées.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDeleteClient(client.id)}
+                                  className="bg-red-500 hover:bg-red-600">
+                                  Supprimer
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
                       </TableCell>
                     </TableRow>
-                  ) : (
-                    filteredClients.map((client) => (
-                      <TableRow key={client.id}>
-                        <TableCell className="font-medium">
-                          {client.name}
-                        </TableCell>
-                        <TableCell>{client.company}</TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          {client.email}
-                        </TableCell>
-                        <TableCell className="hidden lg:table-cell">
-                          {client.phone}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => setEditingClient(client)}>
-                                  <Edit className="h-4 w-4" />
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent className="sm:max-w-md">
-                                <DialogHeader>
-                                  <DialogTitle>Modifier le client</DialogTitle>
-                                  <DialogDescription>
-                                    Modifiez les informations du client.
-                                  </DialogDescription>
-                                </DialogHeader>
-                                {editingClient && (
-                                  <div className="space-y-4 py-4">
-                                    <div className="space-y-2">
-                                      <Label htmlFor="edit-name">Nom*</Label>
-                                      <Input
-                                        id="edit-name"
-                                        value={editingClient.name}
-                                        onChange={(e) =>
-                                          setEditingClient({
-                                            ...editingClient,
-                                            name: e.target.value,
-                                          })
-                                        }
-                                      />
-                                    </div>
-                                    <div className="space-y-2">
-                                      <Label htmlFor="edit-company">
-                                        Société
-                                      </Label>
-                                      <Input
-                                        id="edit-company"
-                                        value={editingClient.company}
-                                        onChange={(e) =>
-                                          setEditingClient({
-                                            ...editingClient,
-                                            company: e.target.value,
-                                          })
-                                        }
-                                      />
-                                    </div>
-                                    <div className="space-y-2">
-                                      <Label htmlFor="edit-email">Email</Label>
-                                      <Input
-                                        id="edit-email"
-                                        type="email"
-                                        value={editingClient.email}
-                                        onChange={(e) =>
-                                          setEditingClient({
-                                            ...editingClient,
-                                            email: e.target.value,
-                                          })
-                                        }
-                                      />
-                                    </div>
-                                    <div className="space-y-2">
-                                      <Label htmlFor="edit-phone">
-                                        Téléphone
-                                      </Label>
-                                      <Input
-                                        id="edit-phone"
-                                        value={editingClient.phone}
-                                        onChange={(e) =>
-                                          setEditingClient({
-                                            ...editingClient,
-                                            phone: e.target.value,
-                                          })
-                                        }
-                                      />
-                                    </div>
-                                    <div className="space-y-2">
-                                      <Label htmlFor="edit-address">
-                                        Adresse
-                                      </Label>
-                                      <Input
-                                        id="edit-address"
-                                        value={editingClient.address}
-                                        onChange={(e) =>
-                                          setEditingClient({
-                                            ...editingClient,
-                                            address: e.target.value,
-                                          })
-                                        }
-                                      />
-                                    </div>
-                                  </div>
-                                )}
-                                <DialogFooter>
-                                  <DialogClose asChild>
-                                    <Button variant="outline">Annuler</Button>
-                                  </DialogClose>
-                                  <Button onClick={handleUpdateClient}>
-                                    Enregistrer
-                                  </Button>
-                                </DialogFooter>
-                              </DialogContent>
-                            </Dialog>
-
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                  <Trash2 className="h-4 w-4 text-destructive" />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>
-                                    Supprimer le client
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Êtes-vous sûr de vouloir supprimer ce client
-                                    ? Cette action est irréversible.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() =>
-                                      handleDeleteClient(client.id)
-                                    }
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                    Supprimer
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
+                  ))}
                 </TableBody>
               </Table>
             </div>
@@ -521,198 +558,186 @@ const Clients = () => {
               <p>Chargement des clients...</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredClients.length === 0 ? (
-                <div className="col-span-full flex flex-col items-center justify-center py-12">
-                  <Building className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                  <p className="text-lg font-medium">Aucun client trouvé</p>
-                  <p className="text-muted-foreground">
-                    Ajoutez un nouveau client pour commencer
-                  </p>
-                </div>
-              ) : (
-                filteredClients.map((client) => (
-                  <Card key={client.id}>
-                    <CardHeader className="pb-2">
-                      <CardTitle>{client.name}</CardTitle>
-                      <CardDescription>{client.company}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2 text-sm">
-                        {client.email && (
-                          <div className="flex items-center">
-                            <span className="font-medium min-w-24">Email:</span>
-                            <span className="text-muted-foreground">
-                              {client.email}
-                            </span>
-                          </div>
-                        )}
-                        {client.phone && (
-                          <div className="flex items-center">
-                            <span className="font-medium min-w-24">
-                              Téléphone:
-                            </span>
-                            <span className="text-muted-foreground">
-                              {client.phone}
-                            </span>
-                          </div>
-                        )}
-                        {client.address && (
-                          <div className="flex items-center">
-                            <span className="font-medium min-w-24">
-                              Adresse:
-                            </span>
-                            <span className="text-muted-foreground">
-                              {client.address}
-                            </span>
-                          </div>
-                        )}
-                        {client.projectIds && client.projectIds.length > 0 && (
-                          <div className="flex items-start">
-                            <span className="font-medium min-w-24">
-                              Projets:
-                            </span>
-                            <span className="text-muted-foreground">
-                              {client.projectIds.length} projet(s)
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex justify-end gap-2 mt-4">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => setEditingClient(client)}>
-                              <Edit className="h-4 w-4" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredClients.map((client) => (
+                <Card key={client.id}>
+                  <CardHeader className="pb-2">
+                    <CardTitle>{client.name}</CardTitle>
+                    <CardDescription>{client.company}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2 text-sm">
+                      {client.email && (
+                        <div className="flex items-center">
+                          <span className="font-medium min-w-24">Email:</span>
+                          <span className="text-muted-foreground">
+                            {client.email}
+                          </span>
+                        </div>
+                      )}
+                      {client.phone && (
+                        <div className="flex items-center">
+                          <span className="font-medium min-w-24">
+                            Téléphone:
+                          </span>
+                          <span className="text-muted-foreground">
+                            {client.phone}
+                          </span>
+                        </div>
+                      )}
+                      {client.address && (
+                        <div className="flex items-center">
+                          <span className="font-medium min-w-24">
+                            Adresse:
+                          </span>
+                          <span className="text-muted-foreground">
+                            {client.address}
+                          </span>
+                        </div>
+                      )}
+                      {client.projectIds && client.projectIds.length > 0 && (
+                        <div className="flex items-start">
+                          <span className="font-medium min-w-24">
+                            Projets:
+                          </span>
+                          <span className="text-muted-foreground">
+                            {client.projectIds.length} projet(s)
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex justify-end gap-2 mt-4">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setEditingClient(client)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>Modifier le client</DialogTitle>
+                            <DialogDescription>
+                              Modifiez les informations du client.
+                            </DialogDescription>
+                          </DialogHeader>
+                          {editingClient && (
+                            <div className="space-y-4 py-4">
+                              <FormField
+                                label="Nom"
+                                name="edit-name-card"
+                                type="text"
+                                value={editingClient.name}
+                                onChange={(value) =>
+                                  setEditingClient({
+                                    ...editingClient,
+                                    name: value,
+                                  })
+                                }
+                                required
+                                validation={{ type: "name" }}
+                              />
+                              
+                              <FormField
+                                label="Société"
+                                name="edit-company-card"
+                                type="text"
+                                value={editingClient.company}
+                                onChange={(value) =>
+                                  setEditingClient({
+                                    ...editingClient,
+                                    company: value,
+                                  })
+                                }
+                                validation={{ type: "company" }}
+                              />
+                              
+                              <FormField
+                                label="Email"
+                                name="edit-email-card"
+                                type="email"
+                                value={editingClient.email}
+                                onChange={(value) =>
+                                  setEditingClient({
+                                    ...editingClient,
+                                    email: value,
+                                  })
+                                }
+                                validation={{ type: "email" }}
+                              />
+                              
+                              <FormField
+                                label="Téléphone"
+                                name="edit-phone-card"
+                                type="tel"
+                                value={editingClient.phone}
+                                onChange={(value) =>
+                                  setEditingClient({
+                                    ...editingClient,
+                                    phone: value,
+                                  })
+                                }
+                                validation={{ type: "phone" }}
+                              />
+                              
+                              <FormField
+                                label="Adresse"
+                                name="edit-address-card"
+                                type="textarea"
+                                value={editingClient.address}
+                                onChange={(value) =>
+                                  setEditingClient({
+                                    ...editingClient,
+                                    address: value,
+                                  })
+                                }
+                                validation={{ type: "address" }}
+                              />
+                            </div>
+                          )}
+                          <DialogFooter>
+                            <DialogClose asChild>
+                              <Button variant="outline">Annuler</Button>
+                            </DialogClose>
+                            <Button onClick={handleUpdateClient}>
+                              Enregistrer
                             </Button>
-                          </DialogTrigger>
-                          <DialogContent className="sm:max-w-md">
-                            <DialogHeader>
-                              <DialogTitle>Modifier le client</DialogTitle>
-                              <DialogDescription>
-                                Modifiez les informations du client.
-                              </DialogDescription>
-                            </DialogHeader>
-                            {editingClient && (
-                              <div className="space-y-4 py-4">
-                                <div className="space-y-2">
-                                  <Label htmlFor="edit-name-card">Nom*</Label>
-                                  <Input
-                                    id="edit-name-card"
-                                    value={editingClient.name}
-                                    onChange={(e) =>
-                                      setEditingClient({
-                                        ...editingClient,
-                                        name: e.target.value,
-                                      })
-                                    }
-                                  />
-                                </div>
-                                <div className="space-y-2">
-                                  <Label htmlFor="edit-company-card">
-                                    Société
-                                  </Label>
-                                  <Input
-                                    id="edit-company-card"
-                                    value={editingClient.company}
-                                    onChange={(e) =>
-                                      setEditingClient({
-                                        ...editingClient,
-                                        company: e.target.value,
-                                      })
-                                    }
-                                  />
-                                </div>
-                                <div className="space-y-2">
-                                  <Label htmlFor="edit-email-card">Email</Label>
-                                  <Input
-                                    id="edit-email-card"
-                                    type="email"
-                                    value={editingClient.email}
-                                    onChange={(e) =>
-                                      setEditingClient({
-                                        ...editingClient,
-                                        email: e.target.value,
-                                      })
-                                    }
-                                  />
-                                </div>
-                                <div className="space-y-2">
-                                  <Label htmlFor="edit-phone-card">
-                                    Téléphone
-                                  </Label>
-                                  <Input
-                                    id="edit-phone-card"
-                                    value={editingClient.phone}
-                                    onChange={(e) =>
-                                      setEditingClient({
-                                        ...editingClient,
-                                        phone: e.target.value,
-                                      })
-                                    }
-                                  />
-                                </div>
-                                <div className="space-y-2">
-                                  <Label htmlFor="edit-address-card">
-                                    Adresse
-                                  </Label>
-                                  <Input
-                                    id="edit-address-card"
-                                    value={editingClient.address}
-                                    onChange={(e) =>
-                                      setEditingClient({
-                                        ...editingClient,
-                                        address: e.target.value,
-                                      })
-                                    }
-                                  />
-                                </div>
-                              </div>
-                            )}
-                            <DialogFooter>
-                              <DialogClose asChild>
-                                <Button variant="outline">Annuler</Button>
-                              </DialogClose>
-                              <Button onClick={handleUpdateClient}>
-                                Enregistrer
-                              </Button>
-                            </DialogFooter>
-                          </DialogContent>
-                        </Dialog>
-
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Supprimer le client
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Êtes-vous sûr de vouloir supprimer ce client ?
-                                Cette action est irréversible.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleDeleteClient(client.id)}
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                Supprimer
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Êtes-vous sûr ?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Cette action supprimera définitivement le client{" "}
+                              <strong>{client.name}</strong> et toutes ses
+                              données associées.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteClient(client.id)}
+                              className="bg-red-500 hover:bg-red-600">
+                              Supprimer
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           )}
         </TabsContent>

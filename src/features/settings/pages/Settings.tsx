@@ -17,11 +17,34 @@ import { ColorPicker } from "@/features/settings/components/ColorPicker";
 import { ThemeSelector } from "@/features/team/components/ThemeSelector";
 import { toast } from "sonner";
 import { saveArchitectInfo, getArchitectInfo } from "@/features/reports/services/reportService";
+import { getAllAgencyMembers, deleteAgencyMember, addAgencyMember } from "@/features/agency/services/agencyMembersService";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/ui/sheet";
 
 const Settings = () => {
   const [selectedTab, setSelectedTab] = useState("account");
   const [headerLogo, setHeaderLogo] = useState("https://i.pravatar.cc/150?u=4");
   const [companyLogo, setCompanyLogo] = useState("https://i.pravatar.cc/150?company");
+  const [agencyMembers, setAgencyMembers] = useState([]);
+  const [isLoadingMembers, setIsLoadingMembers] = useState(false);
+  const [isAddMemberSheetOpen, setIsAddMemberSheetOpen] = useState(false);
+  const [addForm, setAddForm] = useState<{
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    avatar: string;
+    designation: 'member' | 'admin';
+    role: string;
+  }>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    avatar: "",
+    designation: "member",
+    role: "architecte"
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [companyInfo, setCompanyInfo] = useState({
     name: "ArchiHub Studio",
@@ -94,6 +117,24 @@ const Settings = () => {
     loadArchitectInfo();
   }, []);
 
+  // Charger les membres d'agence
+  useEffect(() => {
+    const loadAgencyMembers = async () => {
+      try {
+        setIsLoadingMembers(true);
+        const members = await getAllAgencyMembers();
+        setAgencyMembers(members);
+      } catch (error) {
+        console.error("Erreur lors du chargement des membres d'agence:", error);
+        toast.error("Impossible de charger les membres d'agence");
+      } finally {
+        setIsLoadingMembers(false);
+      }
+    };
+
+    loadAgencyMembers();
+  }, []);
+
   const handleCompanyInfoChange = (field, value) => {
     setCompanyInfo({
       ...companyInfo,
@@ -163,6 +204,73 @@ const Settings = () => {
   const triggerLogoUpload = () => {
     if (logoInputRef.current) {
       logoInputRef.current.click();
+    }
+  };
+
+  // Gérer la suppression d'un membre d'agence
+  const handleDeleteAgencyMember = async (memberId) => {
+    try {
+      await deleteAgencyMember(memberId);
+      toast.success("Membre supprimé avec succès");
+      // Recharger les membres
+      const members = await getAllAgencyMembers();
+      setAgencyMembers(members);
+    } catch (error) {
+      console.error("Erreur lors de la suppression:", error);
+      toast.error("Impossible de supprimer le membre");
+    }
+  };
+
+  const handleAddFormChange = (field: keyof typeof addForm, value: string) => {
+    if (field === 'designation') {
+      setAddForm({ ...addForm, designation: value as 'member' | 'admin' });
+    } else {
+      setAddForm({ ...addForm, [field]: value });
+    }
+  };
+
+  // Liste des rôles TeamMemberRole sans 'entreprise'
+  const TEAM_MEMBER_ROLES = [
+    { value: "architecte", label: "Architecte" },
+    { value: "chef_de_projet", label: "Chef de projet" },
+    { value: "ingenieur", label: "Ingénieur" },
+    { value: "designer", label: "Designer" },
+    { value: "assistant", label: "Assistant(e)" },
+    { value: "dessinateur", label: "Dessinateur" },
+    { value: "autre", label: "Autre" }
+  ];
+
+  const handleAddMember = async (e) => {
+    e.preventDefault();
+    if (!addForm.firstName || !addForm.lastName || !addForm.email) {
+      toast.error("Tous les champs sont obligatoires");
+      return;
+    }
+    try {
+      setIsSubmitting(true);
+      await addAgencyMember({
+        userId: addForm.email,
+        role: addForm.designation,
+        status: "pending",
+        user: {
+          id: addForm.email,
+          firstName: addForm.firstName,
+          lastName: addForm.lastName,
+          email: addForm.email,
+          profileImageUrl: addForm.avatar,
+          phone: addForm.phone
+        } as any
+      });
+      toast.success("Membre ajouté avec succès");
+      setIsAddMemberSheetOpen(false);
+      setAddForm({ firstName: "", lastName: "", email: "", phone: "", avatar: "", designation: "member", role: "architecte" });
+      // Recharger la liste
+      const members = await getAllAgencyMembers();
+      setAgencyMembers(members);
+    } catch (error) {
+      toast.error("Erreur lors de l'ajout du membre");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -306,56 +414,60 @@ const Settings = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Gestion des équipes</CardTitle>
+              <CardTitle>Gestion des membres d'agence</CardTitle>
               <CardDescription>
-                Gérez vos équipes et leurs membres
+                Gérez les membres de votre agence
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="font-medium">Équipe ArchiPro Studio</h3>
-                    <p className="text-sm text-muted-foreground">4 membres</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline">
-                      Gérer
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="text-destructive">
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Supprimer
-                    </Button>
-                  </div>
+              {isLoadingMembers ? (
+                <div className="flex justify-center py-4">
+                  <p>Chargement des membres...</p>
                 </div>
-
-                <Separator />
-
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="font-medium">Équipe Projet Mairie</h3>
-                    <p className="text-sm text-muted-foreground">2 membres</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline">
-                      Gérer
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="text-destructive">
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Supprimer
-                    </Button>
-                  </div>
+              ) : agencyMembers.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">Aucun membre d'agence trouvé</p>
                 </div>
-              </div>
+              ) : (
+                <div className="space-y-4">
+                  {agencyMembers.map((member) => (
+                    <div key={member.id} className="flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="w-8 h-8">
+                          <AvatarImage src={member.user?.profileImageUrl} alt={member.user?.firstName} />
+                          <AvatarFallback>
+                            {member.user?.firstName?.[0]}{member.user?.lastName?.[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <h3 className="font-medium">
+                            {member.user?.firstName} {member.user?.lastName}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            {member.user?.email} • {member.role}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Badge variant={member.status === 'active' ? 'default' : 'secondary'}>
+                          {member.status}
+                        </Badge>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-destructive"
+                          onClick={() => handleDeleteAgencyMember(member.id)}>
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Supprimer
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div className="pt-4">
-                <Button variant="outline">+ Créer une nouvelle équipe</Button>
+                <Button variant="outline" onClick={() => setIsAddMemberSheetOpen(true)}>+ Ajouter un membre</Button>
               </div>
             </CardContent>
           </Card>
@@ -921,6 +1033,94 @@ const Settings = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <Sheet open={isAddMemberSheetOpen} onOpenChange={setIsAddMemberSheetOpen}>
+        <SheetContent className="sm:max-w-md overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Ajouter un membre d'agence</SheetTitle>
+            <SheetDescription>Invitez un nouveau membre dans votre agence.</SheetDescription>
+          </SheetHeader>
+          <form onSubmit={handleAddMember} className="py-4 space-y-4">
+            <div>
+              <Label>Prénom</Label>
+              <Input
+                value={addForm.firstName}
+                onChange={e => handleAddFormChange("firstName", e.target.value)}
+                placeholder="Prénom"
+                required
+              />
+            </div>
+            <div>
+              <Label>Nom</Label>
+              <Input
+                value={addForm.lastName}
+                onChange={e => handleAddFormChange("lastName", e.target.value)}
+                placeholder="Nom"
+                required
+              />
+            </div>
+            <div>
+              <Label>Email</Label>
+              <Input
+                type="email"
+                value={addForm.email}
+                onChange={e => handleAddFormChange("email", e.target.value)}
+                placeholder="Email"
+                required
+              />
+            </div>
+            <div>
+              <Label>Numéro de téléphone</Label>
+              <Input
+                type="tel"
+                value={addForm.phone}
+                onChange={e => handleAddFormChange("phone", e.target.value)}
+                placeholder="Téléphone"
+              />
+            </div>
+            <div>
+              <Label>Avatar / Image</Label>
+              <Input
+                type="url"
+                value={addForm.avatar}
+                onChange={e => handleAddFormChange("avatar", e.target.value)}
+                placeholder="URL de l’avatar ou image"
+              />
+            </div>
+            <div>
+              <Label>Désignation</Label>
+              <select
+                className="w-full border rounded-md p-2"
+                value={addForm.designation}
+                onChange={e => handleAddFormChange("designation", e.target.value)}
+              >
+                <option value="member">Membre</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <div>
+              <Label>Rôle</Label>
+              <select
+                className="w-full border rounded-md p-2"
+                value={addForm.role}
+                onChange={e => handleAddFormChange("role", e.target.value)}
+              >
+                {TEAM_MEMBER_ROLES.map(role => (
+                  <option key={role.value} value={role.value}>{role.label}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button type="button" variant="outline" onClick={() => setIsAddMemberSheetOpen(false)}>
+                Annuler
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Ajout..." : "Ajouter"}
+              </Button>
+            </div>
+          </form>
+        </SheetContent>
+      </Sheet>
     </MainLayout>
   );
 };
