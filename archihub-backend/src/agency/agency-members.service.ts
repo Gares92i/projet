@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AgencyMember } from './entities/agency-member.entity';
 import { CreateAgencyMemberDto } from './dto/create-agency-member.dto';
 import { UpdateAgencyMemberDto } from './dto/update-agency-member.dto';
@@ -11,6 +11,8 @@ export class AgencyMembersService {
   constructor(
     @InjectRepository(AgencyMember)
     private readonly agencyMembersRepository: Repository<AgencyMember>,
+    @InjectRepository(CompanySettings)
+    private readonly companySettingsRepository: Repository<CompanySettings>,
   ) {}
 
   async findAll(ownerId: string): Promise<AgencyMember[]> {
@@ -25,8 +27,7 @@ export class AgencyMembersService {
 
   async create(ownerId: string, dto: CreateAgencyMemberDto): Promise<AgencyMember> {
     // Vérification de la limite d'abonnement
-    const settingsRepo = getRepository(CompanySettings);
-    const settings = await settingsRepo.findOne({ where: { ownerId } });
+    const settings = await this.companySettingsRepository.findOne({ where: { ownerId } });
     if (settings && settings.maxMembersAllowed) {
       const count = await this.agencyMembersRepository.count({ where: { ownerId } });
       if (count >= settings.maxMembersAllowed) {

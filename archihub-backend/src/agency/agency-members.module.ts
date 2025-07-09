@@ -3,9 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AgencyMember } from './entities/agency-member.entity';
 import { AgencyMembersService } from './agency-members.service';
 import { AgencyMembersController } from './agency-members.controller';
+import { CompanySettings } from '../settings/entities/company-settings.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AgencyMember])],
+  imports: [TypeOrmModule.forFeature([AgencyMember, CompanySettings])],
   providers: [AgencyMembersService],
   controllers: [AgencyMembersController],
   exports: [AgencyMembersService],
