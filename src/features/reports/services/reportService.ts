@@ -149,73 +149,22 @@ export const reportService = {
   // Ajouter un nouveau rapport
   addReport: async (report: Partial<SiteVisitReport>): Promise<SiteVisitReport> => {
     const api = createApiClient();
-    
     try {
-      // Traiter les photos si nécessaires
-      let processedPhotos = report.photos || [];
-      if (processedPhotos.some(photo => photo.startsWith('data:'))) {
-        // Récupérer directement l'API pour éviter les limitations de taille
-        const { Authorization } = await api.getAuthHeaders();
-        const uploadEndpoint = `${import.meta.env.VITE_API_URL}/upload`;
-        
-        // Upload des photos une par une
-        const uploadPromises = processedPhotos.map(async (photo, index) => {
-          if (photo.startsWith('data:')) {
-            try {
-              // Créer un blob à partir des données base64
-              const res = await fetch(photo);
-              const blob = await res.blob();
-              
-              // Créer un FormData pour l'upload
-              const formData = new FormData();
-              formData.append("file", blob, `report_photo_${index}.jpg`);
-              formData.append("path", `reports/${report.projectId}`);
-              
-              // Effectuer l'upload
-              const response = await fetch(uploadEndpoint, {
-                method: 'POST',
-                headers: { Authorization },
-                body: formData
-              });
-              
-              if (!response.ok) throw new Error(`Upload failed: ${response.status}`);
-              
-              const data = await response.json();
-              return data.url;
-            } catch (uploadError) {
-              console.error(`Erreur lors de l'upload de la photo ${index}:`, uploadError);
-              return photo; // Conserver le base64 en cas d'erreur
-            }
-          }
-          return photo; // Retourner l'URL inchangée si ce n'est pas du base64
-        });
-        
-        // Attendre que tous les uploads soient terminés
-        processedPhotos = await Promise.all(uploadPromises);
-      }
-      
-      // Récupérer le nom du projet pour la numérotation
-      let projectName = "PRJ";
-      try {
-        const projectResponse = await api.get(`/projects/${report.projectId}`);
-        projectName = projectResponse.name || "PRJ";
-      } catch (projectError) {
-        console.error("Erreur lors de la récupération du nom du projet:", projectError);
-      }
-      
-      // Récupérer les rapports existants pour la numérotation
-      const existingReports = await reportService.getAllReportsByProjectId(report.projectId as string);
-      const reportNumber = generateReportNumber(projectName, existingReports);
-      
-      // Créer le rapport avec les photos traitées
-      const newReport = await api.post<SiteVisitReport>('/reports', {
-        ...report,
-        photos: processedPhotos,
-        reportNumber,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      });
-      
+      // Construction dynamique du payload
+      const payload: any = {};
+      if (report.projectId && typeof report.projectId === 'string' && report.projectId.length > 0) payload.projectId = report.projectId;
+      if (report.reportNumber) payload.reportNumber = report.reportNumber;
+      if (report.date) payload.date = report.date;
+      if (report.author) payload.author = report.author;
+      if (report.status) payload.status = report.status;
+      if (report.photos && Array.isArray(report.photos)) payload.photos = report.photos.filter(p => typeof p === 'string' && p.length > 0);
+      if (report.observations && Array.isArray(report.observations)) payload.observations = report.observations;
+      if (report.recommendations && Array.isArray(report.recommendations)) payload.recommendations = report.recommendations;
+      if (report.architectInfo) payload.architectInfo = report.architectInfo;
+      if (report.reserves && Array.isArray(report.reserves)) payload.reserves = report.reserves;
+      if (report.tasksProgress && Array.isArray(report.tasksProgress)) payload.tasksProgress = report.tasksProgress;
+      // Ajoute d'autres champs si besoin
+      const newReport = await api.post<SiteVisitReport>("/reports", payload);
       return newReport;
     } catch (error) {
       console.error("Erreur lors de l'ajout du rapport:", error);

@@ -28,4 +28,15 @@ export class CompanySettingsService {
     Object.assign(settings, dto);
     return this.companySettingsRepository.save(settings);
   }
+
+  async getArchitectInfo(ownerId: string): Promise<any> {
+    const settings = await this.findByOwnerId(ownerId);
+    return settings.architectInfo || {};
+  }
+
+  async updateArchitectInfo(ownerId: string, architectInfo: any): Promise<any> {
+    const settings = await this.findByOwnerId(ownerId);
+    settings.architectInfo = architectInfo;
+    return this.companySettingsRepository.save(settings);
+  }
 } 

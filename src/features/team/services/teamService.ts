@@ -59,10 +59,9 @@ export const teamService = {
   // Ajouter un nouveau membre
   addTeamMember: async (member: Omit<TeamMember, "id">): Promise<TeamMember> => {
     const api = createApiClient();
-    
     try {
-      // Transformer les données pour correspondre au DTO backend
-      const memberData = {
+      // Construction dynamique du payload
+      const memberData: any = {
         name: member.name,
         email: member.email,
         phone: member.phone,
@@ -70,11 +69,15 @@ export const teamService = {
         status: member.status,
         avatar: member.avatar,
         activity: member.activity,
-        userId: member.user_id,
-        teamId: member.team_id,
-        ownerId: member.user_id // Utiliser user_id comme owner_id pour l'instant
       };
-      
+      // Ajout conditionnel des UUID si valides
+      if (member.user_id && /^[0-9a-fA-F-]{36}$/.test(member.user_id)) {
+        memberData.userId = member.user_id;
+        memberData.ownerId = member.user_id;
+      }
+      if (member.team_id && /^[0-9a-fA-F-]{36}$/.test(member.team_id)) {
+        memberData.teamId = member.team_id;
+      }
       const newMember = await api.post<TeamMember>("/teams", memberData);
       return normalizeTeamMember(newMember);
     } catch (error) {

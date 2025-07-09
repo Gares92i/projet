@@ -31,4 +31,6 @@ export class CreateCompanySettingsDto {
   @IsObject()
   @IsOptional()
   branding?: any;
+
+  architectInfo?: any;
 } 

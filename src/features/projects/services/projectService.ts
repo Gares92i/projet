@@ -19,7 +19,19 @@ export const projectService = {
   // Ajouter un nouveau projet
   addProject: async (project: Omit<Project, "id">): Promise<Project> => {
     const api = createApiClient();
-    return await api.post<Project>("/projects", project);
+    // Construction dynamique du payload
+    const payload: any = {};
+    if (project.name) payload.name = project.name;
+    if (project.description) payload.description = project.description;
+    if (project.status) payload.status = project.status;
+    if (project.startDate) payload.startDate = project.startDate;
+    if (project.endDate) payload.endDate = project.endDate;
+    if (project.client) payload.client = project.client;
+    if (project.location) payload.location = project.location;
+    if (project.manager) payload.manager = project.manager;
+    if (typeof project.progress === 'number') payload.progress = project.progress;
+    // Ajoute d'autres champs si besoin
+    return await api.post<Project>("/projects", payload);
   },
   
   // Mettre à jour un projet existant

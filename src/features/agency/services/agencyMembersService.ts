@@ -58,16 +58,21 @@ export const agencyMembersService = {
   // Ajouter un nouveau membre
   addAgencyMember: async (member: Omit<AgencyMember, "id">): Promise<AgencyMember> => {
     const api = createApiClient();
-    
     try {
-      const newMember = await api.post<AgencyMember>("/agency-members", member);
-      
+      // Construction dynamique du payload
+      const payload: any = {
+        userId: member.userId,
+        role: member.role,
+        status: member.status,
+      };
+      if (member.ownerId && typeof member.ownerId === 'string' && member.ownerId.length > 0) payload.ownerId = member.ownerId;
+      // On n'envoie pas le champ user (objet)
+      const newMember = await api.post<AgencyMember>("/agency-members", payload);
       // Sauvegarder en localStorage comme backup
       const stored = localStorage.getItem("agencyMembersData");
       const members = stored ? JSON.parse(stored) : [];
       members.push(newMember);
       localStorage.setItem("agencyMembersData", JSON.stringify(members));
-      
       return newMember;
     } catch (error) {
       console.error("Erreur lors de l'ajout du membre:", error);
@@ -78,9 +83,15 @@ export const agencyMembersService = {
   // Mettre à jour un membre existant
   updateAgencyMember: async (id: string, updates: Partial<AgencyMember>): Promise<AgencyMember | null> => {
     const api = createApiClient();
-    
     try {
-      const updatedMember = await api.put<AgencyMember>(`/agency-members/${id}`, updates);
+      // Construction dynamique du payload
+      const payload: any = {};
+      if (updates.userId && typeof updates.userId === 'string' && updates.userId.length > 0) payload.userId = updates.userId;
+      if (updates.role) payload.role = updates.role;
+      if (updates.status) payload.status = updates.status;
+      if (updates.ownerId && typeof updates.ownerId === 'string' && updates.ownerId.length > 0) payload.ownerId = updates.ownerId;
+      // On n'envoie pas le champ user (objet)
+      const updatedMember = await api.put<AgencyMember>(`/agency-members/${id}`, payload);
       
       // Mettre à jour le localStorage
       const stored = localStorage.getItem("agencyMembersData");

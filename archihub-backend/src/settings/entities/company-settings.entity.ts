@@ -37,6 +37,9 @@ export class CompanySettings {
   @Column({ type: 'jsonb', nullable: true })
   branding: any;
 
+  @Column({ type: 'jsonb', nullable: true })
+  architectInfo: any;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

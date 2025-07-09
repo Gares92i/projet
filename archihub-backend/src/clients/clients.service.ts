@@ -31,7 +31,7 @@ export class ClientsService {
     try {
       const query = this.clientsRepository
         .createQueryBuilder('client')
-        .leftJoinAndSelect('client.projects', 'projects')
+        // .leftJoinAndSelect('client.projects', 'projects')
         .orderBy('client.name', 'ASC');
 
       // Si un userId est fourni, filtrer par ce userId
@@ -53,7 +53,7 @@ export class ClientsService {
     try {
       const client = await this.clientsRepository.findOne({
         where: { id },
-        relations: ['projects'],
+        // relations: ['projects'],
       });
 
       if (!client) {

@@ -33,4 +33,16 @@ export class CompanySettingsController {
     if (!req.auth?.userId) throw new UnauthorizedException();
     return this.companySettingsService.update(req.auth.userId, dto);
   }
+
+  @Get('/architect-info')
+  async getArchitectInfo(@Request() req: RequestWithAuth) {
+    if (!req.auth?.userId) throw new UnauthorizedException();
+    return this.companySettingsService.getArchitectInfo(req.auth.userId);
+  }
+
+  @Put('/architect-info')
+  async updateArchitectInfo(@Request() req: RequestWithAuth, @Body() architectInfo: any) {
+    if (!req.auth?.userId) throw new UnauthorizedException();
+    return this.companySettingsService.updateArchitectInfo(req.auth.userId, architectInfo);
+  }
 } 

@@ -95,9 +95,19 @@ export const clientService = {
   // Ajouter un nouveau client
   addClient: async (client: ClientCreateInput): Promise<ClientData> => {
     const api = createApiClient();
-    
     try {
-      const newClient = await api.post<ClientData>("/clients", client);
+      // Construction dynamique du payload
+      const payload: any = {
+        name: client.name,
+        email: client.email,
+        phone: client.phone,
+        address: client.address,
+        company: client.company,
+      };
+      if (client.projectIds && Array.isArray(client.projectIds)) {
+        payload.projectIds = client.projectIds.filter(id => typeof id === 'string' && id.length > 0);
+      }
+      const newClient = await api.post<ClientData>("/clients", payload);
       return normalizeClient(newClient);
     } catch (error) {
       console.error("Erreur lors de l'ajout du client:", error);
@@ -120,9 +130,18 @@ export const clientService = {
   // Mettre à jour un client existant
   updateClient: async (id: string, updates: ClientUpdateInput): Promise<ClientData> => {
     const api = createApiClient();
-    
     try {
-      const updatedClient = await api.put<ClientData>(`/clients/${id}`, updates);
+      // Construction dynamique du payload
+      const payload: any = {};
+      if (updates.name) payload.name = updates.name;
+      if (updates.email) payload.email = updates.email;
+      if (updates.phone) payload.phone = updates.phone;
+      if (updates.address) payload.address = updates.address;
+      if (updates.company) payload.company = updates.company;
+      if (updates.projectIds && Array.isArray(updates.projectIds)) {
+        payload.projectIds = updates.projectIds.filter(id => typeof id === 'string' && id.length > 0);
+      }
+      const updatedClient = await api.put<ClientData>(`/clients/${id}`, payload);
       return normalizeClient(updatedClient);
     } catch (error) {
       console.error(`Erreur lors de la mise à jour du client ${id}:`, error);
