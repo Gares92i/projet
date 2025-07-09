@@ -105,13 +105,16 @@ export class ClientsController {
   @ApiResponse({ status: 404, description: 'Client non trouvé.' })
   @ApiResponse({ status: 500, description: 'Erreur serveur.' })
   async findOne(@Param('id') id: string) {
+    this.logger.log(`[FINDONE] Recherche du client avec l'ID: ${id}`);
     try {
-      return await this.clientsService.findOne(id);
+      const client = await this.clientsService.findOne(id);
+      this.logger.log(`[FINDONE] Résultat pour l'ID ${id}: ${client ? 'TROUVÉ' : 'NON TROUVÉ'}`);
+      return client;
     } catch (error) {
+      this.logger.error(`[FINDONE] Erreur pour l'ID ${id}: ${error.message}`);
       if (error instanceof NotFoundException) {
         throw new HttpException(error.message, HttpStatus.NOT_FOUND);
       }
-      this.logger.error(`Erreur lors de la récupération du client: ${error.message}`, error.stack);
       throw new HttpException(
         `Erreur lors de la récupération du client: ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -126,13 +129,16 @@ export class ClientsController {
   @ApiResponse({ status: 404, description: 'Client non trouvé.' })
   @ApiResponse({ status: 500, description: 'Erreur serveur.' })
   async update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
+    this.logger.log(`[UPDATE] Demande de mise à jour du client avec l'ID: ${id}`);
     try {
-      return await this.clientsService.update(id, updateClientDto);
+      const updated = await this.clientsService.update(id, updateClientDto);
+      this.logger.log(`[UPDATE] Résultat pour l'ID ${id}: ${updated ? 'TROUVÉ ET MIS À JOUR' : 'NON TROUVÉ'}`);
+      return updated;
     } catch (error) {
+      this.logger.error(`[UPDATE] Erreur pour l'ID ${id}: ${error.message}`);
       if (error instanceof NotFoundException) {
         throw new HttpException(error.message, HttpStatus.NOT_FOUND);
       }
-      this.logger.error(`Erreur lors de la mise à jour du client: ${error.message}`, error.stack);
       throw new HttpException(
         `Erreur lors de la mise à jour du client: ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
