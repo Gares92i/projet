@@ -10,7 +10,7 @@ export class AgencyMemberMiddleware implements NestMiddleware {
       const userId = req.auth?.userId;
       if (userId && userId !== 'guest') {
         const agencyMember = await this.agencyMembersService.findByUserId(userId);
-        if (agencyMember) {
+        if (agencyMember !== null) {
           req.agencyMember = agencyMember;
         }
       }
