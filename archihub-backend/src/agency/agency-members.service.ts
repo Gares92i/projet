@@ -49,7 +49,7 @@ export class AgencyMembersService {
     await this.agencyMembersRepository.remove(member);
   }
 
-  async findByUserId(userId: string): Promise<AgencyMember | undefined> {
+  async findByUserId(userId: string): Promise<AgencyMember | null> {
     return this.agencyMembersRepository.findOne({ where: { userId } });
   }
 } 
