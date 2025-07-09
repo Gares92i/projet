@@ -5,7 +5,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'clerk_user_id', unique: true }) // Nom correct de la colonne en base
+  @Column({ name: 'clerkId', unique: true }) // Utiliser clerkId comme dans l'entity UsersClerk
   clerkUserId: string;
 
   @Column({ nullable: true })
