@@ -48,4 +48,8 @@ export class AgencyMembersService {
     const member = await this.findOne(id, ownerId);
     await this.agencyMembersRepository.remove(member);
   }
+
+  async findByUserId(userId: string): Promise<AgencyMember | undefined> {
+    return this.agencyMembersRepository.findOne({ where: { userId } });
+  }
 } 

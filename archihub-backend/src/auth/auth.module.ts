@@ -5,11 +5,14 @@ import { ClerkAuthMiddleware } from './middleware/clerk-auth.middleware';
 import { UsersModule } from '../users/users.module';
 import { ClerkUserMiddleware } from './middleware/clerk-user.middleware';
 import { RolesGuard } from './guards/roles.guard';
+import { AgencyMembersModule } from '../agency/agency-members.module';
+import { AgencyMemberMiddleware } from './middleware/agency-member.middleware';
 
 @Module({
   imports: [
     ConfigModule,
     UsersModule,
+    AgencyMembersModule,
   ],
   providers: [AuthService, RolesGuard],
   exports: [AuthService, RolesGuard],
@@ -28,6 +31,15 @@ export class AuthModule {
     // Appliquer le middleware de synchronisation utilisateur
     consumer
       .apply(ClerkUserMiddleware)
+      .exclude(
+        { path: 'api/health', method: RequestMethod.GET },
+        { path: 'api-docs', method: RequestMethod.ALL },
+      )
+      .forRoutes('*');
+
+    // Appliquer le middleware agencyMember
+    consumer
+      .apply(AgencyMemberMiddleware)
       .exclude(
         { path: 'api/health', method: RequestMethod.GET },
         { path: 'api-docs', method: RequestMethod.ALL },
