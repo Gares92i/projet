@@ -13,12 +13,8 @@ export class AgencyMember {
   @JoinColumn({ name: 'user_id' })
   user: UsersClerk;
 
-  @Column({ name: 'owner_id' })
+  @Column({ name: 'owner_id', type: 'varchar' })
   ownerId: string;
-
-  @ManyToOne(() => UsersClerk, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'owner_id' })
-  owner: UsersClerk;
 
   @Column({ length: 50, default: 'member' })
   role: string;
