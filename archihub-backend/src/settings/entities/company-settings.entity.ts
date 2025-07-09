@@ -9,10 +9,6 @@ export class CompanySettings {
   @Column({ name: 'owner_id', type: 'varchar' })
   ownerId: string;
 
-  @ManyToOne(() => UsersClerk, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'owner_id' })
-  owner: UsersClerk;
-
   @Column({ name: 'company_name', length: 255 })
   companyName: string;
 
