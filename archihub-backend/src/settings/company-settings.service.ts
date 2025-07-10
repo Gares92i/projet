@@ -13,8 +13,22 @@ export class CompanySettingsService {
   ) {}
 
   async findByOwnerId(ownerId: string): Promise<CompanySettings> {
-    const settings = await this.companySettingsRepository.findOne({ where: { ownerId } });
-    if (!settings) throw new NotFoundException('Paramètres agence non trouvés');
+    let settings = await this.companySettingsRepository.findOne({ where: { ownerId } });
+    if (!settings) {
+      console.log(`Aucun paramètre d'entreprise trouvé pour ${ownerId}, création automatique...`);
+      settings = await this.create(ownerId, {
+        companyName: 'ArchiHub Studio',
+        address: '45 rue de l\'Architecture, 75001 Paris, France',
+        logoUrl: undefined,
+        subscriptionPlan: 'pro',
+        subscriptionStatus: 'active',
+        maxMembersAllowed: 10,
+        defaultUserRole: 'member',
+        branding: {},
+        architectInfo: {}
+      });
+      console.log(`Paramètres d'entreprise créés automatiquement: ${settings.id}`);
+    }
     return settings;
   }
 
