@@ -1,8 +1,13 @@
-import { IsString, IsOptional, IsIn } from 'class-validator';
+import { IsString, IsOptional, IsIn, IsEmail } from 'class-validator';
 
 export class CreateAgencyMemberDto {
   @IsString()
-  userId: string;
+  @IsOptional()
+  userId?: string;
+
+  @IsEmail()
+  @IsOptional()
+  email?: string;
 
   @IsString()
   @IsOptional()

@@ -36,7 +36,25 @@ export class AgencyMembersService {
         throw new ForbiddenException('Limite de membres atteinte pour votre abonnement.');
       }
     }
-    const member = this.agencyMembersRepository.create({ ...dto, ownerId });
+
+    let userId = dto.userId;
+    
+    // Si userId n'est pas fourni mais email l'est, créer l'utilisateur automatiquement
+    if (!userId && dto.email) {
+      console.log(`Création automatique d'utilisateur pour l'email: ${dto.email}`);
+      const user = await this.usersService.findOrCreateByClerkId(dto.email);
+      if (!user) {
+        throw new ForbiddenException('Impossible de créer l\'utilisateur avec cet email.');
+      }
+      userId = user.id;
+      console.log(`Utilisateur créé avec l'UUID: ${userId}`);
+    }
+
+    if (!userId) {
+      throw new ForbiddenException('userId ou email requis pour créer un membre d\'agence.');
+    }
+
+    const member = this.agencyMembersRepository.create({ ...dto, userId, ownerId });
     return this.agencyMembersRepository.save(member);
   }
 
