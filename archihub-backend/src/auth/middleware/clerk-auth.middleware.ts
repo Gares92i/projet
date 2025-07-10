@@ -18,6 +18,7 @@ export class ClerkAuthMiddleware implements NestMiddleware {
       }
 
       const token = authHeader.split(' ')[1];
+      console.log('Token reçu:', token);
 
       // Vérifier le token
       this.authService
